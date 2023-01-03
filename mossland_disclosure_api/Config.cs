@@ -49,7 +49,8 @@ namespace mossland_disclosure_api
                 try
                 {
                     //Console.WriteLine(makeAPICall_1());
-                    Console.WriteLine(makeAPICall_2());
+                    //Console.WriteLine(makeAPICall_2());
+                    Console.WriteLine(QueryCoinGecko());
                 }
                 catch (Exception ex)
                 {
@@ -60,6 +61,14 @@ namespace mossland_disclosure_api
             }
         }
 
+        static string QueryCoinGecko()
+        {
+            var URL = new UriBuilder("https://api.coingecko.com/api/v3/coins/mossland?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false");
+
+            var client = new WebClient();
+            client.Headers.Add("Accepts", "application/json");
+            return client.DownloadString(URL.ToString());
+        }
 
         static string makeAPICall_1()
         {
