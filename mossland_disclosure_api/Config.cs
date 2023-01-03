@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Net;
 using System.Text;
+using System.Threading;
+using System.Web;
 
 namespace mossland_disclosure_api
 {
@@ -8,6 +12,9 @@ namespace mossland_disclosure_api
     {
         // Http Server
         public readonly int http_server_port = 8000;
+
+        // Coinmarketcap
+        public readonly string coinmarketcap_key = "";
 
         // Database
         public readonly string db_username = "mossland_disclosure";
@@ -17,6 +24,7 @@ namespace mossland_disclosure_api
         // internal use
         private HttpServer httpServer;
         private Database db;
+        private BackgroundWorker worker;
 
         public void Init()
         {
@@ -27,6 +35,61 @@ namespace mossland_disclosure_api
         public void Run()
         {
             Console.WriteLine("[Config] Run");
+
+            worker = new BackgroundWorker();
+            worker.DoWork += Worker_DoWork;
+            worker.RunWorkerAsync();
+        }
+
+        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+
+                try
+                {
+                    //Console.WriteLine(makeAPICall_1());
+                    Console.WriteLine(makeAPICall_2());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                Thread.Sleep(1000 * 3);
+            }
+        }
+
+
+        static string makeAPICall_1()
+        {
+            var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/map");
+
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            queryString["symbol"] = "MOC";
+
+            URL.Query = queryString.ToString();
+
+            var client = new WebClient();
+            client.Headers.Add("X-CMC_PRO_API_KEY", Config.Instance.coinmarketcap_key);
+            client.Headers.Add("Accepts", "application/json");
+            return client.DownloadString(URL.ToString());
+        }
+
+        static string makeAPICall_2()
+        {
+            var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest");
+
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+            //queryString["id"] = "2915";
+            queryString["symbol"] = "MOC";
+
+            URL.Query = queryString.ToString();
+
+            var client = new WebClient();
+            client.Headers.Add("X-CMC_PRO_API_KEY", Config.Instance.coinmarketcap_key);
+            client.Headers.Add("Accepts", "application/json");
+            return client.DownloadString(URL.ToString());
         }
 
 
