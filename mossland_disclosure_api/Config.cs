@@ -68,8 +68,13 @@ namespace mossland_disclosure_api
                     Console.WriteLine("[ERR] QueryCirculatingSupplyMossland() - " + ex.Message);
                 }
 
-                Thread.Sleep(1000 * 60 * 10);   // 10 min
+                Thread.Sleep(1000 * 60 * 30);   // 30 min
             }
+        }
+
+        public Database GetDatabase()
+        {
+            return db;
         }
 
         private void QueryCirculatingSupplyCoinGecko()

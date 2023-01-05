@@ -90,7 +90,6 @@
   <ItemGroup>
     <Compile Include="Config.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="DataManager.cs" />
     <Compile Include="HttpServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

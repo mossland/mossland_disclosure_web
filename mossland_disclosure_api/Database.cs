@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Google.Protobuf.WellKnownTypes;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json.Linq;
 using Org.BouncyCastle.Ocsp;
 using Org.BouncyCastle.Utilities.Collections;
 using System;
@@ -52,6 +54,42 @@ namespace mossland_disclosure_api
 
             connection.Close();
             return ret;
+        }
+
+        public JArray SelectMarketData()
+        {
+            var jsonArray = new JArray();
+
+            MySqlConnection connection = new MySqlConnection(connstring);
+
+            try
+            {
+                connection.Open();
+
+                MySqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "SELECT * FROM market_data";
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var json = new JObject();
+                    json.Add("market_type", reader.GetString("market_type"));
+                    json.Add("number", reader.GetDouble("number"));
+                    json.Add("timestamp", ConvertToUTC(reader.GetDateTime("timestamp")));
+                    jsonArray.Add(json);
+                }
+
+                reader.Close();
+                cmd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ERR] SelectMarketData() - " + ex.Message);
+            }
+
+            connection.Close();
+
+            return jsonArray;
         }
 
         public (double, DateTime) SelectMarketData(string market_type)

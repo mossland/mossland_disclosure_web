@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -70,9 +71,10 @@ namespace mossland_disclosure_api
 
                         string type = urls[1];
 
-                        if (type.Equals("circulating_supply") == true)
+                        if (type.Equals("market") == true)
                         {
-                            string json = "test";
+                            JArray jArray = Config.Instance.GetDatabase().SelectMarketData();
+                            string json = jArray.ToString();
 
                             StreamWriter writer = new StreamWriter(response.OutputStream);
                             writer.Write(json);
