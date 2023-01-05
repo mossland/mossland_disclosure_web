@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Net;
@@ -45,12 +46,21 @@ namespace mossland_disclosure_api
         {
             while (true)
             {
+                int coingecko = 0;
+                int coinmarketcap = 0;
 
                 try
                 {
-                    //Console.WriteLine(makeAPICall_1());
-                    //Console.WriteLine(makeAPICall_2());
-                    Console.WriteLine(QueryCoinGecko());
+                    coingecko = QueryCirculatingSupplyCoinGecko();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                try
+                {
+                    coinmarketcap = QueryCirculatingSupplyCoinmarketcap();
                 }
                 catch (Exception ex)
                 {
@@ -61,36 +71,23 @@ namespace mossland_disclosure_api
             }
         }
 
-        static string QueryCoinGecko()
+        private int QueryCirculatingSupplyCoinGecko()
         {
             var URL = new UriBuilder("https://api.coingecko.com/api/v3/coins/mossland?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=false");
 
             var client = new WebClient();
             client.Headers.Add("Accepts", "application/json");
-            return client.DownloadString(URL.ToString());
+            string json = client.DownloadString(URL.ToString());
+
+            JObject jObject = JObject.Parse(json);
+            return jObject["market_data"]["circulating_supply"].ToObject<int>();
         }
 
-        static string makeAPICall_1()
-        {
-            var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v1/cryptocurrency/map");
-
-            var queryString = HttpUtility.ParseQueryString(string.Empty);
-            queryString["symbol"] = "MOC";
-
-            URL.Query = queryString.ToString();
-
-            var client = new WebClient();
-            client.Headers.Add("X-CMC_PRO_API_KEY", Config.Instance.coinmarketcap_key);
-            client.Headers.Add("Accepts", "application/json");
-            return client.DownloadString(URL.ToString());
-        }
-
-        static string makeAPICall_2()
+        private int QueryCirculatingSupplyCoinmarketcap()
         {
             var URL = new UriBuilder("https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest");
 
             var queryString = HttpUtility.ParseQueryString(string.Empty);
-            //queryString["id"] = "2915";
             queryString["symbol"] = "MOC";
 
             URL.Query = queryString.ToString();
@@ -98,7 +95,10 @@ namespace mossland_disclosure_api
             var client = new WebClient();
             client.Headers.Add("X-CMC_PRO_API_KEY", Config.Instance.coinmarketcap_key);
             client.Headers.Add("Accepts", "application/json");
-            return client.DownloadString(URL.ToString());
+            string json = client.DownloadString(URL.ToString());
+
+            JObject jObject = JObject.Parse(json);
+            return jObject["data"]["MOC"][0]["circulating_supply"].ToObject<int>();
         }
 
 
