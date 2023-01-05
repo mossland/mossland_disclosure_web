@@ -71,10 +71,12 @@
                 <div class="order2">
                     <div class="txt--01"><span data-langNum="3">시가총액</span><span data-langNum="4">(실시간)</span></div>
                     <div class="txt--02"><span data-langNum="5">모스랜드 제공</span></div>
-                    <div class="txt--03"><span class="moc_price">999.9억원</span></div>
-                    <div><span class="txt--04" data-langNum="6">코인마켓캡 제공</span><span class="txt--05">999.9억원</span></div>
+                    <div class="txt--03"><span class="mossland_marketcap">- 억원</span></div>
+                    <div class="coinmarketcap">
+						<span class="txt--04" data-langNum="6">코인마켓캡 제공</span><div class="txt--05"><span class="coinmarketcap_marketcap">- 억원</span></div>
+					</div>
                     <div class="coingeco">
-                        <span class="txt--04" data-langNum="7">코인게코 제공</span><span class="txt--05">999.9억원</span>
+                        <span class="txt--04" data-langNum="7">코인게코 제공</span><div class="txt--05"><span class="coingecko_marketcap">- 억원</span></div>
                     </div>
                 </div>
                 <div class="top_center order1">
@@ -84,10 +86,12 @@
                 <div class="order3">
                     <div class="txt--01"><span data-langNum="8">현재 유통량</span><span data-langNum="4">(실시간)</span></div>
                     <div class="txt--02"><span data-langNum="5">모스랜드 제공</span></div>
-                    <div class="txt--03"><span class="moc_count">0moc</span></div>
-                    <div><span class="txt--04" data-langNum="6">코인마켓캡 제공</span><span class="txt--05">382,489,688moc</span></div>
+                    <div class="txt--03"><span class="mossland_circulating_supply">- moc</span></div>
+                    <div class="coinmarketcapR">
+						<span class="txt--04" data-langNum="6">코인마켓캡 제공</span><div class="txt--05"><span class="coinmarketcap_circulating_supply">- moc</span></div>
+					</div>
                     <div class="coingeco">
-                        <span class="txt--04" data-langNum="7">코인게코 제공</span><span class="txt--05">382,489,688moc</span>
+                        <span class="txt--04" data-langNum="7">코인게코 제공</span><div class="txt--05"><span class="coingecko_circulating_supply">- moc</span></div>
                     </div>
                 </div>
             </div>
@@ -100,7 +104,7 @@
                 </div>
                 <div class="bottom_box">
                     <div class="box_title" data-langNum="10">총 발행 한도 (추가 발행 불가능)</div>
-                    <div class="box_content">500,000,000 moc</div>
+                    <div class="box_content"><span class="mossland_max_supply">- moc</span></div>
                 </div>
                 <div class="bottom_box">
                     <div class="box_title" data-langNum="11">연락처</div>
@@ -811,17 +815,27 @@
         }
 
         // 목표 수치
-        //setTimeout(() => counter($('.moc_count'), 382489688, 'moc'), 1);
-        //setTimeout(() => counter($('.moc_price'), 999999, '억원'), 1);
+        //setTimeout(() => counter($('.mossland_circulating_supply'), 382489688, 'moc'), 1);
+        //setTimeout(() => counter($('.mossland_marketcap'), 999999, '억원'), 1);
 		
 		$.getJSON('/api/market/', function(data){
 			$.each(data, function (index, value) {
-				if (value["market_type"] === "mossland_marketcap_krw") {
-					setTimeout(() => counter($('.moc_price'), value["number"], '억원'), 1);
-				}
-				if (value["market_type"] === "mossland_circulating_supply") {
-					setTimeout(() => counter($('.moc_count'), value["number"], 'moc'), 1);
-				}
+				if (value["market_type"] === "mossland_marketcap_krw")
+					setTimeout(() => counter($('.mossland_marketcap'), value["number"], ' 원'), 1);
+				if (value["market_type"] === "coinmarketcap_marketcap_krw")
+					setTimeout(() => counter($('.coinmarketcap_marketcap'), value["number"], ' 원'), 1);
+				if (value["market_type"] === "coingecko_marketcap_krw")
+					setTimeout(() => counter($('.coingecko_marketcap'), value["number"], ' 원'), 1);
+					
+				if (value["market_type"] === "mossland_circulating_supply")
+					setTimeout(() => counter($('.mossland_circulating_supply'), value["number"], ' moc'), 1);
+				if (value["market_type"] === "coinmarketcap_circulating_supply")
+					setTimeout(() => counter($('.coinmarketcap_circulating_supply'), value["number"], ' moc'), 1);
+				if (value["market_type"] === "coingecko_circulating_supply")
+					setTimeout(() => counter($('.coingecko_circulating_supply'), value["number"], ' moc'), 1);					
+				
+				if (value["market_type"] === "mossland_max_supply")
+					setTimeout(() => counter($('.mossland_max_supply'), value["number"], ' moc'), 1);
 			});
 		});
 
