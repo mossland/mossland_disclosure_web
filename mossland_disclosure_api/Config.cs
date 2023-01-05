@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -48,6 +49,7 @@ namespace mossland_disclosure_api
             {
                 int coingecko = 0;
                 int coinmarketcap = 0;
+                int mossland = 0;
 
                 try
                 {
@@ -61,6 +63,15 @@ namespace mossland_disclosure_api
                 try
                 {
                     coinmarketcap = QueryCirculatingSupplyCoinmarketcap();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+
+                try
+                {
+                    mossland = QueryCirculatingSupplyMossland();
                 }
                 catch (Exception ex)
                 {
@@ -99,6 +110,18 @@ namespace mossland_disclosure_api
 
             JObject jObject = JObject.Parse(json);
             return jObject["data"]["MOC"][0]["circulating_supply"].ToObject<int>();
+        }
+
+        private int QueryCirculatingSupplyMossland()
+        {
+            var URL = new UriBuilder("https://api.moss.land/MOC/info");
+
+            var client = new WebClient();
+            client.Headers.Add("Accepts", "application/json");
+            string json = client.DownloadString(URL.ToString());
+
+            JArray jArray = JArray.Parse(json);
+            return jArray[0]["circulatingSupply"].ToObject<int>();
         }
 
 
