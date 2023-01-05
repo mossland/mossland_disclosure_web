@@ -811,9 +811,19 @@
         }
 
         // 목표 수치
-        setTimeout(() => counter($('.moc_count'), 382489688, 'moc'), 1);
-        setTimeout(() => counter($('.moc_price'), 999999, '억원'), 1);
-
+        //setTimeout(() => counter($('.moc_count'), 382489688, 'moc'), 1);
+        //setTimeout(() => counter($('.moc_price'), 999999, '억원'), 1);
+		
+		$.getJSON('/api/market/', function(data){
+			$.each(data, function (index, value) {
+				if (value["market_type"] === "mossland_marketcap_krw") {
+					setTimeout(() => counter($('.moc_price'), value["number"], '억원'), 1);
+				}
+				if (value["market_type"] === "mossland_circulating_supply") {
+					setTimeout(() => counter($('.moc_count'), value["number"], 'moc'), 1);
+				}
+			});
+		});
 
         var today = new Date();
         var year = today.getFullYear();
