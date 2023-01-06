@@ -62,7 +62,7 @@ namespace mossland_disclosure_api
         private string ToString(double val)
         {
             if (val > 0)
-                return "+" + val.ToString("N", CultureInfo.InvariantCulture) + " moc";
+                return "+" + val.ToString("N0", CultureInfo.InvariantCulture) + " moc";
 
             return val.ToString("N", CultureInfo.InvariantCulture) + " moc";
         }
