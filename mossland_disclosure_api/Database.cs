@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 
@@ -57,6 +59,13 @@ namespace mossland_disclosure_api
             return ret;
         }
 
+        private string ToString(double val)
+        {
+            if (val > 0)
+                return "+" + val.ToString("N", CultureInfo.InvariantCulture) + " moc";
+
+            return val.ToString("N", CultureInfo.InvariantCulture) + " moc";
+        }
 
         public JArray SelectDisclosure()
         {
@@ -152,7 +161,7 @@ namespace mossland_disclosure_api
                     json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
                     json.Add("desc", reader.GetString("desc"));
                     json.Add("desc_en", reader.GetString("desc_en"));
-                    json.Add("value", reader.GetDouble("value").ToString("N", CultureInfo.InvariantCulture) + " moc");
+                    json.Add("value", ToString(reader.GetDouble("value")));
                     jsonArray.Add(json);
                 }
 
@@ -189,7 +198,7 @@ namespace mossland_disclosure_api
                     json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
                     json.Add("desc", reader.GetString("desc"));
                     json.Add("desc_en", reader.GetString("desc_en"));
-                    json.Add("value", reader.GetDouble("value").ToString("N", CultureInfo.InvariantCulture) + " moc");
+                    json.Add("value", ToString(reader.GetDouble("value")));
                     jsonArray.Add(json);
                 }
 
