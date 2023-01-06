@@ -104,7 +104,7 @@
                 </div>
                 <div class="bottom_box">
                     <div class="box_title" data-langNum="10">총 발행 한도 (추가 발행 불가능)</div>
-                    <div class="box_content"><span class="mossland_max_supply">- moc</span></div>
+                    <div class="box_content supply"><span class="mossland_max_supply">- moc</span></div>
                 </div>
                 <div class="bottom_box">
                     <div class="box_title" data-langNum="11">연락처</div>
@@ -195,7 +195,7 @@
                 <div class="right_container">
 
                     <div class="title">
-                        <img src="../img/Vector-18.svg"/>
+                        <img src="../img/Vector-20.svg"/>
                         <span data-langNum="20">예정 유통량 변동 상세</span>
                         <span data-langNum="21">(향후 3개월)</span>
                     </div>
@@ -494,11 +494,13 @@
 
     .bottom_container { display: flex; flex-wrap: nowrap; flex-direction: row; align-content: center; justify-content: space-between; align-items: center; margin-top: 100px;}
     .bottom_container .bottom_box {
-        position: relative; text-align: center; border : 2px solid rgba(0, 0, 0, 0.04); background-color: rgba(233, 251, 245, 0.4); width: 338px; height: 121px; overflow: hidden;
+        border-radius: 6px; position: relative; text-align: center; border : 2px solid rgba(0, 0, 0, 0.04); background-color: rgba(233, 251, 245, 0.4); width: 338px; height: 121px; overflow: hidden;
         display: flex; flex-direction: column; flex-wrap: nowrap; align-content: space-around; justify-content: center; align-items: center;
     }
     .bottom_container .bottom_box .box_title {  font-weight: 500; font-size: 14px; color: #808080;}
     .bottom_container .bottom_box .box_content {  font-weight: 700; font-size: 24px;}
+    .bottom_container .bottom_box .box_content.date {  color : #4F657A;}
+    .bottom_container .bottom_box .box_content.supply {  color : #4F657A;}
     .bottom_container .bottom_box .box_content.contract { color : #00C2C2;}
 
     section.middle_section { margin-top: 86px;}
