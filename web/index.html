@@ -171,22 +171,22 @@
                     <table class="recent_release">
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="22">Team 배정 물량 유통 예정</td>
+                            <td>Team 배정 물량 유통 예정</td>
                             <td>+2,000,000 moc</td>
                         </tr>
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="23">Marketing 배정 물량 유통</td>
+                            <td>Marketing 배정 물량 유통</td>
                             <td>+2,000,000 moc</td>
                         </tr>
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="22">Team 배정 물량 유통 예정</td>
+                            <td>Team 배정 물량 유통 예정</td>
                             <td>+2,000,000 moc</td>
                         </tr>
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="23">Marketing 배정 물량 유통</td>
+                            <td>Marketing 배정 물량 유통</td>
                             <td>+2,000,000 moc</td>
                         </tr>
 
@@ -202,22 +202,22 @@
                     <table class="expected_release">
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="22">Team 배정 물량 유통 예정</td>
+                            <td>Team 배정 물량 유통 예정</td>
                             <td>+2,000,000 moc</td>
                         </tr>
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="23">Marketing 배정 물량 유통</td>
+                            <td>Marketing 배정 물량 유통</td>
                             <td>+2,000,000 moc</td>
                         </tr>
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="22">Team 배정 물량 유통 예정</td>
+                            <td>Team 배정 물량 유통 예정</td>
                             <td>+2,000,000 moc</td>
                         </tr>
                         <tr>
                             <td>2022.12</td>
-                            <td data-langNum="23">Marketing 배정 물량 유통</td>
+                            <td>Marketing 배정 물량 유통</td>
                             <td>+2,000,000 moc</td>
                         </tr>
                     </table>
@@ -252,7 +252,7 @@
 
     <section class="board_section">
         <div class="container">
-            <div class="title--01" data-langNum="24">모스랜드 공시</div>
+            <div class="title--01" data-langNum="22">모스랜드 공시</div>
             <table class="main_board disclosure">
                 <tr>
                     <td class="date">2022.10</td>
@@ -304,7 +304,7 @@
     </section>
     <section class="public_section">
         <div class="container">
-            <div class="title--01" data-langNum="25">모스랜드 공개 문서</div>
+            <div class="title--01" data-langNum="23">모스랜드 공개 문서</div>
             <table class="main_board materials">
                 <tr>
                     <td class="date">2022.10</td>
@@ -690,10 +690,8 @@
         19: '(최근 3개월)',
         20: '예정 유통량 변동 상세',
         21: '(향후 3개월)',
-        22: 'Team 배정 물량 유통 예정',
-        23: 'Marketing 배정 물량 유통',
-        24: '모스랜드 공시',
-        25: '모스랜드 공개 문서',
+        22: '모스랜드 공시',
+        23: '모스랜드 공개 문서',
     };
 
     $.lang.en = {
@@ -719,10 +717,8 @@
         19: '(Within Next 3 Months)',
         20: 'Recent Changes in the Circulating Supply',
         21: '(Within 3 months)',
-        22: 'Team Supply Distribution',
-        23: 'Marketing Supply Distribution',
-        24: 'Mossland Disclosure',
-        25: 'MOssland Materials',
+        22: 'Mossland Disclosure',
+        23: 'MOssland Materials',
     };
 
     function setLanguage(currentLanguage) {
@@ -735,27 +731,165 @@
             month = '0'+ month;
         }
 
-      $('[data-langNum]').each(function() {
-        var $this = $(this);
+		$('[data-langNum]').each(function() {
+		var $this = $(this);
 
-        if( $this.data('langnum') == 26){
-            if( currentLanguage == 'ko'){
-                $('.current_date').html('('+today.toISOString().replace('T', ' ').substring(0, 10)+' 기준)');
-            }
-            else if( currentLanguage == 'en'){
-                $('.current_date').html('(Updated on '+today.toISOString().replace('T', ' ').substring(0, 10)+')');
-            }
+		if( $this.data('langnum') == 24){
+			if( currentLanguage == 'ko'){
+				$('.current_date').html('('+today.toISOString().replace('T', ' ').substring(0, 10)+' 기준)');
+			}
+			else if( currentLanguage == 'en'){
+				$('.current_date').html('(Updated on '+today.toISOString().replace('T', ' ').substring(0, 10)+')');
+			}
 
-        }
-        else
-        {
-            $this.html($.lang[currentLanguage][$this.data('langnum')]);
-        }
+		}
+		else
+		{
+			$this.html($.lang[currentLanguage][$this.data('langnum')]);
+		}
 
-      });
+		});
 
-
+		loadData(currentLanguage);
     };
+	
+	function loadData(lang) {		
+		
+        const numberWithCommas = (x) => {
+
+            if (x == undefined || isNaN(x)) {
+                return;
+            }
+
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        const counter = ($counter, max, unit) => {
+            let now = max;
+
+            const handle = setInterval(() => {
+                $counter.html(numberWithCommas(Math.ceil(max - now))+unit);
+
+                // 목표수치에 도달하면 정지
+                if (now < 1) {
+                    clearInterval(handle);
+                }
+
+                // 증가되는 값이 계속하여 작아짐
+                const step = now / 10;
+
+                // 값을 적용시키면서 다음 차례에 영향을 끼침
+                now -= step;
+            }, 1);
+        }
+
+        //setTimeout(() => counter($('.mossland_circulating_supply'), 382489688, 'moc'), 1);
+        //setTimeout(() => counter($('.mossland_marketcap'), 999999, '억원'), 1);
+
+		// Object.keys($.lang.en).length
+		// data-langNum="0"
+
+		/*
+		var num = Object.keys($.lang.en).length;
+		$('.mossland_marketcap').attr("data-langNum", num);					
+		$.lang.en.add({ num : '' });
+		$.lang.ko.add({ num : '' });
+		*/
+
+		
+        // Market Data
+		$.getJSON('/api/market/', function(data){
+			$.each(data, function (index, value) {
+				if (lang === 'en') {
+					if (value["market_type"] === "mossland_marketcap_usd")
+						setTimeout(() => counter($('.mossland_marketcap'), value["number"], ' USD'), 1);
+					if (value["market_type"] === "coinmarketcap_marketcap_usd")
+						setTimeout(() => counter($('.coinmarketcap_marketcap'), value["number"], ' USD'), 1);
+					if (value["market_type"] === "coingecko_marketcap_usd")
+						setTimeout(() => counter($('.coingecko_marketcap'), value["number"], ' USD'), 1);
+				} else {
+					if (value["market_type"] === "mossland_marketcap_krw")
+						setTimeout(() => counter($('.mossland_marketcap'), value["number"], ' 원'), 1);
+					if (value["market_type"] === "coinmarketcap_marketcap_krw")
+						setTimeout(() => counter($('.coinmarketcap_marketcap'), value["number"], ' 원'), 1);
+					if (value["market_type"] === "coingecko_marketcap_krw")
+						setTimeout(() => counter($('.coingecko_marketcap'), value["number"], ' 원'), 1);
+				}
+					
+				if (value["market_type"] === "mossland_circulating_supply")
+					setTimeout(() => counter($('.mossland_circulating_supply'), value["number"], ' moc'), 1);
+				if (value["market_type"] === "coinmarketcap_circulating_supply")
+					setTimeout(() => counter($('.coinmarketcap_circulating_supply'), value["number"], ' moc'), 1);
+				if (value["market_type"] === "coingecko_circulating_supply")
+					setTimeout(() => counter($('.coingecko_circulating_supply'), value["number"], ' moc'), 1);					
+				
+				if (value["market_type"] === "mossland_max_supply")
+					setTimeout(() => counter($('.mossland_max_supply'), value["number"], ' moc'), 1);
+			});
+		});		
+		
+		// Release Data
+		$.getJSON('/api/recent_release/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td>" + value["date"] + "</td>";
+				if (lang === 'en')
+					html += "<td>" + value["desc_en"] + "</td>";
+				else
+					html += "<td>" + value["desc"] + "</td>";
+				html += "<td>" + value["value"] + "</td>";
+				html += "</tr>";
+			});
+			$('.recent_release').html(html);			
+		});		
+		$.getJSON('/api/expected_release/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td>" + value["date"] + "</td>";
+				if (lang === 'en')
+					html += "<td>" + value["desc_en"] + "</td>";
+				else
+					html += "<td>" + value["desc"] + "</td>";
+				html += "<td>" + value["value"] + "</td>";
+				html += "</tr>";
+			});
+			$('.expected_release').html(html);			
+		});
+		
+		
+		// Disclosure & Materials
+		$.getJSON('/api/disclosure/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td class=\"date\">" + value["date"] + "</td>";
+				if (lang === 'en')
+					html += "<td class=\"body\">" + value["desc_en"] + "</td>";
+				else
+					html += "<td class=\"body\">" + value["desc"] + "</td>";
+				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
+				html += "</tr>";
+			});
+			$('.disclosure').html(html);			
+		});
+		
+		$.getJSON('/api/materials/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td class=\"date\">" + value["date"] + "</td>";
+				if (lang === 'en')
+					html += "<td class=\"body\">" + value["desc_en"] + "</td>";
+				else
+					html += "<td class=\"body\">" + value["desc"] + "</td>";
+				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
+				html += "</tr>";
+			});
+			$('.materials').html(html);			
+		});
+	};
 
     $(window).ready(function(){
         console.log('window.ready');
@@ -798,110 +932,8 @@
             $('.language_container').trigger('click');
         });
 
-        const numberWithCommas = (x) => {
 
-            if (x == undefined || isNaN(x)) {
-                return;
-            }
-
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        const counter = ($counter, max, unit) => {
-            let now = max;
-
-            const handle = setInterval(() => {
-                $counter.html(numberWithCommas(Math.ceil(max - now))+unit);
-
-                // 목표수치에 도달하면 정지
-                if (now < 1) {
-                    clearInterval(handle);
-                }
-
-                // 증가되는 값이 계속하여 작아짐
-                const step = now / 10;
-
-                // 값을 적용시키면서 다음 차례에 영향을 끼침
-                now -= step;
-            }, 1);
-        }
-
-        // Market Data
-        //setTimeout(() => counter($('.mossland_circulating_supply'), 382489688, 'moc'), 1);
-        //setTimeout(() => counter($('.mossland_marketcap'), 999999, '억원'), 1);
-		
-		$.getJSON('/api/market/', function(data){
-			$.each(data, function (index, value) {
-				if (value["market_type"] === "mossland_marketcap_krw")
-					setTimeout(() => counter($('.mossland_marketcap'), value["number"], ' 원'), 1);
-				if (value["market_type"] === "coinmarketcap_marketcap_krw")
-					setTimeout(() => counter($('.coinmarketcap_marketcap'), value["number"], ' 원'), 1);
-				if (value["market_type"] === "coingecko_marketcap_krw")
-					setTimeout(() => counter($('.coingecko_marketcap'), value["number"], ' 원'), 1);
-					
-				if (value["market_type"] === "mossland_circulating_supply")
-					setTimeout(() => counter($('.mossland_circulating_supply'), value["number"], ' moc'), 1);
-				if (value["market_type"] === "coinmarketcap_circulating_supply")
-					setTimeout(() => counter($('.coinmarketcap_circulating_supply'), value["number"], ' moc'), 1);
-				if (value["market_type"] === "coingecko_circulating_supply")
-					setTimeout(() => counter($('.coingecko_circulating_supply'), value["number"], ' moc'), 1);					
-				
-				if (value["market_type"] === "mossland_max_supply")
-					setTimeout(() => counter($('.mossland_max_supply'), value["number"], ' moc'), 1);
-			});
-		});
-		
-		
-		// Release Data
-		$.getJSON('/api/recent_release/', function(data){			
-			var html = "";
-			$.each(data, function (index, value) {				
-				html += "<tr>";
-				html += "<td>" + value["date"] + "</td>";
-				html += "<td data-langNum=\"22\">" + value["desc"] + "</td>";
-				html += "<td>" + value["value"] + "</td>";
-				html += "</tr>";
-			});
-			$('.recent_release').html(html);			
-		});
-		
-		$.getJSON('/api/expected_release/', function(data){			
-			var html = "";
-			$.each(data, function (index, value) {				
-				html += "<tr>";
-				html += "<td>" + value["date"] + "</td>";
-				html += "<td data-langNum=\"22\">" + value["desc"] + "</td>";
-				html += "<td>" + value["value"] + "</td>";
-				html += "</tr>";
-			});
-			$('.expected_release').html(html);			
-		});
-		
-		
-		// Disclosure & Materials
-		$.getJSON('/api/disclosure/', function(data){			
-			var html = "";
-			$.each(data, function (index, value) {				
-				html += "<tr>";
-				html += "<td class=\"date\">" + value["date"] + "</td>";
-				html += "<td class=\"body\">" + value["desc"] + "</td>";
-				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
-				html += "</tr>";
-			});
-			$('.disclosure').html(html);			
-		});
-		
-		$.getJSON('/api/materials/', function(data){			
-			var html = "";
-			$.each(data, function (index, value) {				
-				html += "<tr>";
-				html += "<td class=\"date\">" + value["date"] + "</td>";
-				html += "<td class=\"body\">" + value["desc"] + "</td>";
-				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
-				html += "</tr>";
-			});
-			$('.materials').html(html);			
-		});
+		loadData("ko");
 		
 		
         var today = new Date();

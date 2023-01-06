@@ -151,6 +151,7 @@ namespace mossland_disclosure_api
                     var json = new JObject();
                     json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
                     json.Add("desc", reader.GetString("desc"));
+                    json.Add("desc_en", reader.GetString("desc_en"));
                     json.Add("value", reader.GetDouble("value").ToString("N", CultureInfo.InvariantCulture) + " moc");
                     jsonArray.Add(json);
                 }
@@ -187,6 +188,7 @@ namespace mossland_disclosure_api
                     var json = new JObject();
                     json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
                     json.Add("desc", reader.GetString("desc"));
+                    json.Add("desc_en", reader.GetString("desc_en"));
                     json.Add("value", reader.GetDouble("value").ToString("N", CultureInfo.InvariantCulture) + " moc");
                     jsonArray.Add(json);
                 }
