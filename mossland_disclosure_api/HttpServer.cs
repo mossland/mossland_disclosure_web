@@ -61,7 +61,7 @@ namespace mossland_disclosure_api
                     try
                     {
                         string[] urls = request.RawUrl.Split('/');
-                        Console.WriteLine("RawUrl: " + request.RawUrl);
+                        Console.WriteLine("[HTTP Request] " + string.Format("{0:u}", DateTime.Now) + ", RawUrl: " + request.RawUrl);
 
                         if (urls == null || urls.Length < 3)
                         {
@@ -104,7 +104,28 @@ namespace mossland_disclosure_api
 
                             continue;
                         }
+                        else if (type.Equals("materials") == true)
+                        {
+                            JArray jArray = Config.Instance.GetDatabase().SelectMaterials();
+                            string json = jArray.ToString();
 
+                            StreamWriter writer = new StreamWriter(response.OutputStream);
+                            writer.Write(json);
+                            writer.Close();
+
+                            continue;
+                        }
+                        else if (type.Equals("disclosure") == true)
+                        {
+                            JArray jArray = Config.Instance.GetDatabase().SelectDisclosure();
+                            string json = jArray.ToString();
+
+                            StreamWriter writer = new StreamWriter(response.OutputStream);
+                            writer.Write(json);
+                            writer.Close();
+
+                            continue;
+                        }
                     }
                     catch (Exception ex)
                     {

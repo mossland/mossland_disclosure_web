@@ -57,6 +57,81 @@ namespace mossland_disclosure_api
             return ret;
         }
 
+
+        public JArray SelectDisclosure()
+        {
+            var jsonArray = new JArray();
+
+            MySqlConnection connection = new MySqlConnection(connstring);
+
+            try
+            {
+                connection.Open();
+
+                MySqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "SELECT * FROM disclosure ORDER BY date DESC";
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var json = new JObject();
+                    json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
+                    json.Add("desc", reader.GetString("desc"));
+                    json.Add("desc_en", reader.GetString("desc_en"));
+                    json.Add("link", reader.GetString("desc_en"));
+                    jsonArray.Add(json);
+                }
+
+                reader.Close();
+                cmd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ERR] SelectDisclosure() - " + ex.Message);
+            }
+
+            connection.Close();
+
+            return jsonArray;
+        }
+
+        public JArray SelectMaterials()
+        {
+            var jsonArray = new JArray();
+
+            MySqlConnection connection = new MySqlConnection(connstring);
+
+            try
+            {
+                connection.Open();
+
+                MySqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "SELECT * FROM materials ORDER BY date DESC";
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var json = new JObject();
+                    json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
+                    json.Add("desc", reader.GetString("desc"));
+                    json.Add("desc_en", reader.GetString("desc_en"));
+                    json.Add("link", reader.GetString("desc_en"));
+                    jsonArray.Add(json);
+                }
+
+                reader.Close();
+                cmd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ERR] SelectMaterials() - " + ex.Message);
+            }
+
+            connection.Close();
+
+            return jsonArray;
+        }
+
         public JArray SelectRecentReleaseSchedule()
         {
             var jsonArray = new JArray();
@@ -121,7 +196,7 @@ namespace mossland_disclosure_api
             }
             catch (Exception ex)
             {
-                Console.WriteLine("[ERR] SelectRecentReleaseSchedule() - " + ex.Message);
+                Console.WriteLine("[ERR] SelectExpectedReleaseSchedule() - " + ex.Message);
             }
 
             connection.Close();

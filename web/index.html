@@ -253,7 +253,7 @@
     <section class="board_section">
         <div class="container">
             <div class="title--01" data-langNum="24">모스랜드 공시</div>
-            <table class="main_board">
+            <table class="main_board disclosure">
                 <tr>
                     <td class="date">2022.10</td>
                     <td class="body">모스랜드, 오픈소스 메타버스 플랫폼 베타 출시</td>
@@ -305,7 +305,7 @@
     <section class="public_section">
         <div class="container">
             <div class="title--01" data-langNum="25">모스랜드 공개 문서</div>
-            <table class="main_board">
+            <table class="main_board materials">
                 <tr>
                     <td class="date">2022.10</td>
                     <td class="body">모스랜드: 탈중앙화조직(DAO) 거버넌스 모델에 대한 연구와 계획</td>
@@ -876,6 +876,33 @@
 			});
 			$('.expected_release').html(html);			
 		});
+		
+		
+		// Disclosure & Materials
+		$.getJSON('/api/disclosure/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td class=\"date\">" + value["date"] + "</td>";
+				html += "<td class=\"body\">" + value["desc"] + "</td>";
+				html += "<td><button class=\"btn_view\">View</button></td>";
+				html += "</tr>";
+			});
+			$('.disclosure').html(html);			
+		});
+		
+		$.getJSON('/api/materials/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td class=\"date\">" + value["date"] + "</td>";
+				html += "<td class=\"body\">" + value["desc"] + "</td>";
+				html += "<td><button class=\"btn_view\">View</button></td>";
+				html += "</tr>";
+			});
+			$('.materials').html(html);			
+		});
+		
 		
         var today = new Date();
         var year = today.getFullYear();
