@@ -78,7 +78,7 @@ namespace mossland_disclosure_api
                     json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
                     json.Add("desc", reader.GetString("desc"));
                     json.Add("desc_en", reader.GetString("desc_en"));
-                    json.Add("link", reader.GetString("desc_en"));
+                    json.Add("link", reader.GetString("link"));
                     jsonArray.Add(json);
                 }
 
@@ -115,7 +115,7 @@ namespace mossland_disclosure_api
                     json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
                     json.Add("desc", reader.GetString("desc"));
                     json.Add("desc_en", reader.GetString("desc_en"));
-                    json.Add("link", reader.GetString("desc_en"));
+                    json.Add("link", reader.GetString("link"));
                     jsonArray.Add(json);
                 }
 

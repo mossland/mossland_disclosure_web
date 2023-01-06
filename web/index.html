@@ -122,7 +122,7 @@
         <div class="container">
             <div class="date_file_container">
                 <div class="current_date" data-langNum="26"></div>
-                <div class="btn_file" data-langNum="12">다운로드</div>
+                <div class="btn_file" data-langNum="12" onclick="window.open('https://github.com/mossland/Disclosure-and-Materials/blob/main/Total%20Number%20of%20Tokens%20in%20Circulation/MOC.pdf')">다운로드</div>
             </div>
             <div class="middle_title" >
                 <div>
@@ -227,22 +227,22 @@
 
             <div class="button_container">
 
-                <div class="btn_item">
+                <button class="btn_item" onclick="window.open('https://www.moss.land/privacy-policy')">
                     <img src="../img/Shape1copy.svg"/>
                     <p>Privacy Policy</p>
-                </div>
-                <div class="btn_item">
+                </buttonR>
+                <button class="btn_item" onclick="window.open('https://www.moss.land/terms-condition')">
                     <img src="../img/Shape1copy2.svg"/>
                     <p>Terms & Conditions</p>
-                </div>
-                <div class="btn_item">
+                </button>
+                <button class="btn_item">
                     <img src="../img/Shape1copy3.svg"/>
                     <p>KYC/AML/CTF Policy</p>
-                </div>
-                <div class="btn_item">
+                </button>
+                <button class="btn_item" onclick="window.open('https://www.moss.land/cookiespolicy')"R>
                     <img src="../img/Shape1copy4.svg"/>
                     <p>Cookie Policy</p>
-                </div>
+                </button>
             </div>
         </div>
 
@@ -885,7 +885,7 @@
 				html += "<tr>";
 				html += "<td class=\"date\">" + value["date"] + "</td>";
 				html += "<td class=\"body\">" + value["desc"] + "</td>";
-				html += "<td><button class=\"btn_view\">View</button></td>";
+				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
 				html += "</tr>";
 			});
 			$('.disclosure').html(html);			
@@ -897,7 +897,7 @@
 				html += "<tr>";
 				html += "<td class=\"date\">" + value["date"] + "</td>";
 				html += "<td class=\"body\">" + value["desc"] + "</td>";
-				html += "<td><button class=\"btn_view\">View</button></td>";
+				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
 				html += "</tr>";
 			});
 			$('.materials').html(html);			
