@@ -121,7 +121,7 @@ namespace mossland_disclosure_api
                 while (reader.Read())
                 {
                     var json = new JObject();
-                    json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
+                    json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy"));
                     json.Add("desc", reader.GetString("desc"));
                     json.Add("desc_en", reader.GetString("desc_en"));
                     json.Add("link", reader.GetString("link"));
