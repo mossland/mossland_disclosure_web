@@ -141,8 +141,8 @@
                         <div class="category" data-langNum="16">재단 관리 지갑 #1</div>
                         <div class="info">
                             <div class="body">
-                                <p>0x384578e2a34f52d830ef9c7f7af9fd12c89207c6</p>
-                                <img src="../img/Vector-15.svg"/>
+                                <p id="wallet_1">0x384578e2a34f52d830ef9c7f7af9fd12c89207c6</p>
+                                <img onclick="copyToClipboard('#wallet_1')" style="cursor: pointer;" src="../img/Vector-15.svg"/>
                             </div>
                             <div class="link"><button class="btn_link" onclick="window.open('https://scan.luniverse.io/accounts/0x384578e2a34f52d830ef9c7f7af9fd12c89207c6')" >Link</button> </div>
                         </div>
@@ -151,8 +151,8 @@
                         <div class="category"data-langNum="17">재단 관리 지갑 #2</div>
                         <div class="info">
                             <div class="body">
-                                <p>0x100cdb67fc9327548a2fdbad2f780882b5cf3eff</p>
-                                <img src="../img/Vector-15.svg"/>
+                                <p id="wallet_2">0x100cdb67fc9327548a2fdbad2f780882b5cf3eff</p>
+                                <img onclick="copyToClipboard('#wallet_2')" style="cursor: pointer;"  src="../img/Vector-15.svg"/>
                             </div>
                             <div class="link"><button class="btn_link" onclick="window.open('https://scan.luniverse.io/accounts/0x100cdb67fc9327548a2fdbad2f780882b5cf3eff')" >Link</button> </div>
                         </div>
@@ -574,6 +574,8 @@
         .container, .container2{ width: 100%; box-sizing: border-box; padding: 0 24px; }
 
         .mobile_show { display : none;}
+		
+        .middle_container .txt--03{ font-size:28px; margin-bottom: 10px;}
     }
     @media (max-width: 767px){
 
@@ -600,7 +602,7 @@
         .middle_container .txt--01 span { font-weight: 700; font-size: 14px;}
         .middle_container .txt--01 span:last-child { font-weight: 400; font-size: 12px;}
         .middle_container .txt--02{ font-size:10px; margin-top: 10px; }
-        .middle_container .txt--03{ font-size:30px; margin-bottom: 10px;}
+        .middle_container .txt--03{ font-size:28px; margin-bottom: 10px;}
         .middle_container .txt--04{ font-size:8px; }
         .middle_container .txt--05{ font-size:16px; }
         .coingeco { margin-top: 0px;}
@@ -755,6 +757,14 @@
 
 		loadData(currentLanguage);
     };
+	
+	function copyToClipboard(element) {
+		var $temp = $("<input>");
+		$("body").append($temp);
+		$temp.val($(element).text()).select();
+		document.execCommand("copy");
+		$temp.remove();
+	}
 	
 	function loadData(lang) {		
 		
@@ -947,7 +957,7 @@
         }
         //$('.box_content.date').html(year + ' / ' + month );
         $('.current_date').html('('+today.toISOString().replace('T', ' ').substring(0, 10)+' 기준)');
-
+		
     });
 </script>
 
