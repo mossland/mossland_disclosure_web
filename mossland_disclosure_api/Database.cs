@@ -6,6 +6,7 @@ using Org.BouncyCastle.Utilities.Collections;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Text;
 using System.Threading;
 
@@ -55,6 +56,79 @@ namespace mossland_disclosure_api
             connection.Close();
             return ret;
         }
+
+        public JArray SelectRecentReleaseSchedule()
+        {
+            var jsonArray = new JArray();
+
+            MySqlConnection connection = new MySqlConnection(connstring);
+
+            try
+            {
+                connection.Open();
+
+                MySqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "SELECT * FROM release_schedule WHERE date BETWEEN NOW() - INTERVAL 3 MONTH AND NOW()";
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var json = new JObject();
+                    json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
+                    json.Add("desc", reader.GetString("desc"));
+                    json.Add("value", reader.GetDouble("value").ToString("N", CultureInfo.InvariantCulture) + " moc");
+                    jsonArray.Add(json);
+                }
+
+                reader.Close();
+                cmd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ERR] SelectRecentReleaseSchedule() - " + ex.Message);
+            }
+
+            connection.Close();
+
+            return jsonArray;
+        }
+
+        public JArray SelectExpectedReleaseSchedule()
+        {
+            var jsonArray = new JArray();
+
+            MySqlConnection connection = new MySqlConnection(connstring);
+
+            try
+            {
+                connection.Open();
+
+                MySqlCommand cmd = connection.CreateCommand();
+                cmd.CommandText = "SELECT * FROM release_schedule WHERE date BETWEEN NOW() AND NOW() + INTERVAL 3 MONTH";
+                var reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var json = new JObject();
+                    json.Add("date", ConvertToUTC(reader.GetDateTime("date")).ToString("yyyy.MM"));
+                    json.Add("desc", reader.GetString("desc"));
+                    json.Add("value", reader.GetDouble("value").ToString("N", CultureInfo.InvariantCulture) + " moc");
+                    jsonArray.Add(json);
+                }
+
+                reader.Close();
+                cmd.Dispose();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ERR] SelectRecentReleaseSchedule() - " + ex.Message);
+            }
+
+            connection.Close();
+
+            return jsonArray;
+        }
+
 
         public JArray SelectMarketData()
         {

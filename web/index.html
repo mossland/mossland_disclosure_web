@@ -62,9 +62,9 @@
 
         <div class="container">
             <div class="top_container">
-                <div class="top_btn" data-langNum="0">홈페이지</div>
-                <div class="top_btn" data-langNum="1">깃허브</div>
-                <div class="top_btn" data-langNum="2">트위터</div>
+                <a href="https://moss.land" target="_blank" class="top_btn" data-langNum="0">홈페이지</a>
+                <a href="https://github.com/mossland" target="_blank" class="top_btn" data-langNum="1">깃허브</a>
+                <a href="https://twitter.com/themossland" target="_blank" class="top_btn" data-langNum="2">트위터</a>
             </div>
 
             <div class="middle_container">
@@ -138,23 +138,23 @@
 
                 <ul class="wallet_list">
                     <li>
-                        <div class="category" data-langNum="16">재단 관리 지갑 (장기 보관 목적)</div>
+                        <div class="category" data-langNum="16">재단 관리 지갑 #1</div>
                         <div class="info">
                             <div class="body">
                                 <p>0x384578e2a34f52d830ef9c7f7af9fd12c89207c6</p>
                                 <img src="../img/Vector-15.svg"/>
                             </div>
-                            <div class="link"><button class="btn_link">Link</button> </div>
+                            <div class="link"><button class="btn_link" onclick="window.open('https://scan.luniverse.io/accounts/0x384578e2a34f52d830ef9c7f7af9fd12c89207c6')" >Link</button> </div>
                         </div>
                     </li>
                     <li>
-                        <div class="category"data-langNum="17">재단 관리 지갑 (수시 입출금 목적)</div>
+                        <div class="category"data-langNum="17">재단 관리 지갑 #2</div>
                         <div class="info">
                             <div class="body">
-                                <p>0x384578e2a34f52d830ef9c7f7af9fd12c89207c6</p>
+                                <p>0x100cdb67fc9327548a2fdbad2f780882b5cf3eff</p>
                                 <img src="../img/Vector-15.svg"/>
                             </div>
-                            <div class="link"><button class="btn_link">Link</button> </div>
+                            <div class="link"><button class="btn_link" onclick="window.open('https://scan.luniverse.io/accounts/0x100cdb67fc9327548a2fdbad2f780882b5cf3eff')" >Link</button> </div>
                         </div>
                     </li>
                 </ul>
@@ -168,7 +168,7 @@
                         <span data-langNum="18">최근 유통량 변동 상세</span>
                         <span data-langNum="19">(최근 3개월)</span>
                     </div>
-                    <table>
+                    <table class="recent_release">
                         <tr>
                             <td>2022.12</td>
                             <td data-langNum="22">Team 배정 물량 유통 예정</td>
@@ -199,7 +199,7 @@
                         <span data-langNum="20">예정 유통량 변동 상세</span>
                         <span data-langNum="21">(향후 3개월)</span>
                     </div>
-                    <table>
+                    <table class="expected_release">
                         <tr>
                             <td>2022.12</td>
                             <td data-langNum="22">Team 배정 물량 유통 예정</td>
@@ -335,6 +335,14 @@
             </table>
         </div>
     </section>
+	
+	
+    <section class="bottom_section">
+        <div class="container">
+            <div class="copyright">Copyright @ Mossland. All Right Reserved.</div>	
+        </div>
+    </section>
+
 </div>
 
 
@@ -479,7 +487,7 @@
     .middle_container .txt--01 {  font-weight: 700; font-size: 18px;}
     .middle_container .txt--01 span:last-child { font-weight: 400; font-size: 16px;}
     .middle_container .txt--02 {  font-weight: 500; font-size: 14px; margin-top : 27px;}
-    .middle_container .txt--03 {  font-weight: 700; font-size: 40px; margin-bottom: 20px;}
+    .middle_container .txt--03 {  font-weight: 700; font-size: 38px; margin-bottom: 20px;}
     .middle_container .txt--04 {  font-weight: 500; font-size: 14px; vertical-align: middle; margin-right : 10px;}
     .middle_container .txt--05 {  font-weight: 700; font-size: 24px; vertical-align: middle;}
     .coingeco { margin-top: 10px;}
@@ -542,6 +550,10 @@
     table.main_board tr td { height: 22px; font-style: normal; font-weight: 500; font-size: 18px;line-height: 22px;color: #808080;  }
     table.main_board tr td:first-child { width: 80px;color: #00C2C2;}
     table.main_board tr td:last-child { width: 58px; text-align: right;}
+	
+	section.bottom_section { margin-top: 50px; text-align: center;}
+	.copyright{  font-style: normal; font-weight: 300; font-size: 16px; line-height: 29px; color: #808080; flex: none; order: 0; flex-grow: 0; }
+
 
     /* 컨테이너 */
     @media (min-width: 1760px) {
@@ -672,8 +684,8 @@
         13: '유통량 계획',
         14: '재단 보유 지갑 리스트',
         15: '(유통되지 않는 모스코인을 보관하는 지갑)',
-        16: '재단 관리 지갑 (장기 보관 목적)',
-        17: '재단 관리 지갑(수시 입출금 목적)',
+        16: '재단 관리 지갑 #1',
+        17: '재단 관리 지갑 #2',
         18: '최근 유통량 변동 상세',
         19: '(최근 3개월)',
         20: '예정 유통량 변동 상세',
@@ -701,8 +713,8 @@
         13: 'Circulating Supply Plan',
         14: 'Foundation Wallet List',
         15: '(Wallets to hold Non-Circulating Mosscoin)',
-        16: 'Foundation Wallet (Long term Storage)',
-        17: 'Foundation Wallet (Short-term Uses)',
+        16: 'Foundation Wallet #1',
+        17: 'Foundation Wallet #2',
         18: 'Expected Changes in the Circulating Supply',
         19: '(Within Next 3 Months)',
         20: 'Recent Changes in the Circulating Supply',
@@ -811,10 +823,10 @@
 
                 // 값을 적용시키면서 다음 차례에 영향을 끼침
                 now -= step;
-            }, 10);
+            }, 1);
         }
 
-        // 목표 수치
+        // Market Data
         //setTimeout(() => counter($('.mossland_circulating_supply'), 382489688, 'moc'), 1);
         //setTimeout(() => counter($('.mossland_marketcap'), 999999, '억원'), 1);
 		
@@ -838,14 +850,40 @@
 					setTimeout(() => counter($('.mossland_max_supply'), value["number"], ' moc'), 1);
 			});
 		});
-
+		
+		
+		// Release Data
+		$.getJSON('/api/recent_release/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td>" + value["date"] + "</td>";
+				html += "<td data-langNum=\"22\">" + value["desc"] + "</td>";
+				html += "<td>" + value["value"] + "</td>";
+				html += "</tr>";
+			});
+			$('.recent_release').html(html);			
+		});
+		
+		$.getJSON('/api/expected_release/', function(data){			
+			var html = "";
+			$.each(data, function (index, value) {				
+				html += "<tr>";
+				html += "<td>" + value["date"] + "</td>";
+				html += "<td data-langNum=\"22\">" + value["desc"] + "</td>";
+				html += "<td>" + value["value"] + "</td>";
+				html += "</tr>";
+			});
+			$('.expected_release').html(html);			
+		});
+		
         var today = new Date();
         var year = today.getFullYear();
         var month = today.getMonth() + 1;
         if( month < 10){
             month = '0'+ month;
         }
-        $('.box_content.date').html(year + ' / ' + month );
+        //$('.box_content.date').html(year + ' / ' + month );
         $('.current_date').html('('+today.toISOString().replace('T', ' ').substring(0, 10)+' 기준)');
 
     });

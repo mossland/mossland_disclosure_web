@@ -82,6 +82,28 @@ namespace mossland_disclosure_api
 
                             continue;
                         }
+                        else if (type.Equals("recent_release") == true)
+                        {
+                            JArray jArray = Config.Instance.GetDatabase().SelectRecentReleaseSchedule();
+                            string json = jArray.ToString();
+
+                            StreamWriter writer = new StreamWriter(response.OutputStream);
+                            writer.Write(json);
+                            writer.Close();
+
+                            continue;
+                        }
+                        else if (type.Equals("expected_release") == true)
+                        {
+                            JArray jArray = Config.Instance.GetDatabase().SelectExpectedReleaseSchedule();
+                            string json = jArray.ToString();
+
+                            StreamWriter writer = new StreamWriter(response.OutputStream);
+                            writer.Write(json);
+                            writer.Close();
+
+                            continue;
+                        }
 
                     }
                     catch (Exception ex)
