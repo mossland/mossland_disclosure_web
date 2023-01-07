@@ -747,23 +747,17 @@
         }
 
 		$('[data-langNum]').each(function() {
-		var $this = $(this);
-
-		if( $this.data('langnum') == 24){
-			if( currentLanguage == 'ko'){
-				$('.current_date').html('('+today.toISOString().replace('T', ' ').substring(0, 10)+' 기준)');
-			}
-			else if( currentLanguage == 'en'){
-				$('.current_date').html('(Updated on '+today.toISOString().replace('T', ' ').substring(0, 10)+')');
-			}
-
-		}
-		else
-		{
-			$this.html($.lang[currentLanguage][$this.data('langnum')]);
-		}
-
+            var $this = $(this);
+            
+            $this.html($.lang[currentLanguage][$this.data('langnum')]);
 		});
+
+        if( currentLanguage == 'ko'){
+            $('.current_date').html('('+today.toISOString().replace('T', ' ').substring(0, 10)+' 기준)');
+        }
+        else if( currentLanguage == 'en'){
+            $('.current_date').html('(Updated on '+today.toISOString().replace('T', ' ').substring(0, 10)+')');
+        }
 
 		loadData(currentLanguage);
     };
