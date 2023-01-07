@@ -857,7 +857,7 @@
 					html += "<td>" + value["desc_en"] + "</td>";
 				else
 					html += "<td>" + value["desc"] + "</td>";
-				html += "<td>" + "+" + ~~value["value"] +" moc" + "</td>";
+				html += "<td>" + "+" + (~~value["value"]).toLocaleString() +" moc" + "</td>";
 				html += "</tr>";
 			});
 			$('.recent_release').html(html);			
@@ -871,7 +871,7 @@
 					html += "<td>" + value["desc_en"] + "</td>";
 				else
 					html += "<td>" + value["desc"] + "</td>";
-				html += "<td>" + "+" + ~~value["value"] +" moc" + "</td>";
+				html += "<td>" + "+" + (~~value["value"]).toLocaleString() +" moc" + "</td>";
 				html += "</tr>";
 			});
 			$('.expected_release').html(html);			
