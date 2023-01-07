@@ -20,7 +20,7 @@ const pool = mysql.createPool(config);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
-app.use(cors()); // Test 버전으로 설정(이 설정은 모든 도메인을 허용한다는 뜻 실 서비스에 대포시 주의 :> )
+app.use(cors());
 
 
 app.get("/api/market", (req, res) => {
@@ -143,7 +143,6 @@ app.get("/api/materials", (req, res) => {
     });
 });
 
-// http listen port 생성 서버 실행
 app.listen(3000, () => console.log("Server start"));
 
 
@@ -169,17 +168,9 @@ async function getCoinCap (){
 function updateMarketCap(marketInfo){
     pool.getConnection((error, connection) =>{
         if (!error){
-            /*
-            name : 'coinmarketcap',
-            maxSupply : 0, 
-            circulatingSupply : 0,
-            marketCap_usd : 0,
-            marketCap_krw : 0
-            */
            {
                 console.log(marketInfo.name + "_circulating_supply");
                 let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                //let sql = 'UPDATE `mossmoss`.`marketcap` SET `maxSupply` = ?, `circulatingSupply` = ?, `marketCap` = ? WHERE (`marketName` = ?)';
                 let params = [marketInfo.circulatingSupply, marketInfo.name + '_circulating_supply']
                 connection.query(sql, params, (error, result, field)=>{
                     if (!error){
@@ -194,7 +185,6 @@ function updateMarketCap(marketInfo){
             {
                 console.log(marketInfo.name + "_marketcap_krw");
                 let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                //let sql = 'UPDATE `mossmoss`.`marketcap` SET `maxSupply` = ?, `circulatingSupply` = ?, `marketCap` = ? WHERE (`marketName` = ?)';
                 let params = [marketInfo.marketCap_krw, marketInfo.name + '_marketcap_krw']
                 connection.query(sql, params, (error, result, field)=>{
                     if (!error){
@@ -209,7 +199,6 @@ function updateMarketCap(marketInfo){
             {
                 console.log(marketInfo.name + "_marketcap_usd");
                 let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                //let sql = 'UPDATE `mossmoss`.`marketcap` SET `maxSupply` = ?, `circulatingSupply` = ?, `marketCap` = ? WHERE (`marketName` = ?)';
                 let params = [marketInfo.marketCap_usd, marketInfo.name + '_marketcap_usd']
                 connection.query(sql, params, (error, result, field)=>{
                     if (!error){
@@ -225,7 +214,6 @@ function updateMarketCap(marketInfo){
                 if (marketInfo.name == "mossland"){
                     console.log(marketInfo.name + "_max_supply");
                     let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                    //let sql = 'UPDATE `mossmoss`.`marketcap` SET `maxSupply` = ?, `circulatingSupply` = ?, `marketCap` = ? WHERE (`marketName` = ?)';
                     let params = [marketInfo.maxSupply, marketInfo.name + '_max_supply']
                     connection.query(sql, params, (error, result, field)=>{
                         if (!error){
@@ -259,7 +247,7 @@ function getCoinmarketCap() {
         try {
             response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=2915&convert=USD', {
             headers: {
-                'X-CMC_PRO_API_KEY': 'd33b1121-96e9-4e93-950c-c9fe4683407e',
+                'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY,
             },
             });
         } catch(ex) {
@@ -280,7 +268,7 @@ function getCoinmarketCap() {
         try {
             response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=2915&convert=KRW', {
             headers: {
-                'X-CMC_PRO_API_KEY': 'd33b1121-96e9-4e93-950c-c9fe4683407e',
+                'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY,
             },
             });
         } catch(ex) {
