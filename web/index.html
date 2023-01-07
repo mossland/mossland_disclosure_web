@@ -349,6 +349,7 @@
 </body>
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap');
@@ -848,12 +849,12 @@
 			var html = "";
 			$.each(data, function (index, value) {				
 				html += "<tr>";
-				html += "<td>" + value["date"] + "</td>";
+				html += "<td>" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
 				if (lang === 'en')
 					html += "<td>" + value["desc_en"] + "</td>";
 				else
 					html += "<td>" + value["desc"] + "</td>";
-				html += "<td>" + value["value"] + "</td>";
+				html += "<td>" + "+" + ~~value["value"] +" moc" + "</td>";
 				html += "</tr>";
 			});
 			$('.recent_release').html(html);			
@@ -862,12 +863,12 @@
 			var html = "";
 			$.each(data, function (index, value) {				
 				html += "<tr>";
-				html += "<td>" + value["date"] + "</td>";
+				html += "<td>" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
 				if (lang === 'en')
 					html += "<td>" + value["desc_en"] + "</td>";
 				else
 					html += "<td>" + value["desc"] + "</td>";
-				html += "<td>" + value["value"] + "</td>";
+				html += "<td>" + "+" + ~~value["value"] +" moc" + "</td>";
 				html += "</tr>";
 			});
 			$('.expected_release').html(html);			
@@ -879,7 +880,7 @@
 			var html = "";
 			$.each(data, function (index, value) {				
 				html += "<tr>";
-				html += "<td class=\"date\">" + value["date"] + "</td>";
+				html += "<td class=\"date\">" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
 				if (lang === 'en')
 					html += "<td class=\"body\">" + value["desc_en"] + "</td>";
 				else
@@ -894,7 +895,7 @@
 			var html = "";
 			$.each(data, function (index, value) {				
 				html += "<tr>";
-				html += "<td class=\"date\">" + value["date"] + "</td>";
+				html += "<td class=\"date\">" + dayjs(value["date"]).format('YYYY') + "</td>";
 				if (lang === 'en')
 					html += "<td class=\"body\">" + value["desc_en"] + "</td>";
 				else
