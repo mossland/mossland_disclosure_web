@@ -144,7 +144,7 @@ app.get("/api/materials", (req, res) => {
 });
 
 // http listen port 생성 서버 실행
-app.listen(8000, () => console.log("Server start"));
+app.listen(3000, () => console.log("Server start"));
 
 
 
