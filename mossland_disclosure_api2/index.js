@@ -1,7 +1,7 @@
-const express = require("express");
+const express = require("express");
 const cors = require('cors');
 const axios = require('axios');
-const app = express();
+const app = express();
 const mysql = require('mysql2'); 
 const https = require('https');
 const fs = require('fs');
@@ -23,7 +23,7 @@ app.use(express.urlencoded({ extended: true}));
 app.use(cors());
 
 
-app.get("/api/market", (req, res) => {
+app.get("/api/market", (req, res) => {
     console.log(pool);
     pool.getConnection((error, connection) =>{
         if (!error){
@@ -47,7 +47,7 @@ app.get("/api/market", (req, res) => {
     });
 });
 
-app.get("/api/recent_release", (req, res) => {
+app.get("/api/recent_release", (req, res) => {
     console.log(pool);
     pool.getConnection((error, connection) =>{
         if (!error){
@@ -71,7 +71,7 @@ app.get("/api/recent_release", (req, res) => {
     });
 });
 
-app.get("/api/expected_release", (req, res) => {
+app.get("/api/expected_release", (req, res) => {
     console.log(pool);
     pool.getConnection((error, connection) =>{
         if (!error){
@@ -95,7 +95,7 @@ app.get("/api/expected_release", (req, res) => {
     });
 });
 
-app.get("/api/disclosure", (req, res) => {
+app.get("/api/disclosure", (req, res) => {
     console.log(pool);
     pool.getConnection((error, connection) =>{
         if (!error){
@@ -119,7 +119,7 @@ app.get("/api/disclosure", (req, res) => {
     });
 });
 
-app.get("/api/materials", (req, res) => {
+app.get("/api/materials", (req, res) => {
     console.log(pool);
     pool.getConnection((error, connection) =>{
         if (!error){
@@ -143,7 +143,7 @@ app.get("/api/materials", (req, res) => {
     });
 });
 
-app.listen(3000, () => console.log("Server start"));
+app.listen(3000, () => console.log("Server start"));
 
 
 
