@@ -2,6 +2,9 @@ import mysql from "mysql2";
 import { promisify } from "es6-promisify";
 
 export default class DB {
+    public static init() {
+        DB._instance = new DB();
+    }
     public static get instance() {
         if (!DB._instance) DB._instance = new DB();
         return DB._instance;
@@ -23,7 +26,13 @@ export default class DB {
     }
 
     public async conn(): Promise<mysql.PoolConnection> {
-        const getConn = promisify(this.pool.getConnection);
-        return getConn();
+        try {
+            const getConn = promisify(this.pool.getConnection);
+            const connection = await getConn();
+            return connection;
+        } catch (e) {
+            throw e;
+        }
+        
     }
 }
