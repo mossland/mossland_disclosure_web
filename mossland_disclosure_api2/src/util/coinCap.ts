@@ -10,37 +10,61 @@ export interface IMarketInfo {
 export async function updateMarketCap(marketInfo: IMarketInfo){
     try {
         const conn = await DB.instance.conn();
+        await Promise.all(
+            [
+                new Promise((resolve, reject) => {
+                    conn.query(
+                        'UPDATE `mossland_disclosure`.`market_data` SET `number` = "?" WHERE (`market_type` = ?)',
+                        [marketInfo.circulatingSupply, marketInfo.name + '_circulating_supply'],
+                        (error, result, field)=>{
+                            
+                            if (!error){
+                                resolve(result);
+                            }
+                            else{
+                                reject(error);
+                            }
+                        }
+                    );
+                }),
+                new Promise((resolve, reject) => {
+                    conn.query(
+                        'UPDATE `mossland_disclosure`.`market_data` SET `number` = "?" WHERE (`market_type` = ?)',
+                        [marketInfo.marketCap_krw, marketInfo.name + '_marketcap_krw'],
+                        (error, result, field)=>{
+                            if (!error) {
+
+                                console.log(result);
+                                connection.release()
+                            }
+                            else{
+                                throw error
+                            }
+                        }
+                    );
+                })
+            ]
+        );
+        conn.release();
+    } catch (e) {
+        conn.release();
+    } finally {
+        conn.release();
     }
     
     pool.getConnection((error, connection) =>{
         if (!error) {
            {
                 console.log(marketInfo.name + "_circulating_supply");
-                let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                let params = [marketInfo.circulatingSupply, marketInfo.name + '_circulating_supply']
-                connection.query(sql, params, (error, result, field)=>{
-                    if (!error){
-                        console.log(result);
-                        connection.release()
-                    }
-                    else{
-                        throw error
-                    }
-                })
+                let sql = ;
+                let params = 
+                connection.query(sql, params, )
             }
             {
                 console.log(marketInfo.name + "_marketcap_krw");
-                let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                let params = [marketInfo.marketCap_krw, marketInfo.name + '_marketcap_krw']
-                connection.query(sql, params, (error, result, field)=>{
-                    if (!error){
-                        console.log(result);
-                        connection.release()
-                    }
-                    else{
-                        throw error
-                    }
-                })
+                let sql = "";
+                let params = 
+                connection.query(sql, params, )
             }
             {
                 console.log(marketInfo.name + "_marketcap_usd");
