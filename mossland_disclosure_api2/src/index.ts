@@ -1,51 +1,21 @@
-const express = require("express");
-const cors = require('cors');
-const axios = require('axios');
-const app = express();
-const mysql = require('mysql2'); 
-const https = require('https');
-const fs = require('fs');
-
 require("dotenv").config();
-const config = {
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_SCHEMA, 
-        connectionLimit : 10
-};
 
-const pool = mysql.createPool(config);
+import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
+import axios from 'axios';
+
+import ServerError from './util/serverError';
+
+import ApiRouter from './route/api';
+
+const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
+app.use(express.raw({ type: 'application/octet-stream' }));
 app.use(cors());
 
-
-app.get("/api/market", (req, res) => {
-    console.log(pool);
-    pool.getConnection((error, connection) =>{
-        if (!error){
-            console.log(connection)
-            connection.query('SELECT * FROM mossland_disclosure.market_data', (error, result, field)=>{
-                if (!error){
-                    console.log(result);
-                    connection.release()
-                    res.send(result);
-                }
-                else{
-                    res.send({ok: false});
-                    throw error
-                }
-            })
-        }
-        else{
-            res.send({ok: false});
-            console.log(error);
-        }
-    });
-});
+app.use(ApiRouter);
 
 app.get("/api/recent_release", (req, res) => {
     console.log(pool);
@@ -140,6 +110,14 @@ app.get("/api/materials", (req, res) => {
             res.send({ok: false});
             console.log(error);
         }
+    });
+});
+
+app.use((err: ServerError, req: Request, res: Response, next: NextFunction) => {
+    return res.status(err.code).json({
+        ok: false,
+        message: err.message,
+        error: err.errorObj,
     });
 });
 
