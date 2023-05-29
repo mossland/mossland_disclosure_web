@@ -83,6 +83,10 @@ class Upbit{
         return await this.getCandle('weeks', marketType, count);
     }
 
+    async getMonthCandle(marketType, count) {
+        return await this.getCandle('months', marketType, count);
+    }
+
     async getAccVolume(data){
         let accVol = 0;
         for(const element of data) {
@@ -197,8 +201,21 @@ class Upbit{
     }; 
 
     async getTickerBtc() {
-        let ret = await this.getTicker(this.krwMarket);
+        let ret = await this.getTicker(this.btcMarket);
         return ret;
+    }; 
+    async getAccTradeVolumeKrw() {
+        let ret = await this.getMonthCandle(this.krwMarket, 200);
+        let info = this.getInfo(ret);
+        
+        return info;
+    }; 
+
+    async getAccTradeVolumeBtc() {
+        let ret = await this.getMonthCandle(this.btcMarket, 200);
+        let info = this.getInfo(ret);
+
+        return info;
     }; 
 }
 
