@@ -261,7 +261,7 @@
 
         <div class="container">
             <div class="date_file_container">
-                <div class="current_date"></div>
+                <div class="current_date transfer_list_date"></div>
             </div>
             <div class="middle_title" >
                 <div>
@@ -360,7 +360,7 @@
 
         <div class="container">
             <div class="date_file_container">
-                <div class="current_date"></div>
+                <div class="current_date transaction_list_date"></div>
             </div>
             <div class="middle_title" >
                 <div>
@@ -1104,6 +1104,17 @@
 
 		loadData(currentLanguage);
     };
+
+
+    function getCurrentDateString ( lang ) {
+
+        var today = new Date();
+        if( lang == 'en'){
+            return '(Updated on '+today.toISOString().replace('T', ' ').replace('T', ' ').replace('Z', ' ').substring(0, 19) + ')';
+        }
+
+        return '('+today.toISOString().replace('T', ' ').replace('Z', ' ').substring(0, 19) + ' 기준)';
+    }
 	
 	function copyToClipboard(element) {
 		var $temp = $("<input>");
@@ -1215,6 +1226,8 @@
 
             }
 
+            $('.transfer_list_date').html(getCurrentDateString(lang));
+
             TRANSFER_TIMER = setTimeout(function(){
                 loadTransferList(lang);
             }, 5000);
@@ -1288,6 +1301,8 @@
                 });
 
             }
+
+            $('.transaction_list_date').html(getCurrentDateString(lang));
 
             TRANSACTION_TIMER = setTimeout(function(){
                 loadTransactionList(lang);
