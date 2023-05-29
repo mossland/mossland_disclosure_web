@@ -80,7 +80,7 @@ class Luniverse{
             }
         }
         let res = await axios(config);
-        console.log(res.data.data.transferEvents.items);
+        //console.log(res.data.data.transferEvents.items);
     
         return res.data.data.transferEvents.items;
     }
@@ -93,7 +93,7 @@ class Luniverse{
             method: "get",
         }
         let res = await axios(config);
-        console.log('getHolderCount : ' + res.data.data.token.holdersCount);
+        //console.log('getHolderCount : ' + res.data.data.token.holdersCount);
     
         return res.data.data.token.holdersCount;
         
@@ -147,7 +147,7 @@ class Luniverse{
         const retArr = await this.getHourlyTransactionsByContract(start, end);
         
         let count = await this.getTxCount(retArr);
-        console.log('getLastOneDay : ' + count);
+        //console.log('getLastOneDay : ' + count);
 
         return count;
     }
@@ -163,7 +163,7 @@ class Luniverse{
         dateList.push({startDate : start, endDate : end});
     
         let count = await this.getTransactionCount(dateList);
-        console.log('getLastOneWeek : ' + count);
+        //console.log('getLastOneWeek : ' + count);
     
         return count;
     };
@@ -179,7 +179,7 @@ class Luniverse{
         dateList.push({startDate : start, endDate : end});
     
         let count = await this.getTransactionCount(dateList);
-        console.log('getLastOneMonth : ' + count);
+        //console.log('getLastOneMonth : ' + count);
     
         return count;
     };
@@ -200,7 +200,7 @@ class Luniverse{
         }
     
         let count = await this.getTransactionCount(dateList);
-        console.log('getLastOneYear : ' + count);
+        //console.log('getLastOneYear : ' + count);
         return count;
     };
 };

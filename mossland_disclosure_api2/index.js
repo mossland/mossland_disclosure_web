@@ -20,102 +20,75 @@ const config = {
 
 const pool = mysql.createPool(config);
 
+let memDB = new Map();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cors());
 
 app.get("/api/getLastYearTx", async (req, res) => {
-    const ln = new Luniverse();
-    let ret =  await ln.getLastOneYear();
-    return res.send({count : ret.toString()});
+    const key = 'getLastYearTx';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getLastMonthTx", async (req, res) => {
-    const ln = new Luniverse();
-    let ret =  await ln.getLastOneMonth();
-    return res.send({count : ret.toString()});
+    const key = 'getLastMonthTx';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getLastWeekTx", async (req, res) => {
-    const ln = new Luniverse();
-    let ret =  await ln.getLastOneWeek();
-    return res.send({count : ret.toString()});
+    const key = 'getLastWeekTx';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getLastDayTx", async (req, res) => {
-    const ln = new Luniverse();
-    let ret =  await ln.getLastOneDay();
-    return res.send({count : ret.toString()});
+    const key = 'getLastDayTx';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getHolderCount", async (req, res) => {
-    const ln = new Luniverse();
-    let ret =  await ln.getHolderCount();
-    return res.send({count : ret.toString()});
+    const key = 'getHolderCount';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getLastTx", async (req, res) => {
-    const ln = new Luniverse();
-    let ret =  await ln.getLastTx();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString.toString());
+    const key = 'getLastTx';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getTickerKrw", async (req, res) => {
-    const ub = new Upbit();
-    let ret =  await ub.getTickerKrw();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString);
+    const key = 'getTickerKrw';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getYearKrw", async (req, res) => {
-    const ub = new Upbit();
-    let ret =  await ub.getYearKrw();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString);
+    const key = 'getYearKrw';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getMonthKrw", async (req, res) => {
-    const ub = new Upbit();
-    let ret =  await ub.getMonthKrw();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString);
+    const key = 'getMonthKrw';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getWeekKrw", async (req, res) => {
-    const ub = new Upbit();
-    let ret =  await ub.getWeekKrw();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString);
+    const key = 'getWeekKrw';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getDayKrw", async (req, res) => {
-    const ub = new Upbit();
-    let ret =  await ub.getDayKrw();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString);
+    const key = 'getDayKrw';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getOrderbookKrw", async (req, res) => {
-    const ub = new Upbit();
-    let ret =  await ub.getOrderbookKrw();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString);
+    const key = 'getOrderbookKrw';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/getLastKrwTx", async (req, res) => {
-    const ub = new Upbit();
-    let ret =  await ub.getLastKrwTx();
-
-    var jsonString = JSON.stringify(ret)
-    return res.send(jsonString);
+    const key = 'getLastKrwTx';
+    return res.send(getMocInfo(key));
 });
 
 app.get("/api/market", (req, res) => {
@@ -241,9 +214,98 @@ app.get("/api/materials", (req, res) => {
 app.listen(3000, () => console.log("Server start"));
 
 
+function getMocInfo (key){    
+    if (memDB.has(key))
+        return memDB.get(key);
+    else
+        return {success : false};
+}
+
+setMocInfo();
+setMocLoop();
 getCoinCap();
 getCoinLoop();
 
+function setMocLoop (){    
+    setTimeout(() => {
+        setMocInfo();
+        setMocLoop();
+    }, 5000);
+}
+
+async function setMocInfo(){    
+    const ln = new Luniverse();
+    {
+        const ret =  await ln.getLastOneYear();
+        memDB.set('getLastYearTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneMonth();
+        memDB.set('getLastMonthTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneWeek();
+        memDB.set('getLastWeekTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneDay();
+        memDB.set('getLastDayTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getHolderCount();
+        memDB.set('getHolderCount', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastTx();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getLastTx', jsonString.toString());
+    }
+
+    const ub = new Upbit();
+    {
+        const ret =  await ub.getTickerKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getTickerKrw', jsonString.toString());
+    }
+    {
+        const ret =  await ub.getYearKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getYearKrw', jsonString.toString());
+    }
+    {
+        const ret =  await ub.getMonthKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getMonthKrw', jsonString.toString());
+    }
+
+    {
+        const ret =  await ub.getWeekKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getWeekKrw', jsonString.toString());
+    }
+
+    {
+        const ret =  await ub.getDayKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getDayKrw', jsonString.toString());
+    }
+    {
+        const ret =  await ub.getOrderbookKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getOrderbookKrw', jsonString.toString());
+    }
+
+    {
+        const ret =  await ub.getOrderbookKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getOrderbookKrw', jsonString.toString());
+    }
+    {
+        let ret =  await ub.getLastKrwTx();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getLastKrwTx', jsonString.toString());
+    }
+}
 
 function getCoinLoop (){    
     setTimeout(() => {
