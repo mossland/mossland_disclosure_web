@@ -91,6 +91,11 @@ app.get("/api/getLastKrwTx", async (req, res) => {
     return res.send(getMocInfo(key));
 });
 
+app.get("/api/getAccTradeVolumeKrw", async (req, res) => {
+    const key = 'getAccTradeVolumeKrw';
+    return res.send(getMocInfo(key));
+});
+
 app.get("/api/market", (req, res) => {
     console.log(pool);
     pool.getConnection((error, connection) =>{
@@ -294,16 +299,15 @@ async function setMocInfo(){
         const jsonString = JSON.stringify(ret)
         memDB.set('getOrderbookKrw', jsonString.toString());
     }
-
-    {
-        const ret =  await ub.getOrderbookKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getOrderbookKrw', jsonString.toString());
-    }
     {
         let ret =  await ub.getLastKrwTx();
         const jsonString = JSON.stringify(ret)
         memDB.set('getLastKrwTx', jsonString.toString());
+    }
+    {
+        let ret =  await ub.getAccTradeVolumeKrw();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getAccTradeVolumeKrw', jsonString.toString());
     }
 }
 
