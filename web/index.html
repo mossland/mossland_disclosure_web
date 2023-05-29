@@ -311,7 +311,7 @@
                     <table class="transactions_table">
                         <tr>
                             <td>Total</td>
-                            <td>-</td>
+                            <td class="transactions_total">-</td>
                         </tr>
                         <tr>
                             <td>24h</td>
@@ -373,24 +373,24 @@
                 <div class="left_container">
                     <table class="market_activity_table">
                         <tr>
-                            <td>거래량</td>
-                            <td>4,791,806 MOC</td>
+                            <td data-langNum="28">거래량</td>
+                            <td>- MOC</td>
                         </tr>
                         <tr>
-                            <td>거래대금</td>
-                            <td>509 백만원 (최근24시간)</td>
+                            <td data-langNum="29">거래대금</td>
+                            <td>- 백만원 (최근24시간)</td>
                         </tr>
                         <tr>
-                            <td>52주 최고 / 52주 최저</td>
-                            <td>306(2023.02.24) / 64.10 (2022.12.30)</td>
+                            <td data-langNum="30">52주 최고 / 52주 최저</td>
+                            <td><span class="w52_high">-</span> (<span class="w52_high_date">-</span>) / <span class="w52_low">-</span> (<span class="w52_low_date">-</span>)</td>
                         </tr>
                         <tr>
-                            <td>Volume/Market cap</td>
-                            <td>(거래량/총발행량)</td>
+                            <td data-langNum="31">거래량/총발행량</td>
+                            <td>-</td>
                         </tr>
                         <tr>
-                            <td>Circulating supply/Market cap</td>
-                            <td>(유통량/총발행량)</td>
+                            <td data-langNum="32">유통량/총발행량</td>
+                            <td>-</td>
                         </tr>
                     </table>
                 </div>
@@ -404,23 +404,23 @@
                         </tr>
                         <tr>
                             <td>24h</td>
-                            <td></td>
-                            <td></td>
+                            <td class="krw_1d_high">-</td>
+                            <td class="krw_1d_low">-</td>
                         </tr>
                         <tr>
                             <td>1m</td>
-                            <td></td>
-                            <td></td>
+                            <td class="krw_1m_high">-</td>
+                            <td class="krw_1m_low">-</td>
                         </tr>
                         <tr>
                             <td>1y</td>
-                            <td></td>
-                            <td></td>
+                            <td class="krw_1y_high">-</td>
+                            <td class="krw_1y_low">-</td>
                         </tr>
                         <tr>
-                            <td>total</td>
-                            <td></td>
-                            <td></td>
+                            <td>Total</td>
+                            <td class="krw_total_high">-</td>
+                            <td class="krw_total_low">-</td>
                         </tr>
                     </table>
                 </div>
@@ -596,73 +596,11 @@
 
                 <table class="transaction_list_table">
                     <tr>
-                        <th>체결시간</th>
-                        <th>체결가격(KRW)</th>
-                        <th>체결량(MOC)</th>
-                        <th>체결금액(KRW)</th>
+                        <th data-langNum="33">체결시간</th>
+                        <th data-langNum="34">체결가격(KRW)</th>
+                        <th data-langNum="35">체결량(MOC)</th>
+                        <th data-langNum="36">체결금액(KRW)</th>
                     </tr>
-                    <tr class="sell_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-                    <tr class="buy_row">
-                        <td>05.29 12:55</td>
-                        <td>106</td>
-                        <td>213.42144213</td>
-                        <td>22,434,535</td>
-                    </tr>
-
-
                 </table>
             </div>
 
@@ -975,7 +913,8 @@
     .left_right_container table.table_3col td { width: 30%; text-align: center; }
     .left_right_container table.table_3col th:first-child { width: 40%; text-align: left; }
     .left_right_container table.table_3col th { font-style: normal; font-weight: 700; font-size: 12px; color: #808080; width: 30%; text-align: center; }
-    .left_right_container table.table_3col td { font-style: normal; font-weight: 500; font-size: 12px; color: #808080; }
+    .left_right_container table.table_3col td { font-style: normal; font-weight: 500; font-size: 12px; color: #808080; text-align: center; }
+    .left_right_container table.table_3col td:last-child { font-style: normal; font-weight: 500; font-size: 12px; color: #808080; text-align: center; }
 
     .left_right_container .left_container table.table_2col td { width: 50%; }
 
@@ -1013,6 +952,13 @@
 
     /*.list_container table.transaction_list_table td:nth-child(3) { color: #F47E7D; }*/
     /*.list_container table.transaction_list_table td:nth-child(3) { color: #87CEEB; }*/
+
+    .list_container table.transaction_list_table td:nth-child(2) { text-align: right; }
+    .list_container table.transaction_list_table td:nth-child(3) { text-align: right; }
+    .list_container table.transaction_list_table td:nth-child(4) { text-align: right; }
+    .list_container table.transaction_list_table th:nth-child(2) { text-align: right; }
+    .list_container table.transaction_list_table th:nth-child(3) { text-align: right; }
+    .list_container table.transaction_list_table th:nth-child(4) { text-align: right; }
 
     .left_right_container.order_book_container { margin-top:0 }
 
@@ -1170,6 +1116,7 @@
 
     var BASE_URL = 'https://disclosure.moss.land';
     var TRANSFER_TIMER = null;
+    var TRANSACTION_TIMER = null;
 
     $.lang = {};
 
@@ -1201,7 +1148,16 @@
         24: '모스랜드 트랜젝션 활성화',
         25: 'MOC (MossCoin)',
         26: 'TRANSACTIONS',
-        27: '모스코인 마켓 활성화'
+        27: '모스코인 마켓 활성화',
+        28: '거래량',
+        29: '거래대금',
+        30: '52주 최고 / 52주 최저',
+        31: '거래량/총발행량',
+        32: '유통량/총발행량',
+        33: '체결시간',
+        34: '체결가격(KRW)',
+        35: '체결량(MOC)',
+        36: '체결금액(KRW)',
     };
 
     $.lang.en = {
@@ -1232,7 +1188,16 @@
         24: 'Mossland Transaction Activity',
         25: 'MOC (MossCoin)',
         26: 'TRANSACTIONS',
-        27: 'Mossland Market Activity'
+        27: 'Mossland Market Activity',
+        28: 'Trading Volume',
+        29: 'Trading Value',
+        30: '52-week high / 52-week low',
+        31: 'Volume/Market cap',
+        32: 'Circulating supply/Market cap',
+        33: 'Time',
+        34: 'Price(KRW)',
+        35: 'Amount(MOC)',
+        36: 'Total(KRW)',
     };
 
     function setLanguage(currentLanguage) {
@@ -1344,6 +1309,59 @@
 
             TRANSFER_TIMER = setTimeout(function(){
                 loadTransferList(lang);
+            }, 5000);
+        });
+    }
+
+
+    function pad0(x) {
+
+        if ( x < 10 ) {
+            return '0' + x;
+        } else {
+            return x;
+        }
+    }
+
+    function loadTransactionList( lang ) {
+
+        if ( TRANSACTION_TIMER != null ) {
+            clearInterval(TRANSACTION_TIMER);
+        }
+
+        $.getJSON(BASE_URL + '/api/getLastKrwTx', function(data){
+
+            $('.transaction_list_table_item').remove();
+
+            if ( data != null ) {
+
+                $.each(data, function(i, item) {
+
+                    // "trade_price": 105,
+                    //     "trade_volume": 172.5,
+
+                    var tradePrice = item['trade_price'];
+                    var tradeVolume = item['trade_volume'];
+                    var tradeAmount = numberWithCommas(Math.round(tradePrice * tradeVolume));
+
+                    var d = new Date(item['timestamp']);
+                    var tradeDate = d.getFullYear() + '-' + pad0(d.getMonth()+1) + '-' + pad0(d.getDate()) + ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
+
+                    var $item = $('<tr class="transaction_list_table_item">\n' +
+        '                    <td>'+tradeDate+'</td>\n' +
+        '                    <td>'+tradePrice+'</td>\n' +
+        '                    <td>'+tradeVolume+'</td>\n' +
+        '                    <td>'+tradeAmount+'</td>\n' +
+        '                    </tr>');
+
+                    $('.transaction_list_table tbody').append($item);
+
+                });
+
+            }
+
+            TRANSACTION_TIMER = setTimeout(function(){
+                loadTransactionList(lang);
             }, 5000);
         });
     }
@@ -1507,8 +1525,43 @@
         $.getJSON(BASE_URL + '/api/getLastDayTx', function(data){
             setTimeout(() => counter($('.transactions_1d'), data["count"], ''), 1);
         });
+        $.getJSON(BASE_URL + '/api/getTotalTx', function(data){
+            setTimeout(() => counter($('.transactions_total'), data["count"], ''), 1);
+        });
+
+        $.getJSON(BASE_URL + '/api/getTickerKrw', function(data){
+            var item = data[0];
+            // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
+            $('.w52_high').html(numberWithCommas(item['highest_52_week_price']));
+            $('.w52_high_date').html(item['highest_52_week_date']);
+            // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
+            $('.w52_low').html(numberWithCommas(item['lowest_52_week_price']));
+            $('.w52_low_date').html(item['lowest_52_week_date']);
+        });
+
+        $.getJSON(BASE_URL + '/api/getYearKrw', function(data){
+            $('.krw_1y_high').html(numberWithCommas(data['high_price']));
+            $('.krw_1y_low').html(numberWithCommas(data['low_price']));
+        });
+
+        $.getJSON(BASE_URL + '/api/getMonthKrw', function(data){
+            $('.krw_1m_high').html(numberWithCommas(data['high_price']));
+            $('.krw_1m_low').html(numberWithCommas(data['low_price']));
+        });
+
+
+        $.getJSON(BASE_URL + '/api/getDayKrw', function(data){
+            $('.krw_1d_high').html(numberWithCommas(data['high_price']));
+            $('.krw_1d_low').html(numberWithCommas(data['low_price']));
+        });
+
+        $.getJSON(BASE_URL + '/api/getAccTradeVolumeKrw', function(data){
+            $('.krw_total_high').html(numberWithCommas(data['high_price']));
+            $('.krw_total_low').html(numberWithCommas(data['low_price']));
+        });
 
         loadTransferList(lang);
+        loadTransactionList(lang);
 	}
 
     $(window).ready(function(){
