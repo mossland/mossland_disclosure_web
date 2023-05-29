@@ -26,6 +26,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cors());
 
+
+app.get("/api/getTotalTx", async (req, res) => {
+    const key = 'getTotalTx';
+    return res.send(getMocInfo(key));
+});
+
 app.get("/api/getLastYearTx", async (req, res) => {
     const key = 'getLastYearTx';
     return res.send(getMocInfo(key));
@@ -235,11 +241,15 @@ function setMocLoop (){
     setTimeout(() => {
         setMocInfo();
         setMocLoop();
-    }, 5000);
+    }, 8000);
 }
 
 async function setMocInfo(){    
     const ln = new Luniverse();
+    {
+        const ret =  await ln.getTotalTx();
+        memDB.set('getTotalTx', {count : ret.toString()});
+    }
     {
         const ret =  await ln.getLastOneYear();
         memDB.set('getLastYearTx', {count : ret.toString()});
@@ -545,4 +555,5 @@ function getMosslandCap() {
             resolve(ret);
         }
     });
+    
 }
