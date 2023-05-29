@@ -84,6 +84,18 @@ class Luniverse{
     
         return res.data.data.transferEvents.items;
     }
+
+    async getTotalTransactionsCount() {
+        const url = `/scan/v1.0/chains/0/accounts/${this.contractAddress.toLowerCase()}`;
+        const config = {
+            baseURL : 'https://api.luniverse.io',
+            url,
+            method: "get",
+        }
+        let res = await axios(config);
+    
+        return res.data.data.account.transactionsCount;
+    }
     
     async getHolderCount(){
         const url = `/scan/v1.0/chains/0/tokens/${this.contractAddress.toLowerCase()}`;
@@ -184,23 +196,42 @@ class Luniverse{
         return count;
     };
     
-    async getLastOneYear() {
+    async getDateList(start, end) {
         let dateList = [];
         const format = 'YYYY-MM-DD';
-        let now = dayjs();
-        let utcNow = dayjs.utc(now);
-        let newEnd = utcNow.format(format);
-        for(let i = 1; ; i++){
-            let subDay = i * 90;
-            if (subDay > 365) subDay = 365; 
-            let start = dayjs(utcNow).subtract(subDay, 'day').format(format);
-            dateList.push({startDate : start, endDate : newEnd});
-            newEnd = start;
-            if (subDay >= 365) break;
-        }
+
+        let windowSize = 90;
+        let startTemp = start;
+        let endTemp;
+        do{
+            endTemp = dayjs(startTemp).add(windowSize, 'day');
+            if (end.diff(endTemp) <= 0)
+                endTemp = end;
+            dateList.push({startDate : dayjs(startTemp).format(format),
+                            endDate : dayjs(endTemp).format(format)});
+
+            startTemp = endTemp;
+        }while(end.diff(endTemp) > 0);
+
+        return dateList;
+    }
     
+    async getLastOneYear() {
+        let now = dayjs();
+        let end = dayjs.utc(now);
+        let start = dayjs(end).subtract(1, 'year');
+
+        const dateList = await this.getDateList(start, end);
         let count = await this.getTransactionCount(dateList);
         //console.log('getLastOneYear : ' + count);
+    
+        return count;
+    };
+
+    async getTotalTx() {
+        let count = await this.getTotalTransactionsCount();
+        //console.log('getTotalTxCount : ' + count);
+    
         return count;
     };
 };
