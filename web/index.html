@@ -35,6 +35,7 @@
     <meta property="og:description" content="Circulating supply plan and summary of Mossland" />
 
 	<link rel="icon" href="/favicon.png" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
 <header class="header">
@@ -345,6 +346,10 @@
         </div>
     </section>
 	
+    <section class="public_section">
+        <div id="app">{{ surveyList }}</div>
+    </section>
+
 	
     <section class="bottom_section">
         <div class="container">
@@ -737,6 +742,24 @@
         22: 'Mossland Disclosure',
         23: 'Mossland Materials',
     };
+
+
+    const { createApp } = Vue;
+    createApp({
+        data() {
+            return {
+                surveyList: [],
+            }
+        },
+        async created() {
+            const data = await $.getJSON('/metaverse/survey-list');
+            this.surveyList = data;
+            console.log(data);
+        },
+        mounted() {
+            
+        }
+    }).mount('#app');
 
     function setLanguage(currentLanguage) {
       console.log('setLanguage', arguments);
