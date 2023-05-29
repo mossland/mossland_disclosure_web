@@ -995,6 +995,7 @@
     var TRANSACTION_TIMER = null;
     var ORDER_BOOK_TIMER = null;
     var MOSSLAND_MAX_SUPPLY = 500000000;
+    var MOSSLAND_CIRCULATING_SUPPLY = 0;
 
     $.lang = {};
 
@@ -1118,6 +1119,35 @@
             clearInterval(TRANSFER_TIMER);
         }
 
+        $.getJSON(BASE_URL + '/api/getHolderCount', function(data){
+            $('.holder_count').html(numberWithCommas(data['count']));
+            // setTimeout(() => counter($('.holder_count'), data["count"], ''), 1);
+        });
+
+        $.getJSON(BASE_URL + '/api/getLastYearTx', function(data){
+            $('.transactions_1y').html(numberWithCommas(data['count']));
+            // setTimeout(() => counter($('.transactions_1y'), data["count"], ''), 1);
+        });
+
+        $.getJSON(BASE_URL + '/api/getLastMonthTx', function(data){
+            $('.transactions_1m').html(numberWithCommas(data['count']));
+            // setTimeout(() => counter($('.transactions_1m'), data["count"], ''), 1);
+        });
+
+        $.getJSON(BASE_URL + '/api/getLastWeekTx', function(data){
+            $('.transactions_1w').html(numberWithCommas(data['count']));
+            // setTimeout(() => counter($('.transactions_1w'), data["count"], ''), 1);
+        });
+
+        $.getJSON(BASE_URL + '/api/getLastDayTx', function(data){
+            $('.transactions_1d').html(numberWithCommas(data['count']));
+            // setTimeout(() => counter($('.transactions_1d'), data["count"], ''), 1);
+        });
+        $.getJSON(BASE_URL + '/api/getTotalTx', function(data){
+            $('.transactions_total').html(numberWithCommas(data['count']));
+            // setTimeout(() => counter($('.transactions_total'), data["count"], ''), 1);
+        });
+
         $.getJSON(BASE_URL + '/api/getLastTx', function(data){
 
             $('.transfer_list_table_item').remove();
@@ -1206,6 +1236,27 @@
         if ( TRANSACTION_TIMER != null ) {
             clearInterval(TRANSACTION_TIMER);
         }
+
+        $.getJSON(BASE_URL + '/api/getYearKrw', function(data){
+            $('.krw_1y_high').html(numberWithCommas(data['high_price']));
+            $('.krw_1y_low').html(numberWithCommas(data['low_price']));
+        });
+
+        $.getJSON(BASE_URL + '/api/getMonthKrw', function(data){
+            $('.krw_1m_high').html(numberWithCommas(data['high_price']));
+            $('.krw_1m_low').html(numberWithCommas(data['low_price']));
+        });
+
+
+        $.getJSON(BASE_URL + '/api/getDayKrw', function(data){
+            $('.krw_1d_high').html(numberWithCommas(data['high_price']));
+            $('.krw_1d_low').html(numberWithCommas(data['low_price']));
+        });
+
+        $.getJSON(BASE_URL + '/api/getAccTradeVolumeKrw', function(data){
+            $('.krw_total_high').html(numberWithCommas(data['high_price']));
+            $('.krw_total_low').html(numberWithCommas(data['low_price']));
+        });
 
         $.getJSON(BASE_URL + '/api/getLastKrwTx', function(data){
 
@@ -1359,16 +1410,21 @@
 						setTimeout(() => counter($('.coingecko_marketcap'), value["number"], ' 원'), 1);
 				}
 					
-				if (value["market_type"] === "mossland_circulating_supply")
-					setTimeout(() => counter($('.mossland_circulating_supply'), value["number"], ' moc'), 1);
+				if (value["market_type"] === "mossland_circulating_supply") {
+                    MOSSLAND_CIRCULATING_SUPPLY = value["number"];
+                    setTimeout(() => counter($('.mossland_circulating_supply'), value["number"], ' moc'), 1);
+                }
+
 				if (value["market_type"] === "coinmarketcap_circulating_supply")
 					setTimeout(() => counter($('.coinmarketcap_circulating_supply'), value["number"], ' moc'), 1);
 				if (value["market_type"] === "coingecko_circulating_supply")
 					setTimeout(() => counter($('.coingecko_circulating_supply'), value["number"], ' moc'), 1);					
 				
 				if (value["market_type"] === "mossland_max_supply") {
+                    MOSSLAND_MAX_SUPPLY = value['number'];
                     setTimeout(() => counter($('.mossland_max_supply'), value["number"], ' moc'), 1);
-                    setTimeout(() => counter($('.total_supply'), value["number"], ''), 1);
+                    $('.total_supply').html(numberWithCommas(value['number']));
+                    // setTimeout(() => counter($('.total_supply'), value["number"], ''), 1);
                 }
 			});
 		});		
@@ -1435,29 +1491,6 @@
 			$('.materials').html(html);			
 		});
 
-        $.getJSON(BASE_URL + '/api/getHolderCount', function(data){
-            setTimeout(() => counter($('.holder_count'), data["count"], ''), 1);
-        });
-
-        $.getJSON(BASE_URL + '/api/getLastYearTx', function(data){
-            setTimeout(() => counter($('.transactions_1y'), data["count"], ''), 1);
-        });
-
-        $.getJSON(BASE_URL + '/api/getLastMonthTx', function(data){
-            setTimeout(() => counter($('.transactions_1m'), data["count"], ''), 1);
-        });
-
-        $.getJSON(BASE_URL + '/api/getLastWeekTx', function(data){
-            setTimeout(() => counter($('.transactions_1w'), data["count"], ''), 1);
-        });
-
-        $.getJSON(BASE_URL + '/api/getLastDayTx', function(data){
-            setTimeout(() => counter($('.transactions_1d'), data["count"], ''), 1);
-        });
-        $.getJSON(BASE_URL + '/api/getTotalTx', function(data){
-            setTimeout(() => counter($('.transactions_total'), data["count"], ''), 1);
-        });
-
         $.getJSON(BASE_URL + '/api/getTickerKrw', function(data){
             var item = data[0];
             // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
@@ -1467,40 +1500,17 @@
             $('.w52_low').html(numberWithCommas(item['lowest_52_week_price']));
             $('.w52_low_date').html(item['lowest_52_week_date']);
 
-            $('.acc_trade_volume_24h').html(numberWithCommas(item['acc_trade_volume_24h']) + ' MOC');
+            $('.acc_trade_volume_24h').html(numberWithCommas(Math.floor(item['acc_trade_volume_24h'])) + ' MOC');
 
             if ( lang == 'en' ) {
-                $('.acc_trade_price_24h').html(numberWithCommas(item['acc_trade_price_24h']) + ' KRW (24h)');
+                $('.acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + ' KRW (24h)');
             } else {
-                $('.acc_trade_price_24h').html(numberWithCommas(item['acc_trade_price_24h']) + '원 (최근24시간)');
+                $('.acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + '원 (최근24시간)');
             }
 
-            $('.acc_trade_volume_24h_per').html(numberWithCommas(Math.floor(item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY)) + '%');
-            $('.acc_trade_price_24h_per').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'] * 100 / MOSSLAND_MAX_SUPPLY)) + '%');
+            $('.acc_trade_volume_24h_per').html(numberWithCommas((item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
+            $('.acc_trade_price_24h_per').html(numberWithCommas((item['acc_trade_price_24h'] * 100 / MOSSLAND_CIRCULATING_SUPPLY).toFixed(2)) + '%');
 
-
-
-        });
-
-        $.getJSON(BASE_URL + '/api/getYearKrw', function(data){
-            $('.krw_1y_high').html(numberWithCommas(data['high_price']));
-            $('.krw_1y_low').html(numberWithCommas(data['low_price']));
-        });
-
-        $.getJSON(BASE_URL + '/api/getMonthKrw', function(data){
-            $('.krw_1m_high').html(numberWithCommas(data['high_price']));
-            $('.krw_1m_low').html(numberWithCommas(data['low_price']));
-        });
-
-
-        $.getJSON(BASE_URL + '/api/getDayKrw', function(data){
-            $('.krw_1d_high').html(numberWithCommas(data['high_price']));
-            $('.krw_1d_low').html(numberWithCommas(data['low_price']));
-        });
-
-        $.getJSON(BASE_URL + '/api/getAccTradeVolumeKrw', function(data){
-            $('.krw_total_high').html(numberWithCommas(data['high_price']));
-            $('.krw_total_low').html(numberWithCommas(data['low_price']));
         });
 
         loadTransferList(lang);
