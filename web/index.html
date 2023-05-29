@@ -374,11 +374,11 @@
                     <table class="market_activity_table">
                         <tr>
                             <td data-langNum="28">거래량</td>
-                            <td>- MOC</td>
+                            <td class="acc_trade_volume_24h">- MOC</td>
                         </tr>
                         <tr>
                             <td data-langNum="29">거래대금</td>
-                            <td>- 백만원 (최근24시간)</td>
+                            <td class="acc_trade_price_24h">- KRW (최근24시간)</td>
                         </tr>
                         <tr>
                             <td data-langNum="30">52주 최고 / 52주 최저</td>
@@ -386,11 +386,11 @@
                         </tr>
                         <tr>
                             <td data-langNum="31">거래량/총발행량</td>
-                            <td>-</td>
+                            <td class="acc_trade_volume_24h_per">-</td>
                         </tr>
                         <tr>
                             <td data-langNum="32">유통량/총발행량</td>
-                            <td>-</td>
+                            <td class="acc_trade_price_24h_per">-</td>
                         </tr>
                     </table>
                 </div>
@@ -440,72 +440,11 @@
 
                 <div class="left_container">
 
-                    <table class="order_book_sell_table order_book_table">
+                    <table class="order_book_bid_table order_book_table">
                         <tr>
-                            <th>COUNT</th>
                             <th>AMOUNT</th>
                             <th>TOTAL</th>
                             <th>PRICE</th>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
-                        </tr>
-                        <tr>
-                            <td>6</td>
-                            <td>0.4848</td>
-                            <td>0.1548</td>
-                            <td>28,001</td>
                         </tr>
 
                     </table>
@@ -513,72 +452,11 @@
                 </div>
                 <div class="right_container">
 
-                    <table class="order_book_buy_table order_book_table">
+                    <table class="order_book_ask_table order_book_table">
                         <tr>
                             <th>PRICE</th>
                             <th>TOTAL</th>
                             <th>AMOUNT</th>
-                            <th>COUNT</th>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>28,002</td>
-                            <td>0.30303</td>
-                            <td>0.50504</td>
-                            <td>4</td>
                         </tr>
                     </table>
                 </div>
@@ -918,11 +796,9 @@
 
     .left_right_container .left_container table.table_2col td { width: 50%; }
 
-    .left_right_container table.order_book_table tr td { width:25%;text-align: center; font-style: normal; font-weight: 500; font-size: 12px; color: #808080; }
-    .left_right_container table.order_book_table tr th { width:25%;text-align: center; }
+    .left_right_container table.order_book_table tr td { width:25%;text-align: right; font-style: normal; font-weight: 500; font-size: 12px; color: #808080; }
+    .left_right_container table.order_book_table tr th { width:25%;text-align: right; }
 
-    .left_right_container .left_container table.order_book_table tr td:last-child { text-align: right; }
-    .left_right_container .left_container table.order_book_table tr th:last-child { text-align: right; }
     .left_right_container .right_container table.order_book_table tr td:first-child { text-align: left; }
     .left_right_container .right_container table.order_book_table tr th:first-child { text-align: left; }
 
@@ -1117,6 +993,8 @@
     var BASE_URL = 'https://disclosure.moss.land';
     var TRANSFER_TIMER = null;
     var TRANSACTION_TIMER = null;
+    var ORDER_BOOK_TIMER = null;
+    var MOSSLAND_MAX_SUPPLY = 500000000;
 
     $.lang = {};
 
@@ -1366,6 +1244,57 @@
         });
     }
 
+    function loadOrderBookList( lang ) {
+
+        if ( ORDER_BOOK_TIMER != null ) {
+            clearInterval(ORDER_BOOK_TIMER);
+        }
+
+        $.getJSON(BASE_URL + '/api/getOrderbookKrw', function(data){
+
+            $('.order_book_table_item').remove();
+
+            if ( data != null ) {
+
+                var orderbook_units = data[0]['orderbook_units'];
+
+                var bidTotal = 0;
+                var askTotal = 0;
+
+                for ( var i = 0, l = 10; i< l; i++ ) {
+
+                    var item = orderbook_units[i];
+                    if (item == undefined) {
+                        break;
+                    }
+
+                    bidTotal += item['bid_size'];
+                    askTotal += item['ask_size'];
+
+                    var $itemBid = $('<tr class="order_book_table_item">\n' +
+                        '                    <td>' + numberWithCommas(Math.floor(item['bid_size'])) + '</td>\n' +
+                        '                    <td>' + numberWithCommas(Math.floor(bidTotal)) + '</td>\n' +
+                        '                    <td>' + numberWithCommas(item['bid_price']) + '</td>\n' +
+                        '                    </tr>');
+
+                    $('.order_book_bid_table tbody').append($itemBid);
+
+                    var $itemAsk = $('<tr class="order_book_table_item">\n' +
+                        '                    <td>' + numberWithCommas(item['ask_price']) + '</td>\n' +
+                        '                    <td>' + numberWithCommas(Math.floor(askTotal)) + '</td>\n' +
+                        '                    <td>' + numberWithCommas(Math.floor(item['ask_size'])) + '</td>\n' +
+                        '                    </tr>');
+
+                    $('.order_book_ask_table tbody').append($itemAsk);
+                }
+            }
+
+            ORDER_BOOK_TIMER = setTimeout(function(){
+                loadOrderBookList(lang);
+            }, 5000);
+        });
+    }
+
 
     const numberWithCommas = (x) => {
 
@@ -1537,6 +1466,20 @@
             // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
             $('.w52_low').html(numberWithCommas(item['lowest_52_week_price']));
             $('.w52_low_date').html(item['lowest_52_week_date']);
+
+            $('.acc_trade_volume_24h').html(numberWithCommas(item['acc_trade_volume_24h']) + ' MOC');
+
+            if ( lang == 'en' ) {
+                $('.acc_trade_price_24h').html(numberWithCommas(item['acc_trade_price_24h']) + ' KRW (24h)');
+            } else {
+                $('.acc_trade_price_24h').html(numberWithCommas(item['acc_trade_price_24h']) + '원 (최근24시간)');
+            }
+
+            $('.acc_trade_volume_24h_per').html(numberWithCommas(Math.floor(item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY)) + '%');
+            $('.acc_trade_price_24h_per').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'] * 100 / MOSSLAND_MAX_SUPPLY)) + '%');
+
+
+
         });
 
         $.getJSON(BASE_URL + '/api/getYearKrw', function(data){
@@ -1562,6 +1505,7 @@
 
         loadTransferList(lang);
         loadTransactionList(lang);
+        loadOrderBookList(lang);
 	}
 
     $(window).ready(function(){
