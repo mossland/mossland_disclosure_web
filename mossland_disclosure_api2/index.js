@@ -5,6 +5,8 @@ const app = express();
 const mysql = require('mysql2'); 
 const https = require('https');
 const fs = require('fs');
+const Luniverse = require("./luniverse.js");
+const Upbit = require("./upbit.js");
 
 require("dotenv").config();
 const config = {
@@ -22,6 +24,99 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cors());
 
+app.get("/api/getLastYearTx", async (req, res) => {
+    const ln = new Luniverse();
+    let ret =  await ln.getLastOneYear();
+    return res.send({count : ret.toString()});
+});
+
+app.get("/api/getLastMonthTx", async (req, res) => {
+    const ln = new Luniverse();
+    let ret =  await ln.getLastOneMonth();
+    return res.send({count : ret.toString()});
+});
+
+app.get("/api/getLastWeekTx", async (req, res) => {
+    const ln = new Luniverse();
+    let ret =  await ln.getLastOneWeek();
+    return res.send({count : ret.toString()});
+});
+
+app.get("/api/getLastDayTx", async (req, res) => {
+    const ln = new Luniverse();
+    let ret =  await ln.getLastOneDay();
+    return res.send({count : ret.toString()});
+});
+
+app.get("/api/getHolderCount", async (req, res) => {
+    const ln = new Luniverse();
+    let ret =  await ln.getHolderCount();
+    return res.send({count : ret.toString()});
+});
+
+app.get("/api/getLastTx", async (req, res) => {
+    const ln = new Luniverse();
+    let ret =  await ln.getLastTx();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString.toString());
+});
+
+app.get("/api/getTickerKrw", async (req, res) => {
+    const ub = new Upbit();
+    let ret =  await ub.getTickerKrw();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString);
+});
+
+app.get("/api/getYearKrw", async (req, res) => {
+    const ub = new Upbit();
+    let ret =  await ub.getYearKrw();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString);
+});
+
+app.get("/api/getMonthKrw", async (req, res) => {
+    const ub = new Upbit();
+    let ret =  await ub.getMonthKrw();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString);
+});
+
+app.get("/api/getWeekKrw", async (req, res) => {
+    const ub = new Upbit();
+    let ret =  await ub.getWeekKrw();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString);
+});
+
+app.get("/api/getDayKrw", async (req, res) => {
+    const ub = new Upbit();
+    let ret =  await ub.getDayKrw();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString);
+});
+
+app.get("/api/getOrderbookKrw", async (req, res) => {
+    const ub = new Upbit();
+    let ret =  await ub.getOrderbookKrw();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString);
+});
+
+app.get("/api/getLastKrwTx", async (req, res) => {
+    const ub = new Upbit();
+    let ret =  await ub.getLastKrwTx();
+
+    var jsonString = JSON.stringify(ret)
+    return res.send(jsonString);
+});
 
 app.get("/api/market", (req, res) => {
     console.log(pool);
@@ -144,7 +239,6 @@ app.get("/api/materials", (req, res) => {
 });
 
 app.listen(3000, () => console.log("Server start"));
-
 
 
 getCoinCap();
