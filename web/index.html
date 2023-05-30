@@ -373,7 +373,7 @@
                         </tr>
                         <tr>
                             <td data-langNum="30">52주 최고 / 52주 최저</td>
-                            <td><span class="w52_high">-</span> (<span class="w52_high_date">-</span>) / <span class="w52_low">-</span> (<span class="w52_low_date">-</span>)</td>
+                            <td><span class="w52_high">-</span> (<span class="w52_high_date">-</span>) / <br/><span class="w52_low">-</span> (<span class="w52_low_date">-</span>)</td>
                         </tr>
                         <tr>
                             <td data-langNum="31">거래량/총발행량 (24h)</td>
@@ -1571,6 +1571,28 @@
                     setTimeout(() => counter($('.mossland_max_supply'), value["number"], ' moc'), 1);
                 }
 			});
+
+            $.getJSON(BASE_URL + '/api/getTickerKrw', function(data){
+                var item = data[0];
+                // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
+                $('.w52_high').html(numberWithCommas(item['highest_52_week_price']) + ' KRW');
+                $('.w52_high_date').html(item['highest_52_week_date']);
+                // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
+                $('.w52_low').html(numberWithCommas(item['lowest_52_week_price']) + ' KRW');
+                $('.w52_low_date').html(item['lowest_52_week_date']);
+
+                $('.acc_trade_volume_24h').html(numberWithCommas(Math.floor(item['acc_trade_volume_24h'])) + ' MOC');
+
+                if ( lang == 'en' ) {
+                    $('.acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + ' KRW (24h)');
+                } else {
+                    $('.acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + ' KRW');
+                }
+
+                $('.acc_trade_volume_24h_per').html(numberWithCommas((item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
+                $('.acc_trade_price_24h_per').html(numberWithCommas((item['acc_trade_price_24h'] * 100 / MOSSLAND_CIRCULATING_SUPPLY).toFixed(2)) + '%');
+
+            });
 		});		
 		
 		// Release Data
@@ -1634,28 +1656,6 @@
 			});
 			$('.materials').html(html);			
 		});
-
-        $.getJSON(BASE_URL + '/api/getTickerKrw', function(data){
-            var item = data[0];
-            // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
-            $('.w52_high').html(numberWithCommas(item['highest_52_week_price']) + ' KRW');
-            $('.w52_high_date').html(item['highest_52_week_date']);
-            // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
-            $('.w52_low').html(numberWithCommas(item['lowest_52_week_price']) + ' KRW');
-            $('.w52_low_date').html(item['lowest_52_week_date']);
-
-            $('.acc_trade_volume_24h').html(numberWithCommas(Math.floor(item['acc_trade_volume_24h'])) + ' MOC');
-
-            if ( lang == 'en' ) {
-                $('.acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + ' KRW (24h)');
-            } else {
-                $('.acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + ' KRW');
-            }
-
-            $('.acc_trade_volume_24h_per').html(numberWithCommas((item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
-            $('.acc_trade_price_24h_per').html(numberWithCommas((item['acc_trade_price_24h'] * 100 / MOSSLAND_CIRCULATING_SUPPLY).toFixed(2)) + '%');
-
-        });
 
         loadTransferList(lang);
         loadTransactionList(lang);
