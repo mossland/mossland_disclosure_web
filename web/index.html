@@ -1646,7 +1646,7 @@
 		
 		// Disclosure & Materials
 		$.getJSON(BASE_URL + '/api/disclosure/', function(data){
-			var html보 = "";
+			var html = "";
 			$.each(data, function (index, value) {				
 				html += "<tr>";
 				html += "<td class=\"date\">" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
