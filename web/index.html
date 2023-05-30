@@ -573,23 +573,23 @@
                     <div class="middle_title" >
                         <div>
                             <img src="./img/Vector-17.svg"/>
-                            <span data-langNum="13">모스랜드 DAO 활동</span>
+                            <span data-langNum="71">모스랜드 DAO 활동</span>
                         </div>
                     </div>
                     <div class="dao_stat">
                         <dl>
                             <div class="dao_stat__block">
-                                <dt>전체 안건 수</dt>
-                                <dd>{{ surveyData.totalSurveyCount }} 안건</dd>
+                                <dt data-langNum="72">전체 안건 수</dt>
+                                <dd>{{ surveyData.totalSurveyCount }} <span data-langNum="73">안건</span></dd>
                             </div>
 
                             
                             <div class="dao_stat__block">
-                                <dt>누적 투표 수</dt>
-                                <dd>{{ accVoteCount }} 회</dd>
+                                <dt data-langNum="74">누적 투표 수</dt>
+                                <dd>{{ accVoteCount }} <span data-langNum="75">회</span></dd>
                             </div>
                             <div class="dao_stat__block">
-                                <dt>누적 투표 MMOC</dt>
+                                <dt data-langNum="76">누적 투표 MMOC</dt>
                                 <dd>{{ accVoteMmoc }} MMOC</dd>
                             </div>
                         </dl>
@@ -598,17 +598,17 @@
                     <div class="dao_vote" v-if="dupVoteList && dupVoteList.length > 0">
                         <div class="title">
                             <img src="./img/Vector-18.svg"/>
-                            <span>최근 DAO 안건</span>
+                            <span data-langNum="77">최근 DAO 안건</span>
                         </div>
                         <section class="vote-list-table">
                             <transition-group name="votelist" tag="div" mode="out-in" @after-enter="onAfterEnter">
                                 <div v-for="v, vidx in dupVoteList" :key="`${v.id}`" :data-id="v.id">
                                     <div class="info">
                                         <div class="title td">
-                                            <mark class="surveying" v-if="v.status === 'surveying'">
+                                            <mark data-langNum="78" class="surveying" v-if="v.status === 'surveying'">
                                                 진행중
                                             </mark>
-                                            <mark class="end" v-else>
+                                            <mark data-langNum="79" class="end" v-else>
                                                 마감
                                             </mark>
                                             <a :href="`https://meta.moss.land/survey`" taget="_blank">
@@ -629,7 +629,7 @@
                                                     :data-idx="sidx"
                                                 >
                                                     <div class="text">{{ selectionData[v.id][sidx].text }}</div>
-                                                    <div class="count">{{ selectionData[v.id][sidx].count }}표</div>
+                                                    <div class="count">{{ selectionData[v.id][sidx].count }}<span data-langNum="80">표</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -642,7 +642,7 @@
                     <div class="dao_resp" v-if="dupRespList && dupRespList.length > 0">
                         <div class="title">
                             <img src="./img/Vector-18.svg"/>
-                            <span>최근 투표</span>
+                            <span data-langNum="81">최근 투표</span>
                         </div>
                         <section class="resp-list-table">
                             <transition-group name="resplist" tag="div" mode="out-in">
@@ -1555,6 +1555,17 @@
         69: '지난 4주간',
         70: '지난 1년간',
 
+        71: '모스랜드 DAO 활동',
+        72: '전체 안건 수',
+        73: '안건',
+        74: '누적 투표 수',
+        75: '회',
+        76: '누적 투표 MMOC',
+        77: '최근 DAO 안건',
+        78: '진행중',
+        79: '마감',
+        80: '표',
+        81: '최근 투표'
     };
 
     $.lang.en = {
@@ -1632,6 +1643,18 @@
         68: 'The previous week',
         69: 'Last 4 weeks',
         70: 'Last 1 year',
+
+        71: 'Mossland DAO Activity',
+        72: 'Total Agenda Count',
+        73: 'Agendas',
+        74: 'Cumulative Vote Count',
+        75: 'Votes',
+        76: 'Cumulative Vote MMOC',
+        77: 'Recent DAO Agenda',
+        78: 'In Progress',
+        79: 'Closed',
+        80: 'Votes',
+        81: 'Recent Votes',
     };
 
 
