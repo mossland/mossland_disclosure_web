@@ -266,7 +266,7 @@
             <div class="middle_title" >
                 <div>
                     <img src="./img/Vector-17.svg"/>
-                    <span data-langNum="24">모스코인 트랜젝션 활성화</span>
+                    <span data-langNum="24">모스랜드 트랜젝션 활성화</span>
                 </div>
             </div>
 
@@ -365,12 +365,19 @@
             <div class="middle_title" >
                 <div>
                     <img src="./img/Vector-17.svg"/>
-                    <span data-langNum="27">모스코인 마켓 활성화</span>
+                    <span data-langNum="27">모스랜드 마켓 활성화</span>
                 </div>
             </div>
 
             <div class="left_right_container">
                 <div class="left_container">
+
+                    <div class="title">
+                        <img src="./img/Vector-18.svg"/>
+                        <span>Information</span>
+                        <span></span>
+                    </div>
+
                     <table class="market_activity_table">
                         <tr>
                             <td data-langNum="28">거래량</td>
@@ -396,9 +403,15 @@
                 </div>
                 <div class="right_container">
 
+                    <div class="title">
+                        <img src="./img/Vector-20.svg"/>
+                        <span>Price performance</span>
+                        <span></span>
+                    </div>
+
                     <table class="market_price_performance_table table_3col">
                         <tr>
-                            <th>Price performance</th>
+                            <th>Period</th>
                             <th>All-time high</th>
                             <th>All-time low</th>
                         </tr>
@@ -483,6 +496,95 @@
             </div>
 
 
+        </div>
+    </section>
+
+
+    <section class="middle_section">
+
+        <div class="container">
+            <div class="date_file_container">
+                <div class="current_date"></div>
+            </div>
+            <div class="middle_title" >
+                <div>
+                    <img src="./img/Vector-17.svg"/>
+                    <span data-langNum="37">모스랜드 오픈소스 활성화</span>
+                </div>
+            </div>
+
+            <div class="left_right_container">
+
+                <div class="left_container">
+
+                    <div class="title">
+                        <img src="./img/Vector-18.svg"/>
+                        <span>Github Code Frequency</span>
+                        <span></span>
+                    </div>
+
+                    <table class="github_frq_table table_3col">
+                        <tr>
+                            <th>Period</th>
+                            <th>The number of additions</th>
+                            <th>The number of deletions</th>
+                        </tr>
+                        <tr>
+                            <td>The week of May 28</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>The week of May 21</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>The month of May</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>The year of 2023</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="right_container">
+
+                    <div class="title">
+                        <img src="./img/Vector-18.svg"/>
+                        <span>Github Commits</span>
+                        <span></span>
+                    </div>
+
+                    <table class="github_commits_table table_2col">
+                        <tr>
+                            <th>Period</th>
+                            <th>Counts</th>
+                        </tr>
+                        <tr>
+                            <td>The week of May 28</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>The week of May 21</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>The month of May</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>The year of 2023</td>
+                            <td>-</td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
         </div>
     </section>
 
@@ -790,9 +892,9 @@
     .left_right_container table.table_3col td:first-child { width: 40%; text-align: left; }
     .left_right_container table.table_3col td { width: 30%; text-align: center; }
     .left_right_container table.table_3col th:first-child { width: 40%; text-align: left; }
-    .left_right_container table.table_3col th { font-style: normal; font-weight: 700; font-size: 12px; color: #808080; width: 30%; text-align: center; }
-    .left_right_container table.table_3col td { font-style: normal; font-weight: 500; font-size: 12px; color: #808080; text-align: center; }
-    .left_right_container table.table_3col td:last-child { font-style: normal; font-weight: 500; font-size: 12px; color: #808080; text-align: center; }
+    .left_right_container table.table_3col th { font-style: normal; font-weight: 700; color: #808080; width: 30%; text-align: center; }
+    .left_right_container table.table_3col td { font-style: normal; font-weight: 500; color: #808080; text-align: center; }
+    .left_right_container table.table_3col td:last-child { font-style: normal; font-weight: 500; color: #808080; text-align: center; }
 
     .left_right_container .left_container table.table_2col td { width: 50%; }
 
@@ -837,6 +939,9 @@
     .list_container table.transaction_list_table th:nth-child(4) { text-align: right; }
 
     .left_right_container.order_book_container { margin-top:0 }
+
+    table.github_commits_table tr th:last-child { text-align: right; }
+    table.github_commits_table tr td:last-child { text-align: right; }
 
     section.middle_section .button_container { display: flex; flex-direction: row; justify-content: space-between; align-items: center; padding: 0; gap: 38px; margin-top: 60px;}
     section.middle_section .button_container .btn_item {box-sizing: border-box; display: flex; flex-direction: column;justify-content: center; align-items: center;   width: 242px; height: 150px; background: rgba(233, 251, 245, 0.4); border: 3px dashed rgba(0, 0, 0, 0.08); border-radius: 20px; flex: none; order: 0; flex-grow: 0;}
@@ -1037,6 +1142,7 @@
         34: '체결가격(KRW)',
         35: '체결량(MOC)',
         36: '체결금액(KRW)',
+        37: '모스코인 오픈소스 활성화',
     };
 
     $.lang.en = {
@@ -1077,6 +1183,7 @@
         34: 'Price(KRW)',
         35: 'Amount(MOC)',
         36: 'Total(KRW)',
+        37: 'Mossland Opensource Activity',
     };
 
     function setLanguage(currentLanguage) {
