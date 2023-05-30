@@ -35,7 +35,8 @@
     <meta property="og:description" content="Circulating supply plan and summary of Mossland" />
 
 	<link rel="icon" href="/favicon.png" />
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="//unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/big.js/2.3.0/big.min.js"></script>
 </head>
 <body>
 <header class="header">
@@ -488,6 +489,84 @@
     </section>
 
 
+    <section class="public_section">
+        <div id="app">
+            <section class="middle_section">
+                <div class="container">
+                    <div class="middle_title" >
+                        <div>
+                            <img src="./img/Vector-17.svg"/>
+                            <span data-langNum="13">Mossland DAO</span>
+                        </div>
+                    </div>
+                    <div class="dao_stat">
+                        <dl>
+                            <div class="dao_stat__block">
+                                <dt>전체 안건 수</dt>
+                                <dd>{{ surveyData.totalSurveyCount }} 안건</dd>
+                            </div>
+
+                            
+                            <div class="dao_stat__block">
+                                <dt>누적 투표 수</dt>
+                                <dd>{{ accVoteCount }} 회</dd>
+                            </div>
+                            <div class="dao_stat__block">
+                                <dt>누적 투표 MMOC</dt>
+                                <dd>{{ accVoteMmoc }} MMOC</dd>
+                            </div>
+                        </dl>
+                    </div>
+                    
+                    <div class="dao_vote">
+                        <div class="title">
+                            <img src="./img/Vector-18.svg"/>
+                            <span>최근 DAO 안건</span>
+                        </div>
+                        <section class="vote-list-table">
+                            <transition-group name="votelist" tag="div" mode="out-in">
+                                <div v-for="v, vidx in dupVoteList" :key="`${v.id}_${vidx}`" :data-index="vidx">
+                                    <div class="info">
+                                        <div class="title td">
+                                            <mark class="surveying" v-if="v.status === 'surveying'">
+                                                진행중
+                                            </mark>
+                                            <mark class="end" v-else>
+                                                마감
+                                            </mark>
+                                            <a :href="`https://meta.moss.land/survey`" taget="_blank">
+                                                {{ v.title }}
+                                            </a>
+                                        </div>
+                                        <div class="duration td">
+                                            {{ toDateFormat(v.openAt) }} ~ {{ toDateFormat(v.closeAt) }}
+                                        </div>
+                                    </div>
+                                    <div class="figure">
+                                        <div class="selection td" colspan="2">
+                                            <div class="selection__wrapper">
+                                                <div
+                                                    class="selection__ele"
+                                                    v-for="sel, sidx in v.selections"
+                                                    :key="`${v.id}_${sidx}${sel}`"
+                                                    :style="{ flex: `${Math.max(1, parseFloat(selectionData[v.id][sidx].percent))} 1`, opacity: 0.8 }"
+                                                >
+                                                    <div class="text">{{ selectionData[v.id][sidx].text }}</div>
+                                                    <div class="count">{{ selectionData[v.id][sidx].count }}표</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </transition-group>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+
     <section class="board_section">
         <div class="container">
             <div class="title--01" data-langNum="22">모스랜드 공시</div>
@@ -572,10 +651,6 @@
 
             </table>
         </div>
-    </section>
-	
-    <section class="public_section">
-        <div id="app">{{ surveyList }}</div>
     </section>
 
 	
@@ -858,6 +933,164 @@
 	section.bottom_section { margin-top: 50px; text-align: center;}
 	.copyright{  font-style: normal; font-weight: 300; font-size: 16px; line-height: 29px; color: #808080; flex: none; order: 0; flex-grow: 0; }
 
+    .dao_stat {
+        margin-top: 3em;
+    }
+    .dao_stat dl {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        line-height: 19px;
+        color: #4F657A;
+    }
+
+    .dao_stat dl .dao_stat__block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dao_stat dl .dao_stat__block:nth-child(2) {
+        margin-top: 2em;
+    }
+    .dao_stat dl .dao_stat__block:nth-child(3) {
+        margin-top: 12px;
+    }
+
+    .dao_stat dl .dao_stat__block dt {
+        min-width: 20vw;
+        text-align: left;
+    }
+    .dao_stat dl .dao_stat__block dd {
+        min-width: 10vw;
+        text-align: right;
+        color: #808080;
+        font-weight: 700;
+    }
+
+    .dao_vote {
+        margin: 2em 0;
+    }
+
+    .dao_vote {
+        width: 95%;
+        margin: 2em auto 0 auto;
+    }
+    .dao_vote .title img {
+        margin-right: 6px;
+    }
+    .dao_vote .title span {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 19px;
+        color: #4F657A;
+    }
+
+    .dao_vote .vote-list-table .td {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 14px;
+        color: #808080;
+    }
+
+    .dao_vote .vote-list-table .info {
+        width: 100%;
+        display: flex;
+        align-items: center;
+    }
+
+    
+    .dao_vote .vote-list-table .td.title mark {
+        display: inline-block;
+        white-space: nowrap;
+        font-size: 10px;
+        border-radius: 10px;
+        padding: 4px 8px;
+        color: #fff;
+        text-align: center;
+        margin-right: 10px;
+    }
+
+    .dao_vote .vote-list-table .td.title mark.surveying {
+        background-color: #00C2C2;
+    }
+    .dao_vote .vote-list-table .td.title mark.end {
+        background-color: #afafaf;   
+    }
+    .dao_vote .vote-list-table .td.title {
+        display: inline-block;
+        padding: 1em 3em 1em 10px;
+        text-align: left;
+        flex: 1;
+    }
+    .dao_vote .vote-list-table .td.vote-count {
+        white-space: nowrap;
+        padding-right: 2em;
+    }
+    .dao_vote .vote-list-table .td.duration {
+        padding: 1em 0;
+        white-space: nowrap;
+        text-align: right;
+    }
+
+    .dao_vote .vote-list-table .td.selection .selection__wrapper {
+        display: flex;
+        align-items: center;
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele {
+        text-align: center;
+        white-space: nowrap;
+        color: #fff;
+        font-size: 12px;
+        padding: 3px 10px;
+        box-sizing: border-box;
+        margin-bottom: 3em;
+    }
+    .votelist-move,
+    .votelist-enter-active,
+    .votelist-leave-active {
+        transition: all 0.5s ease;
+        transition-delay: calc(attr(data-index number) * 0.24s);
+    }
+    .votelist-leave-to,
+    .votelist-enter-from {
+        opacity: 0;
+        transform: translateY(3em);
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n + 1) {
+        background-color: #2CD3E1;
+        
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n + 2) {
+        background-color: #A459D1;
+        
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n + 3) {
+        background-color: #F266AB;
+        
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n) {
+        background-color: #FFB84C;
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele .text {
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele .count {
+        display: inline-block;
+        font-size: 10px;
+    }
+
 
     /* 컨테이너 */
     @media (min-width: 1760px) {
@@ -1089,16 +1322,91 @@
     createApp({
         data() {
             return {
-                surveyList: [],
+                surveyData: {"success":true,"totalSurveyCount":52,"totalVoteCount":{"count":"107298","num":"10380118.036661600000752"},"lastVote":[]},
+                voteSlideSize: 5,
+                startIdx: 0,
+                endIdx: 5,
+            }
+        },
+        computed: {
+            accVoteCount() {
+                return commaNumber(Big(this.surveyData.totalVoteCount.count).toString());
+            },
+            accVoteMmoc() {
+                return commaNumber(Big(this.surveyData.totalVoteCount.num).toFixed(2, 0));
+            },
+            dupVoteList() {
+                const data = [];
+                const vList = this.surveyData.lastVote.slice(this.startIdx % this.surveyData.lastVote.length, this.endIdx % this.surveyData.lastVote.length);
+                if (vList.length < this.voteSlideSize) {
+                    const diff = this.voteSlideSize - vList.length;
+                    for (let i = 0; i < diff; i++) {
+                        if (this.surveyData.lastVote[i]) {
+                            vList.push(this.surveyData.lastVote[i]);
+                        }
+                    }
+                    this.endIdx = diff;
+                }
+                return vList;
+            },
+            selectionData() {
+                return this.surveyData.lastVote.reduce((acc, v) => {
+                    if (!acc[v.id]) {
+                        acc[v.id] = v.selections.map((s) => {
+                            return {
+                                text: s,
+                                count: 0,
+                                ratio: Big(0).toString(),
+                                percent: Big(0).toString(),
+                            }
+                        });
+                    }
+
+                    const totalResponse = v.responses.length;
+                    let ratioSum = Big(0);
+                    let percentSum = Big(0);
+                    v.responses.forEach((r, ridx) => {
+                        acc[v.id][r.selection].count += 1;
+                        const rat = Big(acc[v.id][r.selection].count).div(totalResponse).toFixed(2, 0);
+                        acc[v.id][r.selection].ratio = rat;
+                        ratioSum = ratioSum.plus(rat);
+                        const perc = Big(acc[v.id][r.selection].ratio).times(100).toFixed(2, 0);
+                        acc[v.id][r.selection].percent = perc;
+                        percentSum = percentSum.plus(perc);
+
+                        if (ridx === r.length - 1) {
+                            const diff = Big(100).sub(percentSum);
+                            acc[v.id][r.selection].percent = Big(acc[v.id][r.selection].percent).plus(diff).toString();
+
+                            const ratDiff = Big(1).sub(ratioSum);
+                            acc[v.id][r.selection].ratio = Big(acc[v.id][r.selection].ratio).plus(ratDiff).toString();
+                        }
+                    });
+
+                    return acc;
+                }, {});
             }
         },
         async created() {
             const data = await $.getJSON('/metaverse/survey-list');
-            this.surveyList = data;
-            console.log(data);
+            this.surveyData = data;
+            this.incrementList();
         },
-        mounted() {
-            
+        methods: {
+            incrementList() {
+                setTimeout(() => {
+                    this.startIdx = this.endIdx;
+                    this.endIdx = this.startIdx + this.voteSlideSize;
+                    this.incrementList();
+                }, 3000)
+            },
+            toDateFormat(val) {
+                try {
+                    return dayjs(val).format('YYYY-MM-DD');
+                } catch (e) {
+                    return val;
+                }
+            }
         }
     }).mount('#app');
 
@@ -1593,5 +1901,114 @@
         //$('.box_content.date').html(year + ' / ' + month );
         $('.current_date').html('('+today.toISOString().replace('T', ' ').substring(0, 10)+' 기준)');
     });
+
+
+    function commaNumber(inputNumber, optionalSeparator, optionalDecimalChar) {
+
+    // default `decimalChar` is a period
+    const decimalChar = optionalDecimalChar || '.'
+
+    let stringNumber // we assign this in the switch block and need it later.
+
+    {
+        let number // we assign this in the switch block and need it right after.
+
+        switch (typeof inputNumber) {
+
+            case 'string':
+
+            // if there aren't enough digits to need separators then return it
+            // NOTE: some numbers which are too small will get passed this
+            //       when they have decimal values which make them too long here.
+            //       but, the number value check after this switch will catch it.
+            if (inputNumber.length < (inputNumber[0] === '-' ? 5 : 4)) {
+                return inputNumber
+            }
+
+            // remember it as a string in `stringNumber` and convert to a Number
+            stringNumber = inputNumber
+
+            // if they're not using the Node standard decimal char then replace it
+            // before converting.
+            number = Number(
+                (decimalChar !== '.') ? stringNumber.replace(decimalChar, '.') : stringNumber
+            )
+            break
+
+            // convert to a string.
+            // NOTE: don't check if the number is too small before converting
+            //       because we'll need to return `stringNumber` anyway.
+            case 'number':
+            stringNumber = String(inputNumber)
+            number       = inputNumber
+            // create the string version with the decimalChar they specified.
+            // this matches what the above case 'string' produces,
+            // and, fixes the bug *not* doing this caused.
+            if ('.' !== decimalChar && !Number.isInteger(inputNumber)) {
+                stringNumber = stringNumber.replace('.', decimalChar)
+            }
+            break
+
+            // return invalid type as-is
+            default: return inputNumber
+    }
+
+    // when it doesn't need a separator or isn't a number then return it
+    if ((-1000 < number && number < 1000) || isNaN(number) || !isFinite(number)) {
+        return stringNumber
+    }
+    }
+
+    {
+        // strip off decimal value to add back in later
+        const decimalIndex = stringNumber.lastIndexOf(decimalChar)
+        let decimal
+        if (decimalIndex > -1) {
+            decimal = stringNumber.slice(decimalIndex)
+            stringNumber = stringNumber.slice(0, decimalIndex)
+        }
+
+        // finally, parse the string. Note, default 'separator' is a comma.
+        const parts = parse(stringNumber, optionalSeparator || ',')
+
+        // if there's a decimal value then add it to the parts.
+        if (decimal) {// NOTE: we sliced() it off including the decimalChar
+            parts.push(decimal)
+        }
+
+        // combine all parts for the final string (note, has separators).
+        return parts.join('')
+    }
+}
+
+function parse(string, separator) {
+
+    // find first index to split the string at (where 1st separator goes).
+    let i = ((string.length - 1) % 3) + 1
+
+    // above calculation is wrong when num is negative and a certain size.
+    if (i === 1 && (string[0] === '-')) {
+    i = 4  // example: -123,456,789  start at 4, not 1.
+    }
+
+    const strings = [ // holds the string parts
+    string.slice(0, i) // grab part before the first separator
+    ]
+
+    // split remaining string in groups of 3 where a separator belongs
+    for (; i < string.length; i += 3) {
+    strings.push(separator, string.substr(i, 3))
+    }
+
+    return strings
+}
+
+
+
+function bindWith(separator, decimalChar) {
+    return function(number) {
+    return commaNumber(number, separator, decimalChar)
+    }
+}
 </script>
 
