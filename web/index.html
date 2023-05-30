@@ -490,6 +490,7 @@
         <div class="container">
             <div class="date_file_container">
                 <div class="current_date"></div>
+                <div class="btn_link" onclick="window.open('https://github.com/mossland')">Github</div>
             </div>
             <div class="middle_title" >
                 <div>
@@ -504,35 +505,30 @@
 
                     <div class="title">
                         <img src="./img/Vector-18.svg"/>
-                        <span>Github Code Frequency</span>
+                        <span data-langNum="62">Github Code Frequency</span>
                         <span></span>
                     </div>
 
                     <table class="github_frq_table table_3col">
                         <tr>
-                            <th>Period</th>
-                            <th>The number of additions</th>
-                            <th>The number of deletions</th>
+                            <th data-langNum="43">기간</th>
+                            <th data-langNum="64">추가 항목</th>
+                            <th data-langNum="65">삭제 항목</th>
                         </tr>
                         <tr>
-                            <td>The week of May 28</td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td data-langNum="67">이번주</td>
+                            <td class="github_frq_tw_add">-</td>
+                            <td class="github_frq_tw_del">-</td>
                         </tr>
                         <tr>
-                            <td>The week of May 21</td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td data-langNum="68">저번주</td>
+                            <td class="github_frq_pw_add">-</td>
+                            <td class="github_frq_pw_del">-</td>
                         </tr>
                         <tr>
-                            <td>The month of May</td>
-                            <td>-</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>The year of 2023</td>
-                            <td>-</td>
-                            <td>-</td>
+                            <td data-langNum="70">지난 1년간</td>
+                            <td class="github_frq_1y_add">-</td>
+                            <td class="github_frq_1y_del">-</td>
                         </tr>
                     </table>
                 </div>
@@ -541,30 +537,26 @@
 
                     <div class="title">
                         <img src="./img/Vector-18.svg"/>
-                        <span>Github Commits</span>
+                        <span data-langNum="63">Github Code Commits</span>
                         <span></span>
                     </div>
 
                     <table class="github_commits_table table_2col">
                         <tr>
-                            <th>Period</th>
-                            <th>Counts</th>
+                            <th data-langNum="43">기간</th>
+                            <th data-langNum="66">횟수</th>
                         </tr>
                         <tr>
-                            <td>The week of May 28</td>
-                            <td>-</td>
+                            <td data-langNum="67">이번주</td>
+                            <td class="github_commit_tw">-</td>
                         </tr>
                         <tr>
-                            <td>The week of May 21</td>
-                            <td>-</td>
+                            <td data-langNum="68">저번주</td>
+                            <td class="github_commit_pw">-</td>
                         </tr>
                         <tr>
-                            <td>The month of May</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td>The year of 2023</td>
-                            <td>-</td>
+                            <td data-langNum="70">지난 1년간</td>
+                            <td class="github_commit_1y">-</td>
                         </tr>
                     </table>
                 </div>
@@ -939,6 +931,7 @@
     section.middle_section .current_date {  font-weight: 500; font-size: 14px; color: #808080; text-align: left;}
     section.middle_section .btn_file { cursor:pointer;  font-weight: bold; font-size: 12px; color: #00C2C2; text-align: right; border : 1px solid #00C2C2; border-radius: 40px; padding: 5px 14px; vertical-align: top;}
     section.middle_section .btn_file::before { content:url('./img/Vector-16.svg'); padding-right: 4px;}
+    section.middle_section .btn_link { cursor:pointer;  font-weight: bold; font-size: 12px; color: #00C2C2; text-align: right; border : 1px solid #00C2C2; border-radius: 40px; padding: 5px 14px; vertical-align: top;}
     section.middle_section .middle_title {
         position: relative; background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)); background-size: 100% 2px; background-repeat: no-repeat; background-position: center center;
         display: flex; flex-direction: row; flex-wrap: nowrap; align-content: center; justify-content: center; align-items: center;
@@ -979,7 +972,7 @@
     .left_right_container table.table_3col th:first-child { width: 40%; text-align: left; }
     .left_right_container table.table_3col th { font-style: normal; font-weight: 700; color: #808080; width: 30%; text-align: center; }
     .left_right_container table.table_3col td { font-style: normal; font-weight: 500; color: #808080; text-align: center; }
-    .left_right_container table.table_3col td:last-child { font-style: normal; font-weight: 500; color: #808080; text-align: center; }
+    .left_right_container table.table_3col td:last-child { font-style: normal; font-weight: 500; color: #808080; text-align: center;font-size: 14px; }
 
     .left_right_container .left_container table.table_2col td { width: 50%; }
 
@@ -1438,6 +1431,8 @@
         .left_right_container table tr td:first-child { font-size : 12px;}
         .left_right_container table tr td:last-child { font-size : 12px;}
 
+        .left_right_container table.table_3col td:last-child { font-size: 12px; }
+
         .list_container { width:100%;margin-top:30px; }
         .list_container .title{  font-size: 14px;}
 
@@ -1547,7 +1542,18 @@
         58: '누적량(MOC)',
         59: '평균매수호가(KRW)',
         60: '평균매도호가(KRW)',
-        61: '체결 이력'
+        61: '체결 이력',
+
+        62: 'Github Code Frequency',
+        63: 'Github Commits',
+        64: '추가 항목',
+        65: '삭제 항수',
+        66: '횟수',
+
+        67: '이번주',
+        68: '저번주',
+        69: '지난 4주간',
+        70: '지난 1년간',
 
     };
 
@@ -1614,7 +1620,18 @@
         58: 'Total(MOC)',
         59: 'Bid Price(KRW)',
         60: 'Ask Price(KRW)',
-        61: 'Transactions'
+        61: 'Transactions',
+
+        62: 'Github Code Frequency',
+        63: 'Github Commits',
+        64: 'The number of additions',
+        65: 'The number of deletions',
+        66: 'Counts',
+
+        67: 'The current week',
+        68: 'The previous week',
+        69: 'Last 4 weeks',
+        70: 'Last 1 year',
     };
 
 
@@ -1884,7 +1901,7 @@
                         '</td>\n' +
                         '</tr>');
 
-                    $('.transfer_list_table tbody').append($item);
+                    $('.transfer_list_table').append($item);
 
                 });
 
@@ -1960,7 +1977,7 @@
         '                    <td>'+tradeAmount+'</td>\n' +
         '                    </tr>');
 
-                    $('.transaction_list_table tbody').append($item);
+                    $('.transaction_list_table').append($item);
 
                 });
 
@@ -2007,7 +2024,7 @@
                         '                    <td>' + numberWithCommas(item['bid_price']) + '</td>\n' +
                         '                    </tr>');
 
-                    $('.order_book_bid_table tbody').append($itemBid);
+                    $('.order_book_bid_table').append($itemBid);
 
                     var $itemAsk = $('<tr class="order_book_table_item">\n' +
                         '                    <td>' + numberWithCommas(item['ask_price']) + '</td>\n' +
@@ -2015,7 +2032,7 @@
                         '                    <td>' + numberWithCommas(Math.floor(item['ask_size'])) + '</td>\n' +
                         '                    </tr>');
 
-                    $('.order_book_ask_table tbody').append($itemAsk);
+                    $('.order_book_ask_table').append($itemAsk);
                 }
             }
 
@@ -2161,7 +2178,7 @@
 		
 		// Disclosure & Materials
 		$.getJSON(BASE_URL + '/api/disclosure/', function(data){
-			var html보 = "";
+			var html = "";
 			$.each(data, function (index, value) {				
 				html += "<tr>";
 				html += "<td class=\"date\">" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
@@ -2189,6 +2206,57 @@
 			});
 			$('.materials').html(html);			
 		});
+
+
+        $.getJSON(BASE_URL + '/api/getCodeFrequency', function(data){
+
+            var list = data;
+
+            var lastItem = list[list.length -1];
+            $('.github_frq_tw_add').html(numberWithCommas(lastItem['add']));
+            $('.github_frq_tw_del').html(numberWithCommas(Math.abs(lastItem['del'])));
+
+            var prevItem = list[list.length - 2];
+            $('.github_frq_pw_add').html(numberWithCommas(prevItem['add']));
+            $('.github_frq_pw_del').html(numberWithCommas(Math.abs(prevItem['del'])));
+
+
+            var add1y = 0;
+            var del1y = 0;
+
+            for( var i = 0, l = 52; i < l; i++ ) {
+
+                var item = list[list.length - 1 - i];
+                add1y += item['add'];
+                del1y += item['del'];
+            }
+
+            $('.github_frq_1y_add').html(numberWithCommas(add1y));
+            $('.github_frq_1y_del').html(numberWithCommas(Math.abs(del1y)));
+        });
+
+
+        $.getJSON(BASE_URL + '/api/getCommitCount', function(data){
+
+            var list = data['all'];
+
+            var lastItem = list[list.length -1];
+            $('.github_commit_tw').html(numberWithCommas(lastItem));
+
+            var prevItem = list[list.length - 2];
+            $('.github_commit_pw').html(numberWithCommas(prevItem));
+
+            var total = 0;
+
+            for( var i = 0, l = 52; i < l; i++ ) {
+
+                var item = list[list.length - 1 - i];
+                total += item;
+            }
+
+            $('.github_commit_1y').html(numberWithCommas(total));
+        })
+
 
         loadTransferList(lang);
         loadTransactionList(lang);
