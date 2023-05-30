@@ -7,6 +7,7 @@ const https = require('https');
 const fs = require('fs');
 const Luniverse = require("./luniverse.js");
 const Upbit = require("./upbit.js");
+const GitHub = require("./github.js");
 
 require("dotenv").config();
 const config = {
@@ -99,6 +100,16 @@ app.get("/api/getLastKrwTx", async (req, res) => {
 
 app.get("/api/getAccTradeVolumeKrw", async (req, res) => {
     const key = 'getAccTradeVolumeKrw';
+    return res.send(getMocInfo(key));
+});
+
+app.get("/api/getCommitCount", async (req, res) => {
+    const key = 'getCommitCount';
+    return res.send(getMocInfo(key));
+});
+
+app.get("/api/getCodeFrequency", async (req, res) => {
+    const key = 'getCodeFrequency';
     return res.send(getMocInfo(key));
 });
 
@@ -241,7 +252,7 @@ function setMocLoop (){
     setTimeout(() => {
         setMocInfo();
         setMocLoop();
-    }, 8000);
+    }, 15000);
 }
 
 async function setMocInfo(){    
@@ -318,6 +329,18 @@ async function setMocInfo(){
         let ret =  await ub.getAccTradeVolumeKrw();
         const jsonString = JSON.stringify(ret)
         memDB.set('getAccTradeVolumeKrw', jsonString.toString());
+    }
+
+    const gb = new GitHub();
+    {
+        let ret =  await gb.getWeeklyCodeCount();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getCodeFrequency', jsonString.toString());
+    }
+    {
+        let ret =  await gb.getWeeklyCommitCount();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getCommitCount', jsonString.toString());
     }
 }
 
