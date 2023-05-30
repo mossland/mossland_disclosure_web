@@ -515,19 +515,18 @@
                         </tr>
                         <tr>
                             <td data-langNum="67">이번주</td>
-                            <td>-</td>
+                            <td class="github_frq_tw_add">-</td>
+                            <td class="github_frq_tw_del">-</td>
                         </tr>
                         <tr>
                             <td data-langNum="68">저번주</td>
-                            <td>-</td>
+                            <td class="github_frq_pw_add">-</td>
+                            <td class="github_frq_pw_del">-</td>
                         </tr>
                         <tr>
-                            <td data-langNum="69">지난 4주</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="70">올해</td>
-                            <td>-</td>
+                            <td data-langNum="70">지난 1년간</td>
+                            <td class="github_frq_1y_add">-</td>
+                            <td class="github_frq_1y_del">-</td>
                         </tr>
                     </table>
                 </div>
@@ -547,19 +546,15 @@
                         </tr>
                         <tr>
                             <td data-langNum="67">이번주</td>
-                            <td>-</td>
+                            <td class="github_commit_tw">-</td>
                         </tr>
                         <tr>
                             <td data-langNum="68">저번주</td>
-                            <td>-</td>
+                            <td class="github_commit_pw">-</td>
                         </tr>
                         <tr>
-                            <td data-langNum="69">지난 4주</td>
-                            <td>-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="70">올해</td>
-                            <td>-</td>
+                            <td data-langNum="70">지난 1년간</td>
+                            <td class="github_commit_1y">-</td>
                         </tr>
                     </table>
                 </div>
@@ -874,7 +869,7 @@
     .left_right_container table.table_3col th:first-child { width: 40%; text-align: left; }
     .left_right_container table.table_3col th { font-style: normal; font-weight: 700; color: #808080; width: 30%; text-align: center; }
     .left_right_container table.table_3col td { font-style: normal; font-weight: 500; color: #808080; text-align: center; }
-    .left_right_container table.table_3col td:last-child { font-style: normal; font-weight: 500; color: #808080; text-align: center; }
+    .left_right_container table.table_3col td:last-child { font-style: normal; font-weight: 500; color: #808080; text-align: center;font-size: 14px; }
 
     .left_right_container .left_container table.table_2col td { width: 50%; }
 
@@ -1038,6 +1033,8 @@
         .left_right_container table tr td:first-child { font-size : 12px;}
         .left_right_container table tr td:last-child { font-size : 12px;}
 
+        .left_right_container table.table_3col td:last-child { font-size: 12px; }
+
         .list_container { width:100%;margin-top:30px; }
         .list_container .title{  font-size: 14px;}
 
@@ -1157,8 +1154,8 @@
 
         67: '이번주',
         68: '저번주',
-        69: '지난 4주',
-        70: '올해',
+        69: '지난 4주간',
+        70: '지난 1년간',
 
     };
 
@@ -1236,7 +1233,7 @@
         67: 'The current week',
         68: 'The previous week',
         69: 'Last 4 weeks',
-        70: 'The current year',
+        70: 'Last 1 year',
     };
 
     function setLanguage(currentLanguage) {
@@ -1674,6 +1671,57 @@
 			});
 			$('.materials').html(html);			
 		});
+
+
+        $.getJSON(BASE_URL + '/api/getCodeFrequency', function(data){
+
+            var list = data;
+
+            var lastItem = list[list.length -1];
+            $('.github_frq_tw_add').html(numberWithCommas(lastItem['add']));
+            $('.github_frq_tw_del').html(numberWithCommas(Math.abs(lastItem['del'])));
+
+            var prevItem = list[list.length - 2];
+            $('.github_frq_pw_add').html(numberWithCommas(prevItem['add']));
+            $('.github_frq_pw_del').html(numberWithCommas(Math.abs(prevItem['del'])));
+
+
+            var add1y = 0;
+            var del1y = 0;
+
+            for( var i = 0, l = 52; i < l; i++ ) {
+
+                var item = list[list.length - 1 - i];
+                add1y += item['add'];
+                del1y += item['del'];
+            }
+
+            $('.github_frq_1y_add').html(numberWithCommas(add1y));
+            $('.github_frq_1y_del').html(numberWithCommas(Math.abs(del1y)));
+        });
+
+
+        $.getJSON(BASE_URL + '/api/getCommitCount', function(data){
+
+            var list = data['all'];
+
+            var lastItem = list[list.length -1];
+            $('.github_commit_tw').html(numberWithCommas(lastItem));
+
+            var prevItem = list[list.length - 2];
+            $('.github_commit_pw').html(numberWithCommas(prevItem));
+
+            var total = 0;
+
+            for( var i = 0, l = 52; i < l; i++ ) {
+
+                var item = list[list.length - 1 - i];
+                total += item;
+            }
+
+            $('.github_commit_1y').html(numberWithCommas(total));
+        })
+
 
         loadTransferList(lang);
         loadTransactionList(lang);
