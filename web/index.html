@@ -1369,7 +1369,7 @@
                         '</td>\n' +
                         '</tr>');
 
-                    $('.transfer_list_table tbody').append($item);
+                    $('.transfer_list_table').append($item);
 
                 });
 
@@ -1445,7 +1445,7 @@
         '                    <td>'+tradeAmount+'</td>\n' +
         '                    </tr>');
 
-                    $('.transaction_list_table tbody').append($item);
+                    $('.transaction_list_table').append($item);
 
                 });
 
@@ -1492,7 +1492,7 @@
                         '                    <td>' + numberWithCommas(item['bid_price']) + '</td>\n' +
                         '                    </tr>');
 
-                    $('.order_book_bid_table tbody').append($itemBid);
+                    $('.order_book_bid_table').append($itemBid);
 
                     var $itemAsk = $('<tr class="order_book_table_item">\n' +
                         '                    <td>' + numberWithCommas(item['ask_price']) + '</td>\n' +
@@ -1500,7 +1500,7 @@
                         '                    <td>' + numberWithCommas(Math.floor(item['ask_size'])) + '</td>\n' +
                         '                    </tr>');
 
-                    $('.order_book_ask_table tbody').append($itemAsk);
+                    $('.order_book_ask_table').append($itemAsk);
                 }
             }
 
