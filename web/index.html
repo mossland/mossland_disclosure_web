@@ -141,7 +141,7 @@
             </div>
             <div class="wallet_container">
                 <div class="wallet_title" >
-                    <span data-langNum="14">재단 보유 지갑 리스트</span> <br class="mobile_show"/>
+                    <span data-langNum="14"><img src="./img/Vector-21.svg"/>&nbsp;&nbsp;재단 보유 지갑 리스트</span> <br class="mobile_show"/>
                     <span data-langNum="15">(유통되지 않는 모스코인을 보관하는 지갑)</span>
                 </div>
 
@@ -272,11 +272,11 @@
                 </div>
             </div>
 
-            <div class="left_right_container">
+            <div class="left_right_container moc_trans">
 
                 <div class="left_container">
                     <div class="title">
-                        <img src="./img/Vector-18.svg"/>
+<!--                        <img src="./img/Vector-18.svg"/>-->
                         <span data-langNum="25">모스코인 (MOC)</span>
                         <span><button class="btn_link" onclick="window.open('https://scan.luniverse.io/tokens/0x878120a5c9828759a250156c66d629219f07c5c6');" >Link</button></span>
                     </div>
@@ -298,7 +298,7 @@
                 <div class="right_container">
 
                     <div class="title">
-                        <img src="./img/Vector-20.svg"/>
+<!--                        <img src="./img/Vector-20.svg"/>-->
                         <span data-langNum="26">트랜잭션</span>
                         <span><button class="btn_link" onclick="window.open('https://scan.luniverse.io/tokens/0x878120A5C9828759A250156c66D629219F07C5c6')" >Link</button></span>
                     </div>
@@ -322,7 +322,7 @@
             <div class="list_container">
 
                 <div class="title">
-                    <img src="./img/Vector-18.svg"/>
+                    <img src="./img/Vector-22.svg"/>
                     <span data-langNum="50">토큰 전송 기록</span>
                     <span></span>
                 </div>
@@ -355,11 +355,11 @@
                 </div>
             </div>
 
-            <div class="left_right_container">
+            <div class="left_right_container moc_trans">
                 <div class="left_container">
 
                     <div class="title">
-                        <img src="./img/Vector-18.svg"/>
+<!--                        <img src="./img/Vector-18.svg"/>-->
                         <span data-langNum="38">기본 정보</span>
                         <span></span>
                     </div>
@@ -390,7 +390,7 @@
                 <div class="right_container">
 
                     <div class="title">
-                        <img src="./img/Vector-20.svg"/>
+<!--                        <img src="./img/Vector-20.svg"/>-->
                         <span data-langNum="39">가격 지표</span>
                         <span></span>
                     </div>
@@ -428,7 +428,7 @@
             <div class="list_container">
 
                 <div class="title">
-                    <img src="./img/Vector-18.svg"/>
+                    <img src="./img/Vector-23.svg"/>
                     <span data-langNum="56">실시간 호가</span>
                     <span></span>
                 </div>
@@ -466,7 +466,7 @@
             <div class="list_container">
 
                 <div class="title">
-                    <img src="./img/Vector-18.svg"/>
+                    <img src="./img/Vector-22.svg"/>
                     <span data-langNum="61">체결 이력</span>
                     <span></span>
                 </div>
@@ -504,7 +504,7 @@
                 <div class="left_container">
 
                     <div class="title">
-                        <img src="./img/Vector-18.svg"/>
+                        <img src="./img/Vector-25.svg"/>
                         <span data-langNum="62">Github Code Frequency</span>
                         <span></span>
                     </div>
@@ -536,7 +536,7 @@
                 <div class="right_container">
 
                     <div class="title">
-                        <img src="./img/Vector-18.svg"/>
+                        <img src="./img/Vector-25.svg"/>
                         <span data-langNum="63">Github Code Commits</span>
                         <span></span>
                     </div>
@@ -966,6 +966,8 @@
     .left_right_container table tr td:first-child { width : 60px;}
     .left_right_container table tr td:last-child {  font-style: normal; font-weight: 700; font-size: 12px; width:100px; line-height: 17px; text-align: right; color: #808080; flex: none; order: 2; flex-grow: 1;}
 
+    .left_right_container.moc_trans { width:90%;margin-left:auto;margin-right:auto;margin-bottom:50px; }
+
     .title .btn_link { float:right; }
     .left_right_container table.table_3col td:first-child { width: 40%; text-align: left; }
     .left_right_container table.table_3col td { width: 30%; text-align: center; }
@@ -979,6 +981,8 @@
     .left_right_container table.order_book_table tr td { width:25%;text-align: right; font-style: normal; font-weight: 500; font-size: 12px; color: #808080; }
     .left_right_container table.order_book_table tr th { width:25%;text-align: right; }
 
+    .left_right_container .left_container table.order_book_table tr td:first-child { text-align: left; }
+    .left_right_container .left_container table.order_book_table tr th:first-child { text-align: left; }
     .left_right_container .right_container table.order_book_table tr td:first-child { text-align: left; }
     .left_right_container .right_container table.order_book_table tr th:first-child { text-align: left; }
 
@@ -1009,6 +1013,8 @@
     /*.list_container table.transaction_list_table td:nth-child(3) { color: #F47E7D; }*/
     /*.list_container table.transaction_list_table td:nth-child(3) { color: #87CEEB; }*/
 
+    .list_container table.transaction_list_table td:nth-child(1) { text-align: left; }
+    .list_container table.transaction_list_table th:nth-child(1) { text-align: left; }
     .list_container table.transaction_list_table td:nth-child(2) { text-align: right; }
     .list_container table.transaction_list_table td:nth-child(3) { text-align: right; }
     .list_container table.transaction_list_table td:nth-child(4) { text-align: right; }
