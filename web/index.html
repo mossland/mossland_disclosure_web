@@ -606,10 +606,10 @@
                                     <div class="info">
                                         <div class="title td">
                                             <mark data-langNum="78" class="surveying" v-if="v.status === 'surveying'">
-                                                진행중
+                                                {{ locale === 'ko' ? '진행중' : 'Active' }}
                                             </mark>
                                             <mark data-langNum="79" class="end" v-else>
-                                                마감
+                                                {{ locale === 'ko' ? '마감' : 'Closed' }}
                                             </mark>
                                             <a :href="`https://meta.moss.land/survey`" taget="_blank">
                                                 {{ v.title }}
@@ -629,7 +629,7 @@
                                                     :data-idx="sidx"
                                                 >
                                                     <div class="text">{{ selectionData[v.id][sidx].text }}</div>
-                                                    <div class="count">{{ selectionData[v.id][sidx].count }}<span data-langNum="80">표</span></div>
+                                                    <div class="count">{{ selectionData[v.id][sidx].count }}<span data-langNum="80">{{ locale === 'ko' ? '표' : 'Votes'}}</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -1557,7 +1557,7 @@
 
         71: '모스랜드 DAO 활동',
         72: '전체 안건 수',
-        73: '안건',
+        73: '건',
         74: '누적 투표 수',
         75: '회',
         76: '누적 투표 MMOC',
@@ -1645,13 +1645,13 @@
         70: 'Last 1 year',
 
         71: 'Mossland DAO Activity',
-        72: 'Total Agenda Count',
-        73: 'Agendas',
-        74: 'Cumulative Vote Count',
+        72: 'Total Proposal Count',
+        73: 'Proposals',
+        74: 'Total Vote Count',
         75: 'Votes',
-        76: 'Cumulative Vote MMOC',
-        77: 'Recent DAO Agenda',
-        78: 'In Progress',
+        76: 'Total Vote MMOC',
+        77: 'Recent DAO Proposals',
+        78: 'Active',
         79: 'Closed',
         80: 'Votes',
         81: 'Recent Votes',
@@ -1679,6 +1679,9 @@
             }
         },
         computed: {
+            locale() {
+                return window.currentLanguage || 'ko';
+            },
             accVoteCount() {
                 return commaNumber(Big(this.surveyData.totalVoteCount.count).toString());
             },
@@ -1818,6 +1821,7 @@
         }
 
 		loadData(currentLanguage);
+        window.currentLanguage = currentLanguage;
     };
 
 
