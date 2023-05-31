@@ -243,50 +243,42 @@ function getMocInfo (key){
         return {success : false};
 }
 
-setMocInfo();
-setMocLoop();
+
 getCoinCap();
 getCoinLoop();
 
-function setMocLoop (){    
+setLuniverseInfo();
+setLuniverseLoop();
+
+setGitHubInfo();
+setGithubLoop();
+
+setUpbitInfo();
+setUpbitLoop();
+
+function setLuniverseLoop (){    
     setTimeout(() => {
-        setMocInfo();
-        setMocLoop();
-    }, 15000);
+        setLuniverseInfo();
+        setLuniverseLoop();
+    }, 60 * 1000);
 }
 
-async function setMocInfo(){    
-    const ln = new Luniverse();
-    {
-        const ret =  await ln.getTotalTx();
-        memDB.set('getTotalTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneYear();
-        memDB.set('getLastYearTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneMonth();
-        memDB.set('getLastMonthTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneWeek();
-        memDB.set('getLastWeekTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneDay();
-        memDB.set('getLastDayTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getHolderCount();
-        memDB.set('getHolderCount', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastTx();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getLastTx', jsonString.toString());
-    }
+function setGithubLoop (){    
+    setTimeout(() => {
+        setGitHubInfo();
+        setGithubLoop();
+    }, 1000 * 60 * 10);
+}
 
+
+function setUpbitLoop (){    
+    setTimeout(() => {
+        setUpbitInfo();
+        setUpbitLoop();
+    }, 1000 * 10);
+}
+
+async function setUpbitInfo(){    
     const ub = new Upbit();
     {
         const ret =  await ub.getTickerKrw();
@@ -330,7 +322,9 @@ async function setMocInfo(){
         const jsonString = JSON.stringify(ret)
         memDB.set('getAccTradeVolumeKrw', jsonString.toString());
     }
+}
 
+async function setGitHubInfo(){    
     const gb = new GitHub();
     {
         let ret =  await gb.getWeeklyCodeCount();
@@ -341,6 +335,39 @@ async function setMocInfo(){
         let ret =  await gb.getWeeklyCommitCount();
         const jsonString = JSON.stringify(ret)
         memDB.set('getCommitCount', jsonString.toString());
+    }
+}
+
+async function setLuniverseInfo(){    
+    const ln = new Luniverse();
+    {
+        const ret =  await ln.getTotalTx();
+        memDB.set('getTotalTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneYear();
+        memDB.set('getLastYearTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneMonth();
+        memDB.set('getLastMonthTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneWeek();
+        memDB.set('getLastWeekTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneDay();
+        memDB.set('getLastDayTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getHolderCount();
+        memDB.set('getHolderCount', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastTx();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getLastTx', jsonString.toString());
     }
 }
 
