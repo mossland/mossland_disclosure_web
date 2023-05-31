@@ -243,74 +243,42 @@ function getMocInfo (key){
         return {success : false};
 }
 
-setMocInfo();
-setMocLoop();
+
 getCoinCap();
 getCoinLoop();
 
-setMocInfo2();
-setMocLoop2();
+setLuniverseInfo();
+setLuniverseLoop();
 
-function setMocLoop (){    
+setGitHubInfo();
+setGithubLoop();
+
+setUpbitInfo();
+setUpbitLoop();
+
+function setLuniverseLoop (){    
     setTimeout(() => {
-        setMocInfo();
-        setMocLoop();
+        setLuniverseInfo();
+        setLuniverseLoop();
     }, 60 * 1000);
 }
 
-function setMocLoop2 (){    
+function setGithubLoop (){    
     setTimeout(() => {
-        setMocInfo2();
-        setMocLoop2();
+        setGitHubInfo();
+        setGithubLoop();
     }, 1000 * 60 * 10);
 }
 
-async function setMocInfo2(){    
-    const gb = new GitHub();
-    {
-        let ret =  await gb.getWeeklyCodeCount();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getCodeFrequency', jsonString.toString());
-    }
-    {
-        let ret =  await gb.getWeeklyCommitCount();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getCommitCount', jsonString.toString());
-    }
+
+function setUpbitLoop (){    
+    setTimeout(() => {
+        setUpbitInfo();
+        setUpbitLoop();
+    }, 1000 * 10);
 }
 
-async function setMocInfo(){    
-    const ln = new Luniverse();
-    {
-        const ret =  await ln.getTotalTx();
-        memDB.set('getTotalTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneYear();
-        memDB.set('getLastYearTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneMonth();
-        memDB.set('getLastMonthTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneWeek();
-        memDB.set('getLastWeekTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastOneDay();
-        memDB.set('getLastDayTx', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getHolderCount();
-        memDB.set('getHolderCount', {count : ret.toString()});
-    }
-    {
-        const ret =  await ln.getLastTx();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getLastTx', jsonString.toString());
-    }
-
+async function setUpbitInfo(){    
     const ub = new Upbit();
     {
         const ret =  await ub.getTickerKrw();
@@ -353,6 +321,53 @@ async function setMocInfo(){
         let ret =  await ub.getAccTradeVolumeKrw();
         const jsonString = JSON.stringify(ret)
         memDB.set('getAccTradeVolumeKrw', jsonString.toString());
+    }
+}
+
+async function setGitHubInfo(){    
+    const gb = new GitHub();
+    {
+        let ret =  await gb.getWeeklyCodeCount();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getCodeFrequency', jsonString.toString());
+    }
+    {
+        let ret =  await gb.getWeeklyCommitCount();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getCommitCount', jsonString.toString());
+    }
+}
+
+async function setLuniverseInfo(){    
+    const ln = new Luniverse();
+    {
+        const ret =  await ln.getTotalTx();
+        memDB.set('getTotalTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneYear();
+        memDB.set('getLastYearTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneMonth();
+        memDB.set('getLastMonthTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneWeek();
+        memDB.set('getLastWeekTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastOneDay();
+        memDB.set('getLastDayTx', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getHolderCount();
+        memDB.set('getHolderCount', {count : ret.toString()});
+    }
+    {
+        const ret =  await ln.getLastTx();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getLastTx', jsonString.toString());
     }
 }
 
