@@ -248,11 +248,35 @@ setMocLoop();
 getCoinCap();
 getCoinLoop();
 
+setMocInfo2();
+setMocLoop2();
+
 function setMocLoop (){    
     setTimeout(() => {
         setMocInfo();
         setMocLoop();
     }, 15000);
+}
+
+function setMocLoop2 (){    
+    setTimeout(() => {
+        setMocInfo2();
+        setMocLoop2();
+    }, 1000 * 60 * 10);
+}
+
+async function setMocInfo2(){    
+    const gb = new GitHub();
+    {
+        let ret =  await gb.getWeeklyCodeCount();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getCodeFrequency', jsonString.toString());
+    }
+    {
+        let ret =  await gb.getWeeklyCommitCount();
+        const jsonString = JSON.stringify(ret)
+        memDB.set('getCommitCount', jsonString.toString());
+    }
 }
 
 async function setMocInfo(){    
@@ -329,18 +353,6 @@ async function setMocInfo(){
         let ret =  await ub.getAccTradeVolumeKrw();
         const jsonString = JSON.stringify(ret)
         memDB.set('getAccTradeVolumeKrw', jsonString.toString());
-    }
-
-    const gb = new GitHub();
-    {
-        let ret =  await gb.getWeeklyCodeCount();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getCodeFrequency', jsonString.toString());
-    }
-    {
-        let ret =  await gb.getWeeklyCommitCount();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getCommitCount', jsonString.toString());
     }
 }
 
