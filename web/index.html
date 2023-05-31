@@ -1073,7 +1073,7 @@
         text-align: left;
     }
     .dao_stat dl .dao_stat__block dd {
-        min-width: 10vw;
+        min-width: 200px;
         text-align: right;
         color: #808080;
         font-weight: 700;
@@ -1340,6 +1340,13 @@
         .pc_show { display:none; }
     }
     @media (max-width: 767px){
+
+        .dao_stat__block {
+            width: 100%;
+        }
+        .dao_stat dl .dao_stat__block dt {
+            flex: 1;
+        }
 
         .dao_vote > .title {
             margin-top: 6em;
