@@ -2173,7 +2173,7 @@
                 }
 
                 $('.acc_trade_volume_24h_per').html(numberWithCommas((item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
-                $('.acc_trade_price_24h_per').html(numberWithCommas((item['acc_trade_price_24h'] * 100 / MOSSLAND_CIRCULATING_SUPPLY).toFixed(2)) + '%');
+                $('.acc_trade_price_24h_per').html(numberWithCommas((MOSSLAND_CIRCULATING_SUPPLY* 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
 
             });
 		});		
