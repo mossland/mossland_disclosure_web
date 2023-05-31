@@ -255,7 +255,7 @@ function setMocLoop (){
     setTimeout(() => {
         setMocInfo();
         setMocLoop();
-    }, 15000);
+    }, 60 * 1000);
 }
 
 function setMocLoop2 (){    
