@@ -304,10 +304,6 @@
                     </div>
                     <table class="transactions_table">
                         <tr>
-                            <td data-langNum="44">전체 기간</td>
-                            <td class="transactions_total">-</td>
-                        </tr>
-                        <tr>
                             <td data-langNum="45">최근 24시간</td>
                             <td class="transactions_1d">-</td>
                         </tr>
@@ -1875,10 +1871,10 @@
             $('.transactions_1d').html(numberWithCommas(data['count']));
             // setTimeout(() => counter($('.transactions_1d'), data["count"], ''), 1);
         });
-        $.getJSON(BASE_URL + '/api/getTotalTx', function(data){
-            $('.transactions_total').html(numberWithCommas(data['count']));
+        // $.getJSON(BASE_URL + '/api/getTotalTx', function(data){
+            // $('.transactions_total').html(numberWithCommas(data['count']));
             // setTimeout(() => counter($('.transactions_total'), data["count"], ''), 1);
-        });
+        // });
 
         $.getJSON(BASE_URL + '/api/getLastTx', function(data){
 
