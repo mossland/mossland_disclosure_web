@@ -36,7 +36,7 @@
 
 	<link rel="icon" href="/favicon.png" />
     <script src="//unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/big.js/2.3.0/big.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/big.js@6.2.1/big.min.js"></script>
 </head>
 <body>
 <header class="header">
@@ -1937,7 +1937,7 @@
                         item['to'] +
                         '</div></td>\n' +
                         '<td>' +
-                        ( item['value'] / 1000000000000000000 )+
+                        ( Big(item['value']).div(1000000000000000000).toString() )+
                         '</td>\n' +
                         '</tr>');
 
@@ -2305,6 +2305,8 @@
 
     $(window).ready(function(){
         console.log('window.ready');
+        Big.PE = 1000000;
+        Big.NE = -1000000;
 
         $('.language_container').on('click', function (e) {
             e.preventDefault();
