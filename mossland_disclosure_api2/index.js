@@ -8,6 +8,7 @@ const fs = require('fs');
 const Luniverse = require("./luniverse.js");
 const Upbit = require("./upbit.js");
 const GitHub = require("./github.js");
+const Database = require("./database.js");
 
 require("dotenv").config();
 const config = {
@@ -20,8 +21,9 @@ const config = {
 };
 
 const pool = mysql.createPool(config);
+const db = new Database();
 
-let memDB = new Map();
+//let memDB = new Map();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
@@ -30,87 +32,104 @@ app.use(cors());
 
 app.get("/api/getTotalTx", async (req, res) => {
     const key = 'getTotalTx';
-    return res.send(getMocInfo(key));
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getLastYearTx", async (req, res) => {
     const key = 'getLastYearTx';
-    return res.send(getMocInfo(key));
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getLastMonthTx", async (req, res) => {
     const key = 'getLastMonthTx';
-    return res.send(getMocInfo(key));
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getLastWeekTx", async (req, res) => {
     const key = 'getLastWeekTx';
-    return res.send(getMocInfo(key));
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getLastDayTx", async (req, res) => {
     const key = 'getLastDayTx';
-    return res.send(getMocInfo(key));
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getHolderCount", async (req, res) => {
     const key = 'getHolderCount';
-    return res.send(getMocInfo(key));
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getLastTx", async (req, res) => {
     const key = 'getLastTx';
-    return res.send(getMocInfo(key));
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getTickerKrw", async (req, res) => {
     const key = 'getTickerKrw';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getYearKrw", async (req, res) => {
     const key = 'getYearKrw';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getMonthKrw", async (req, res) => {
     const key = 'getMonthKrw';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getWeekKrw", async (req, res) => {
     const key = 'getWeekKrw';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getDayKrw", async (req, res) => {
     const key = 'getDayKrw';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getOrderbookKrw", async (req, res) => {
     const key = 'getOrderbookKrw';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getLastKrwTx", async (req, res) => {
     const key = 'getLastKrwTx';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getAccTradeVolumeKrw", async (req, res) => {
     const key = 'getAccTradeVolumeKrw';
-    return res.send(getMocInfo(key));
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getCommitCount", async (req, res) => {
     const key = 'getCommitCount';
-    return res.send(getMocInfo(key));
+    const ret = await db.getGithubData(key);
+    return res.send(ret);
 });
 
 app.get("/api/getCodeFrequency", async (req, res) => {
     const key = 'getCodeFrequency';
-    return res.send(getMocInfo(key));
+    const ret = await db.getGithubData(key);
+    return res.send(ret);
 });
 
 app.get("/api/market", (req, res) => {
@@ -162,7 +181,6 @@ app.get("/api/recent_release", (req, res) => {
 });
 
 app.get("/api/expected_release", (req, res) => {
-    console.log(pool);
     pool.getConnection((error, connection) =>{
         if (!error){
             console.log(connection)
@@ -186,7 +204,6 @@ app.get("/api/expected_release", (req, res) => {
 });
 
 app.get("/api/disclosure", (req, res) => {
-    console.log(pool);
     pool.getConnection((error, connection) =>{
         if (!error){
             console.log(connection)
@@ -217,7 +234,7 @@ app.get("/api/materials", (req, res) => {
             connection.query('SELECT * FROM mossland_disclosure.materials ORDER BY date DESC', (error, result, field)=>{
                 if (!error){
                     console.log(result);
-                    connection.release()
+                    connection.release();
                     res.send(result);
                 }
                 else{
@@ -236,13 +253,12 @@ app.get("/api/materials", (req, res) => {
 app.listen(3000, () => console.log("Server start"));
 
 
-function getMocInfo (key){    
-    if (memDB.has(key))
-        return memDB.get(key);
-    else
-        return {success : false};
-}
-
+// function getMocInfo (key){    
+//     if (memDB.has(key))
+//         return memDB.get(key);
+//     else
+//         return {success : false};
+// }
 
 getCoinCap();
 getCoinLoop();
@@ -281,100 +297,139 @@ function setUpbitLoop (){
 async function setUpbitInfo(){    
     const ub = new Upbit();
     {
+        const key = 'getTickerKrw';
         const ret =  await ub.getTickerKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getTickerKrw', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getYearKrw';
         const ret =  await ub.getYearKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getYearKrw', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getMonthKrw';
         const ret =  await ub.getMonthKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getMonthKrw', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
     }
 
     {
+        const key = 'getWeekKrw';
         const ret =  await ub.getWeekKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getWeekKrw', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
     }
 
     {
+        const key = 'getDayKrw';
         const ret =  await ub.getDayKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getDayKrw', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getOrderbookKrw';
         const ret =  await ub.getOrderbookKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getOrderbookKrw', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getLastKrwTx';
         let ret =  await ub.getLastKrwTx();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getLastKrwTx', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getAccTradeVolumeKrw';
         let ret =  await ub.getAccTradeVolumeKrw();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getAccTradeVolumeKrw', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
     }
 }
 
 async function setGitHubInfo(){    
     const gb = new GitHub();
     {
+        const key = 'getCodeFrequency';
         let ret =  await gb.getWeeklyCodeCount();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getCodeFrequency', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setGithubData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getCommitCount';
         let ret =  await gb.getWeeklyCommitCount();
         const jsonString = JSON.stringify(ret)
-        memDB.set('getCommitCount', jsonString.toString());
+        await  db.setGithubData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
 }
 
 async function setLuniverseInfo(){    
     const ln = new Luniverse();
     {
+        const key = 'getTotalTx';
         const ret =  await ln.getTotalTx();
-        memDB.set('getTotalTx', {count : ret.toString()});
+        const jsonString = JSON.stringify({count : ret.toString()});
+        await  db.setLuniverseData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getLastYearTx';
         const ret =  await ln.getLastOneYear();
-        memDB.set('getLastYearTx', {count : ret.toString()});
+        const jsonString = JSON.stringify({count : ret.toString()});
+        await  db.setLuniverseData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getLastMonthTx';
         const ret =  await ln.getLastOneMonth();
-        memDB.set('getLastMonthTx', {count : ret.toString()});
+        const jsonString = JSON.stringify({count : ret.toString()});
+        await  db.setLuniverseData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getLastWeekTx';
         const ret =  await ln.getLastOneWeek();
-        memDB.set('getLastWeekTx', {count : ret.toString()});
+        const jsonString = JSON.stringify({count : ret.toString()});
+        await  db.setLuniverseData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getLastDayTx';
         const ret =  await ln.getLastOneDay();
-        memDB.set('getLastDayTx', {count : ret.toString()});
+        const jsonString = JSON.stringify({count : ret.toString()});
+        await  db.setLuniverseData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getHolderCount';
         const ret =  await ln.getHolderCount();
-        memDB.set('getHolderCount', {count : ret.toString()});
+        const jsonString = JSON.stringify({count : ret.toString()});
+        await  db.setLuniverseData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
     {
+        const key = 'getLastTx';
         const ret =  await ln.getLastTx();
-        const jsonString = JSON.stringify(ret)
-        memDB.set('getLastTx', jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await  db.setLuniverseData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
     }
 }
 
 function getCoinLoop (){    
     setTimeout(() => {
         getCoinCap();
-
         getCoinLoop();
     }, 1000 * 60 * 10);
 }
