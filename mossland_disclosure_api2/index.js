@@ -132,122 +132,29 @@ app.get("/api/getCodeFrequency", async (req, res) => {
     return res.send(ret);
 });
 
-app.get("/api/market", (req, res) => {
-    console.log(pool);
-    pool.getConnection((error, connection) =>{
-        if (!error){
-            console.log(connection)
-            connection.query('SELECT * FROM mossland_disclosure.market_data', (error, result, field)=>{
-                if (!error){
-                    console.log(result);
-                    connection.release()
-                    res.send(result);
-                }
-                else{
-                    res.send({ok: false});
-                    throw error
-                }
-            })
-        }
-        else{
-            res.send({ok: false});
-            console.log(error);
-        }
-    });
+app.get("/api/market", async (req, res) => {
+    const ret = await db.getMarket();
+    return res.send(ret);
 });
 
-app.get("/api/recent_release", (req, res) => {
-    console.log(pool);
-    pool.getConnection((error, connection) =>{
-        if (!error){
-            console.log(connection)
-            connection.query('SELECT * FROM mossland_disclosure.release_schedule WHERE date BETWEEN NOW() - INTERVAL 3 MONTH AND NOW()', (error, result, field)=>{
-                if (!error){
-                    console.log(result);
-                    connection.release()
-                    res.send(result);
-                }
-                else{
-                    res.send({ok: false});
-                    throw error
-                }
-            })
-        }
-        else{
-            res.send({ok: false});
-            console.log(error);
-        }
-    });
+app.get("/api/recent_release",  async (req, res) => {
+    const ret = await db.getRecentRelease();
+    return res.send(ret);
 });
 
-app.get("/api/expected_release", (req, res) => {
-    pool.getConnection((error, connection) =>{
-        if (!error){
-            console.log(connection)
-            connection.query('SELECT * FROM mossland_disclosure.release_schedule WHERE date >= CURDATE() AND date <= (CURDATE() + INTERVAL 3 MONTH)', (error, result, field)=>{
-                if (!error){
-                    console.log(result);
-                    connection.release()
-                    res.send(result);
-                }
-                else{
-                    res.send({ok: false});
-                    throw error
-                }
-            })
-        }
-        else{
-            res.send({ok: false});
-            console.log(error);
-        }
-    });
+app.get("/api/expected_release", async (req, res) => {
+    const ret = await db.getExpectedEelease();
+    return res.send(ret);
 });
 
-app.get("/api/disclosure", (req, res) => {
-    pool.getConnection((error, connection) =>{
-        if (!error){
-            console.log(connection)
-            connection.query('SELECT * FROM mossland_disclosure.disclosure ORDER BY date DESC', (error, result, field)=>{
-                if (!error){
-                    console.log(result);
-                    connection.release()
-                    res.send(result);
-                }
-                else{
-                    res.send({ok: false});
-                    throw error
-                }
-            })
-        }
-        else{
-            res.send({ok: false});
-            console.log(error);
-        }
-    });
+app.get("/api/disclosure", async (req, res) => {
+    const ret = await db.getDisclosure();
+    return res.send(ret);
 });
 
-app.get("/api/materials", (req, res) => {
-    console.log(pool);
-    pool.getConnection((error, connection) =>{
-        if (!error){
-            console.log(connection)
-            connection.query('SELECT * FROM mossland_disclosure.materials ORDER BY date DESC', (error, result, field)=>{
-                if (!error){
-                    console.log(result);
-                    connection.release();
-                    res.send(result);
-                }
-                else{
-                    res.send({ok: false});
-                    throw error
-                }
-            })
-        }
-        else{
-            res.send({ok: false});
-            console.log(error);
-        }
-    });
+app.get("/api/materials", async (req, res) => {
+    const ret = await db.getMaterials();
+    return res.send(ret);
 });
 
 app.listen(3000, () => console.log("Server start"));

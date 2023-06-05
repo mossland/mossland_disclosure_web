@@ -47,6 +47,62 @@ class Database{
         }
     }
 
+    async getData2(table){
+        const connection = await pool.getConnection();
+        try{
+            let sql = "SELECT * FROM mossland_disclosure." + table + " ORDER BY date DESC";
+            const result = await connection.query(sql);
+            connection.release();
+            return result[0];
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
+    }
+
+    async getMarket(){
+        const connection = await pool.getConnection();
+        try{
+            let sql = "SELECT * FROM mossland_disclosure.market_data";
+            const result = await connection.query(sql);
+            connection.release();
+            return result[0];
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
+    }
+
+    async getRecentRelease(){
+        const connection = await pool.getConnection();
+        try{
+            let sql = "SELECT * FROM mossland_disclosure.release_schedule WHERE date BETWEEN NOW() - INTERVAL 3 MONTH AND NOW()";
+            const result = await connection.query(sql);
+            connection.release();
+            return result[0];
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
+    }
+
+    async getExpectedEelease(){
+        const connection = await pool.getConnection();
+        try{
+            let sql = "SELECT * FROM mossland_disclosure.release_schedule WHERE date >= CURDATE() AND date <= (CURDATE() + INTERVAL 3 MONTH)";
+            const result = await connection.query(sql);
+            connection.release();
+            return result[0];
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
+    }
+
     async getGithubData(key){
         return await this.getData('github', key);
     }
@@ -64,6 +120,12 @@ class Database{
     }
     async setUpbitData(key, value){
         return await this.setData('upbit', key, value);
+    }
+    async getMaterials(){
+        return await this.getData2('materials');
+    }
+    async getDisclosure(){
+        return await this.getData2('disclosure');
     }
 }
 
