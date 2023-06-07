@@ -122,4 +122,107 @@ router.get('/materials', async (req, res, next) => {
     }
 });
 
+
+router.get("/api/getTotalTx", async (req, res) => {
+    const key = 'getTotalTx';
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getLastYearTx", async (req, res) => {
+    const key = 'getLastYearTx';
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getLastMonthTx", async (req, res) => {
+    const key = 'getLastMonthTx';
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getLastWeekTx", async (req, res) => {
+    const key = 'getLastWeekTx';
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getLastDayTx", async (req, res) => {
+    const key = 'getLastDayTx';
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getHolderCount", async (req, res) => {
+    const key = 'getHolderCount';
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getLastTx", async (req, res) => {
+    const key = 'getLastTx';
+    const ret = await db.getLuniverseData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getTickerKrw", async (req, res) => {
+    const key = 'getTickerKrw';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getYearKrw", async (req, res) => {
+    const key = 'getYearKrw';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getMonthKrw", async (req, res) => {
+    const key = 'getMonthKrw';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getWeekKrw", async (req, res) => {
+    const key = 'getWeekKrw';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getDayKrw", async (req, res) => {
+    const key = 'getDayKrw';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getOrderbookKrw", async (req, res) => {
+    const key = 'getOrderbookKrw';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getLastKrwTx", async (req, res) => {
+    const key = 'getLastKrwTx';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getAccTradeVolumeKrw", async (req, res) => {
+    const key = 'getAccTradeVolumeKrw';
+    const ret = await db.getUpbitData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getCommitCount", async (req, res) => {
+    const key = 'getCommitCount';
+    const ret = await db.getGithubData(key);
+    return res.send(ret);
+});
+
+router.get("/api/getCodeFrequency", async (req, res) => {
+    const key = 'getCodeFrequency';
+    const ret = await db.getGithubData(key);
+    return res.send(ret);
+});
+
 export default router;

@@ -8,6 +8,8 @@ import ServerError from './util/serverError';
 
 import DB from './db/db';
 
+import { updateMarketCap, getCoinmarketCap, getCoingeckoCap, getMosslandCap } from './util/coinCap';
+
 import ApiRouter from './route/api';
 
 

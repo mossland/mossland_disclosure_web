@@ -35,7 +35,7 @@ export async function updateMarketCap(marketInfo: IMarketInfo){
                             if (!error) {
 
                                 console.log(result);
-                                connection.release()
+                                conn.release()
                             }
                             else{
                                 throw error
@@ -238,7 +238,7 @@ export async function getMosslandCap() {
                 marketCap_krw : 0
             };
             
-            json.forEach(function(data, idx){
+            json.forEach(function(data: any, idx: number){
                 if (data.currencyCode ==='USD'){
                     ret.maxSupply = data.maxSupply;
                     ret.circulatingSupply = data.circulatingSupply;
