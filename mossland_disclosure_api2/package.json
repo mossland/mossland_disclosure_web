@@ -18,6 +18,7 @@
     "bluebird": "^3.7.2",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
+    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "es6-promisify": "^7.0.0",
     "express": "^4.17.1",
@@ -26,7 +27,9 @@
     "mysql2": "^2.3.3",
     "node-cron": "^3.0.2",
     "tsc": "^2.0.4",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "yarn": "^1.22.19"
+
   },
   "description": "",
   "devDependencies": {

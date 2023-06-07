@@ -2,3 +2,5 @@
 .env
 .env.*
 node_modules/
+
+config.json
