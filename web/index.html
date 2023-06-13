@@ -579,7 +579,6 @@
                                 <dd>{{ surveyData.totalSurveyCount }} <span data-langNum="73">안건</span></dd>
                             </div>
 
-                            
                             <div class="dao_stat__block">
                                 <dt data-langNum="74">누적 투표 수</dt>
                                 <dd>{{ accVoteCount }} <span data-langNum="75">회</span></dd>
@@ -590,7 +589,7 @@
                             </div>
                         </dl>
                     </div>
-                    
+
                     <div class="dao_vote" v-if="dupVoteList && dupVoteList.length > 0">
                         <div class="title">
                             <img src="./img/Vector-30.svg"/>
@@ -748,10 +747,9 @@
         </div>
     </section>
 
-	
     <section class="bottom_section">
         <div class="container">
-            <div class="copyright">Copyright @ Mossland. All Right Reserved.</div>	
+            <div class="copyright">Copyright @ Mossland. All Right Reserved.</div>
         </div>
     </section>
 
@@ -1034,7 +1032,7 @@
     table.main_board tr td { height: 22px; font-style: normal; font-weight: 500; font-size: 18px;line-height: 22px;color: #808080;  }
     table.main_board tr td:first-child { width: 80px;color: #00C2C2;}
     table.main_board tr td:last-child { width: 58px; text-align: right;}
-	
+
 	section.bottom_section { margin-top: 50px; text-align: center;}
 	.copyright{  font-style: normal; font-weight: 300; font-size: 16px; line-height: 29px; color: #808080; flex: none; order: 0; flex-grow: 0; }
 
@@ -1119,7 +1117,7 @@
         align-items: center;
     }
 
-    
+
     .dao_vote .vote-list-table .td.title mark {
         display: inline-block;
         white-space: nowrap;
@@ -1135,7 +1133,7 @@
         background-color: #00C2C2;
     }
     .dao_vote .vote-list-table .td.title mark.end {
-        background-color: #afafaf;   
+        background-color: #afafaf;
     }
     .dao_vote .vote-list-table .td.title {
         display: inline-block;
@@ -1216,15 +1214,15 @@
     }
     .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n + 1) {
         background-color: #2CD3E1;
-        
+
     }
     .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n + 2) {
         background-color: #A459D1;
-        
+
     }
     .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n + 3) {
         background-color: #F266AB;
-        
+
     }
     .dao_vote .vote-list-table .td.selection .selection__wrapper .selection__ele:nth-child(4n) {
         background-color: #FFB84C;
@@ -1330,7 +1328,7 @@
         .container, .container2{ width: 100%; box-sizing: border-box; padding: 0 24px; }
 
         .mobile_show { display : none;}
-		
+
         .middle_container .txt--03{ font-size:28px; margin-bottom: 10px;}
         .mobile_hide {}
         .pc_show { display:none; }
@@ -1467,7 +1465,7 @@
         button.btn_view { font-size: 10px; padding : 5px 10px;}
 
         .title--01 {font-size : 16px;}
-		
+
 		.copyright {font-size: 10px;}
 
         .mobile_hide { display : none; }
@@ -1818,7 +1816,7 @@
 
 		$('[data-langNum]').each(function() {
             var $this = $(this);
-            
+
             $this.html($.lang[currentLanguage][$this.data('langnum')]);
 		});
 
@@ -1843,7 +1841,7 @@
 
         return '('+today.toISOString().replace('T', ' ').replace('Z', ' ').substring(0, 19) + ' 기준)';
     }
-	
+
 	function copyToClipboard(element) {
 		var $temp = $("<input>");
 		$("body").append($temp);
@@ -2117,12 +2115,12 @@
 
 		/*
 		var num = Object.keys($.lang.en).length;
-		$('.mossland_marketcap').attr("data-langNum", num);					
+		$('.mossland_marketcap').attr("data-langNum", num);
 		$.lang.en.add({ num : '' });
 		$.lang.ko.add({ num : '' });
 		*/
 
-		
+
         // Market Data
 		$.getJSON(BASE_URL + '/api/market/', function(data){
 			$.each(data, function (index, value) {
@@ -2141,7 +2139,7 @@
 					if (value["market_type"] === "coingecko_marketcap_krw")
 						setTimeout(() => counter($('.coingecko_marketcap'), value["number"], ' 원'), 1);
 				}
-					
+
 				if (value["market_type"] === "mossland_circulating_supply") {
                     MOSSLAND_CIRCULATING_SUPPLY = value["number"];
                     setTimeout(() => counter($('.mossland_circulating_supply'), value["number"], ' moc'), 1);
@@ -2150,8 +2148,8 @@
 				if (value["market_type"] === "coinmarketcap_circulating_supply")
 					setTimeout(() => counter($('.coinmarketcap_circulating_supply'), value["number"], ' moc'), 1);
 				if (value["market_type"] === "coingecko_circulating_supply")
-					setTimeout(() => counter($('.coingecko_circulating_supply'), value["number"], ' moc'), 1);					
-				
+					setTimeout(() => counter($('.coingecko_circulating_supply'), value["number"], ' moc'), 1);
+
 				if (value["market_type"] === "mossland_max_supply") {
                     MOSSLAND_MAX_SUPPLY = value['number'];
                     setTimeout(() => counter($('.mossland_max_supply'), value["number"], ' moc'), 1);
@@ -2179,12 +2177,12 @@
                 $('.acc_trade_price_24h_per').html(numberWithCommas((MOSSLAND_CIRCULATING_SUPPLY* 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
 
             });
-		});		
-		
+		});
+
 		// Release Data
 		$.getJSON(BASE_URL + '/api/recent_release/', function(data){
 			var html = "";
-			$.each(data, function (index, value) {				
+			$.each(data, function (index, value) {
 				html += "<tr>";
 				html += "<td>" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
 				if (lang === 'en')
@@ -2194,11 +2192,11 @@
 				html += "<td>" + "+" + (~~value["value"]).toLocaleString() +" moc" + "</td>";
 				html += "</tr>";
 			});
-			$('.recent_release').html(html);			
-		});		
+			$('.recent_release').html(html);
+		});
 		$.getJSON(BASE_URL + '/api/expected_release/', function(data){
 			var html = "";
-			$.each(data, function (index, value) {				
+			$.each(data, function (index, value) {
 				html += "<tr>";
 				html += "<td>" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
 				if (lang === 'en')
@@ -2208,14 +2206,14 @@
 				html += "<td>" + "+" + (~~value["value"]).toLocaleString() +" moc" + "</td>";
 				html += "</tr>";
 			});
-			$('.expected_release').html(html);			
+			$('.expected_release').html(html);
 		});
-		
-		
+
+
 		// Disclosure & Materials
 		$.getJSON(BASE_URL + '/api/disclosure/', function(data){
 			var html = "";
-			$.each(data, function (index, value) {				
+			$.each(data, function (index, value) {
 				html += "<tr>";
 				html += "<td class=\"date\">" + dayjs(value["date"]).format('YYYY.MM') + "</td>";
 				if (lang === 'en')
@@ -2225,12 +2223,12 @@
 				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
 				html += "</tr>";
 			});
-			$('.disclosure').html(html);			
+			$('.disclosure').html(html);
 		});
-		
+
 		$.getJSON(BASE_URL + '/api/materials/', function(data){
 			var html = "";
-			$.each(data, function (index, value) {				
+			$.each(data, function (index, value) {
 				html += "<tr>";
 				html += "<td class=\"date\">" + dayjs(value["date"]).format('YYYY') + "</td>";
 				if (lang === 'en')
@@ -2240,7 +2238,7 @@
 				html += "<td><button class=\"btn_view\" onclick=\"window.open('" + value["link"] + "')\">View</button></td>";
 				html += "</tr>";
 			});
-			$('.materials').html(html);			
+			$('.materials').html(html);
 		});
 
 
