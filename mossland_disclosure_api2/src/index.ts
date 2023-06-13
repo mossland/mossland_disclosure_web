@@ -1,5 +1,7 @@
 require("dotenv").config();
 
+import cf from '../config.json';
+
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import axios from 'axios';
@@ -9,6 +11,8 @@ import DB from './db/db';
 import ServerError from './util/serverError';
 import { updateMarketCap, getCoinmarketCap, getCoingeckoCap, getMosslandCap } from './util/coinCap';
 import Upbit from './util/upbit';
+import Github from './util/github';
+import Luniverse from './util/luniverse';
 
 import ApiRouter from './route/api';
 
@@ -72,130 +76,117 @@ async function setUpbitInfo(){
         const key = 'getTickerKrw';
         const ret =  await ub.getTickerKrw();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
     {
         const key = 'getYearKrw';
         const ret =  await ub.getYearKrw();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
     {
         const key = 'getMonthKrw';
         const ret =  await ub.getMonthKrw();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
 
     {
         const key = 'getWeekKrw';
         const ret =  await ub.getWeekKrw();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
 
     {
         const key = 'getDayKrw';
         const ret =  await ub.getDayKrw();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
     {
         const key = 'getOrderbookKrw';
         const ret =  await ub.getOrderbookKrw();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
     {
         const key = 'getLastKrwTx';
         let ret =  await ub.getLastKrwTx();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
     {
         const key = 'getAccTradeVolumeKrw';
         let ret =  await ub.getAccTradeVolumeKrw();
         const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('upbit', key, jsonString.toString());
     }
 }
 
 async function setGitHubInfo(){    
-    const gb = new GitHub();
+    const gb = new Github((cf as any).Github.Token);
     {
         const key = 'getCodeFrequency';
         let ret =  await gb.getWeeklyCodeCount();
         const jsonString = JSON.stringify(ret);
-        await  db.setGithubData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('github', key, jsonString.toString());
     }
     {
         const key = 'getCommitCount';
         let ret =  await gb.getWeeklyCommitCount();
-        const jsonString = JSON.stringify(ret)
-        await  db.setGithubData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        const jsonString = JSON.stringify(ret);
+        await DB.instance.setData('github', key, jsonString.toString());
     }
 }
 
 async function setLuniverseInfo(){    
-    const ln = new Luniverse();
+    const ln = new Luniverse({
+        NodeId : (cf as any).Luniverse.NodeId,
+        KeyId : (cf as any).Luniverse.KeyId,
+        SecretKey : (cf as any).Luniverse.SecretKey,
+    });
     {
         const key = 'getTotalTx';
         const ret =  await ln.getTotalTx();
         const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('luniverse', key, jsonString.toString());
     }
     {
         const key = 'getLastYearTx';
         const ret =  await ln.getLastOneYear();
         const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('luniverse', key, jsonString.toString());
     }
     {
         const key = 'getLastMonthTx';
         const ret =  await ln.getLastOneMonth();
         const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('luniverse', key, jsonString.toString());
     }
     {
         const key = 'getLastWeekTx';
         const ret =  await ln.getLastOneWeek();
         const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('luniverse', key, jsonString.toString());
     }
     {
         const key = 'getLastDayTx';
         const ret =  await ln.getLastOneDay();
         const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('luniverse', key, jsonString.toString());
     }
     {
         const key = 'getHolderCount';
         const ret =  await ln.getHolderCount();
         const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('luniverse', key, jsonString.toString());
     }
     {
         const key = 'getLastTx';
         const ret =  await ln.getLastTx();
         const jsonString = JSON.stringify(ret);
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+        await DB.instance.setData('luniverse', key, jsonString.toString());
     }
 }
 

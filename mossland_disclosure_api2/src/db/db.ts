@@ -34,7 +34,35 @@ export default class DB {
             throw e;
         }
     }
+    public async getData(table: string, key: string){
+        const connection = await this.conn();
+        try{
+            let sql = "SELECT json_value FROM mossland_disclosure." + table+ " WHERE query_type = ?;";
+            let params = [key];
+            const [rows]: any = await connection.query(sql, params);
+            connection.release();
+            return rows[0].json_value;
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
+    }
     public async setData(table: string, key: string, value: any) {
-        
+        const connection = await this.conn();
+        try{
+            let sql = "INSERT INTO mossland_disclosure." + table + " (query_type, json_value) values(?, ?)\
+                            ON DUPLICATE KEY UPDATE\
+                            query_type = ?,\
+                            json_value = ?;";
+            let params = [key, value, key, value];
+            const [rows]: any = await connection.query(sql, params);
+            connection.release();
+            return rows;
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
     }
 }
