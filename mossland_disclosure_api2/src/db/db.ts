@@ -33,6 +33,8 @@ export default class DB {
         } catch (e) {
             throw e;
         }
+    }
+    public async setData(table: string, key: string, value: any) {
         
     }
 }

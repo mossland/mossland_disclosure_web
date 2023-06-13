@@ -1,22 +1,24 @@
 const axios = require('axios');
 const cf = require("./config.json");
 
-class Github{
+class Github {
     constructor() {
         this.baseURL = ' https://api.github.com';
-        this.repoList = ['mossland_disclosure_web', 
-                        'Hackathon',
-                        'MosslandDeveloperSupportProgram',
-                        'mossverse',
-                        'art_resource',
-                        'Disclosure-and-Materials',
-                        'The-Story-of-CyberTHUG',
-                        'MossCoin',
-                        'Projects',
-                        'MossDAO',
-                        'Brand-Identity',
-                    ];
+        this.repoList = [
+            'mossland_disclosure_web', 
+            'Hackathon',
+            'MosslandDeveloperSupportProgram',
+            'mossverse',
+            'art_resource',
+            'Disclosure-and-Materials',
+            'The-Story-of-CyberTHUG',
+            'MossCoin',
+            'Projects',
+            'MossDAO',
+            'Brand-Identity',
+        ];
     }
+
     async getWeeklyCodeCount(){
         let ret = await this.getStatistics('code_frequency');
         let codeCount = new Map();
