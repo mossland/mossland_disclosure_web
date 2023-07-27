@@ -15,6 +15,11 @@ class Github{
                         'Projects',
                         'MossDAO',
                         'Brand-Identity',
+                        'WhiteProjFront',
+                        'WhiteProj',
+                        'rocket_branch',
+                        'mossland_team',
+                        'mossland-metaverse'
                     ];
     }
     async getWeeklyCodeCount(){
