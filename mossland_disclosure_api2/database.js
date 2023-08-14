@@ -103,6 +103,45 @@ class Database{
         }
     }
 
+    async setWmocInfo(value){
+        const jsonString = JSON.stringify(value.wmocLastTx);
+        const connection = await pool.getConnection();
+        try{
+            let sql = "UPDATE mossland_disclosure.wmoc_info SET\
+                            maxSupplyWmoc = ?,\
+                            supplyableWmoc = ?,\
+                            mocBalance = ?,\
+                            mocCirculatingSupply = ?,\
+                            wmocLastTx = ?,\
+                            pausedWmoc = ?\
+                            WHERE (`id` = '0');";
+            let params = [value.maxSupplyWmoc,   value.supplyableWmoc, value.mocBalance,
+                          value.mocCirculatingSupply, jsonString, value.pausedWmoc];
+
+            const [rows] = await connection.query(sql, params);
+            connection.release();
+            return rows;
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
+    }
+
+    async getWmocInfo(){
+        const connection = await pool.getConnection();
+        try{
+            let sql = "SELECT * FROM mossland_disclosure.wmoc_info";
+            const result = await connection.query(sql);
+            connection.release();
+            return result[0][0];
+        }
+        catch(err){
+            connection.release();
+            return {success : false};
+        }
+    }
+
     async getGithubData(key){
         return await this.getData('github', key);
     }

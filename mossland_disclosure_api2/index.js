@@ -9,6 +9,7 @@ const Luniverse = require("./luniverse.js");
 const Upbit = require("./upbit.js");
 const GitHub = require("./github.js");
 const Database = require("./database.js");
+const SwapInfo = require("./swapInfo.js");
 
 require("dotenv").config();
 const config = {
@@ -29,6 +30,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true}));
 app.use(cors());
 
+
+app.get("/api/getWmocInfo", async (req, res) => {
+    const ret = await db.getWmocInfo();
+    return res.send(ret);
+});
 
 app.get("/api/getTotalTx", async (req, res) => {
     const key = 'getTotalTx';
@@ -167,6 +173,7 @@ app.listen(3000, () => console.log("Server start"));
 //         return {success : false};
 // }
 
+/*
 getCoinCap();
 getCoinLoop();
 
@@ -178,6 +185,12 @@ setGithubLoop();
 
 setUpbitInfo();
 setUpbitLoop();
+*/
+
+setWmocInfo();
+setWmocLoop();
+
+
 
 function setLuniverseLoop (){    
     setTimeout(() => {
@@ -199,6 +212,21 @@ function setUpbitLoop (){
         setUpbitInfo();
         setUpbitLoop();
     }, 1000 * 10);
+}
+
+
+function setWmocLoop (){    
+    setTimeout(() => {
+        setWmocInfo();
+        setWmocLoop();
+    }, 1000 * 10);
+}
+
+
+async function setWmocInfo(){    
+    const si = new SwapInfo();
+    const ret = await si.getWmocInfo();
+    await  db.setWmocInfo(ret);
 }
 
 async function setUpbitInfo(){    
@@ -567,5 +595,4 @@ function getMosslandCap() {
             resolve(ret);
         }
     });
-    
 }
