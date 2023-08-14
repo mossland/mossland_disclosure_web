@@ -103,17 +103,19 @@ $.lang.ko = {
     86: '&nbsp;&nbsp;실시간 스왑 시스템 정보',
     87: '(WMOC는 MOC 유통량 안에서 발행되며 락업되어 유통량을 초과하지 않습니다)',
 
-    88: 'A: WMOC 총 발행량',
-    89: 'B: WMOC 유통량 (= A-C)',
-    90: 'C: 락업된 WMOC 수량',
-    91: 'D: 락업된 MOC 수량',
-    92: 'MOC + WMOC 유통량 <br>(= MOC 유통량 - D + B)',
+    88: 'WMOC 총 발행량',
+    89: 'WMOC 유통량',
+    90: '락업된 WMOC 수량',
+    91: '락업된 MOC 수량',
+    92: '보정된 MOC 유통량',
 
     93: 'MOC 락업 지갑',
     94: 'WMOC 락업 지갑',
     95: '스왑 시스템',
     96: '실시간 유통량 모니터',
     97: '값(WMOC)',
+    98: '1) WMOC 총 발행량에서 락업된 WMOC 수량을 제외한 실제 WMOC 유통량',
+    99: '2) 유통 가능한 MOC와 WMOC의 합산 값으로 MOC 유통량을 초과하면 안됨',
 };
 
 $.lang.en = {
@@ -206,23 +208,25 @@ $.lang.en = {
     82: '(including private repository)',
     83: 'Blog',
 
-    84: 'Wrapped MOC (WMOC) Real-time Information',
+    84: 'Wrapped MOC (WMOC) Status (Real-time)',
     85: 'Wrapped MOC (WMOC)',
 
-    86: 'Real-time Swap System Information',
-    87: '(WMOC is issued within the MOC circulation and locked up, not exceeding the circulating supply)',
+    86: 'Swap System Status',
+    87: '(Locked-up wallet deposits maintain stable MossCoin total supply and circulating supply)',
 
-    88: 'A: WMOC total issuance ',
-    89: 'B: WMOC Circulating supply <br>(= A-C)',
-    90: 'C: WMOC Locked up quantity',
-    91: 'D: MOC Locked up quantity',
-    92: 'MOC + WMOC Circulating supply <br>(= MOC Circulating supply - D + B)',
+    88: 'Total supply of WMOC',
+    89: 'Circulating supply of WMOC',
+    90: 'Quantity of Locked-up WMOC',
+    91: 'Quantity of Locked-up MOC',
+    92: 'Adjusted Circulating supply',
 
-    93: 'MOC Lockup Wallet',
-    94: 'WMOC Lockup Wallet',
+    93: 'Locked-up Wallet of MOC',
+    94: 'Locked-up Wallet of WMOC',
     95: 'Swap system',
-    96: 'Real-time Circulating Supply Monitor',
+    96: 'Circulating supply monitor',
     97: 'Value(WMOC)',
+    98: '1) The circulating supply of WMOC, excluding the quantity of locked-up WMOC, from the total supply of WMOC.',
+    99: '2) The combined value of tradable MOC and WMOC in circulation must not exceed the circulating supply of MOC.',
 };
 
 
@@ -450,21 +454,10 @@ function loadTransferList(lang) {
         $('.moc_balance').html(numberWithCommas(mb));
         $('.total_circulating_supply').html(numberWithCommas(tcs));
 
-        let normal;
-        let malfunction;
-        if (lang === 'en') {
-            normal = 'Normal operation';
-            malfunction = 'Malfunction';
-        }
-        else{
-            normal = '정상';
-            malfunction = '비정상';
-        }
-        const status = (tcs === mcs ? normal : malfunction);
-        const color =  (tcs === mcs ? 'green' : 'red');
-        const isNormal = `<span style = "color:${color}">${status}</span>`
+        const className =  (tcs === mcs ? 'green_circle' : 'red_circle');
+        const isNormal = `<div class="${className}"></div>`
 
-        $('.is_normal_wmoc_count').html(isNormal);
+        $('.wmoc_status').html(isNormal);
 
         $('.wmoc_transfer_list_table_item').remove();
         if (data != null) {
@@ -675,9 +668,11 @@ function loadTransactionList(lang) {
 
         $('.transaction_list_date').html(getCurrentDateString(lang));
 
+        /*
         TRANSACTION_TIMER = setTimeout(function () {
             loadTransactionList(lang);
         }, 5000);
+        */
     });
 }
 

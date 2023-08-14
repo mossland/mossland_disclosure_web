@@ -351,7 +351,6 @@
             </div>
 
             <div class="left_right_container moc_trans">
-
                 <div class="left_container">
                     <div class="title">
                         <!--                        <img src="./img/Vector-18.svg"/>-->
@@ -387,30 +386,39 @@
                     <span data-langNum="87">(WMOC는 MOC 유통량 안에서 발행되며 락업되어 유통량을 초과하지 않습니다)</span>
                 </div>
             </div>
-            <div class="left_right_container moc_trans" style="margin-top:0px">
+            <div class="left_right_container moc_trans" style="margin-top:0px;margin-bottom:5px">
                 <div class="left_container">
                     <table class="moc_table table_2col">
                         <tr>
-                            <td data-langNum="88">A: WMOC 총 발행량</td>
+                            <td data-langNum="88">WMOC 총 발행량</td>
                             <td class="max_supply_wmoc">-</td>
                         </tr>
                         <tr>
-                            <td data-langNum="89">B: WMOC 유통량 (=A-C)</td>
+                            <td>
+                                <span data-langNum="89">WMOC 유통량</span>
+                                <span style="position: relative;top: -4px;font-size: 11px;">  1)</span></td>
+                            </td>
                             <td class="wmoc_circulating_supply">-</td>
                         </tr>
                         <tr>
-                            <td data-langNum="90">C: 락업된 WMOC 수량</td>
+                            <td data-langNum="90">락업된 WMOC 수량</td>
                             <td class="supplyable_wmoc">-</td>
                         </tr>
                         <tr>
-                            <td data-langNum="91">D: 락업된 MOC 수량</td>
+                            <td >
+                                <span data-langNum="91">락업된 MOC 수량</span>
+                                <span style="position: relative;top: -4px;font-size: 11px;">  2)</span></td>
                             <td class="moc_balance">-</td>
                         </tr>
                         <tr>
-                            <td data-langNum="92">MOC + WMOC 유통량 <br>(= MOC 유통량 - D + B)</td>
+                            <td data-langNum="92">보정된 MOC 유통량</td>
                             <td class="total_circulating_supply">-</td>
                         </tr>
                     </table>
+                    <div class="subscript">
+                        <span data-langNum="98">1) WMOC 총 발행량에서 락업된 WMOC 수량을 제외한 실제 WMOC 유통량</span>
+                        <span data-langNum="99">2) 유통 가능한 MOC와 WMOC의 합산 값으로 MOC 유통량을 초과하면 안됨</span>
+                    </div>
                 </div>
                 <div class="right_container">
                     <table class="transactions_table">
@@ -431,15 +439,13 @@
                         </tr>
                         <tr>
                             <td data-langNum="96">실시간 유통량 모니터</td>
-                            <td class="is_normal_wmoc_count ">-</td>
+                            <td class="wmoc_status ">-</td>
                         </tr>
                     </table>
                 </div>
             </div>
 
-
-
-            <div class="list_container">
+            <div class="list_container" style="margin-top: 50px;">
                 <div class="title">
                     <img src="./img/Vector-22.svg"/>
                     <span data-langNum="50">토큰 전송 기록</span>

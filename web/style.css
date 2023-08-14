@@ -1183,6 +1183,34 @@ section.bottom_section {
     width: 100%;
 }
 
+.subscript {
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    color: #808080;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.green_circle{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #00ff00;
+
+    margin-left: auto;
+}
+
+.red_circle{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #ff0000;
+
+    margin-left: auto;
+}
+
 .resplist-move,
 .resplist-enter-active,
 .resplist-leave-active {
@@ -1836,6 +1864,16 @@ section.bottom_section {
 
     .pc_show {
         display: none;
+    }
+
+    .subscript {
+        margin-left: auto;
+        margin-right: auto;
+        display: flex;
+        flex-direction: column;
+        color: #808080;
+        font-size: 10px;
+        white-space:break-spaces;
     }
 
 }
