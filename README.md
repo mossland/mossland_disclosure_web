@@ -1,3 +1,54 @@
+# Mossland Disclosure System
+
+In the first half of 2023, Mossland introduced the Disclosure System to provide greater transparency and a fairer opportunity for project participation to Mosscoin holders. This system offers comprehensive information related to Mosscoin, including real-time circulating supply, future distribution plans, and a list of wallets managed by the foundation. Additionally, it furnishes real-time information about Mossland's open-source development progress and voting status within its decentralized framework, thus aiding Mosscoin holders in assessing the project's progression.
+
+The Mossland Disclosure System (https://disclosure.moss.land) is an open-source project.
+
+## Development Roadmap
+
+- 2023-01-09: **[Completed]** Mossland Disclosure Website Launch: Open-source Node.js backend for market data and document access
+  - Purpose: Provide comprehensive information about Mosscoin distribution plans and disclosures
+  - Content: Backend source code based on Node.js, offering information through HTTP REST APIs
+    - Distribution information disclosure: Market capitalization, current circulating supply, distribution plans, foundation wallet lists, planned changes in circulation, etc.
+    - Information disclosure: Disclosure documents, project-related documents
+    
+- 2023-05-30: **[Completed]** Mossland Disclosure Website Update: Real-time trading and market data, along with open-source community statistics
+  - Purpose: Provide real-time Mosscoin transaction data, market data, and Mossland project activity information to assist Mosscoin holders in evaluating the project
+  - Content: Real-time Mosscoin transaction information, real-time market data, open-source community activity information and statistics
+    - Real-time Mosscoin transaction information: Contract source code, Mosscoin holder count, recent transaction count, real-time transfer records
+    - Real-time Mosscoin market information: Mosscoin trading volume, circulating supply, price indicators, real-time order/execution history, etc.
+    - Mossland open-source activity information: Github Code Frequency, Github Code Commits real-time information
+    - Mossland DAO activity information: Total agenda count, cumulative voting count, recent agenda status, etc.
+
+- 2024: Real-time updates of Mossland's decentralized governance framework information and statistics
+
+## Source Code Directory Overview
+
+### [mossland_disclosure_api](/mossland_disclosure_api)
+Backend source code based on .NET that provides the following information through HTTP REST APIs:
+- Market capitalization (Mossland, CoinMarketCap, CoinGecko)
+- Circulating supply (Mossland, CoinMarketCap, CoinGecko)
+- Total issuance limit (Mossland)
+- Circulating supply change plans
+- Disclosures, public documents
+
+### [mossland_disclosure_api2](/mossland_disclosure_api2)
+Backend source code based on Node.js that provides the following information through HTTP REST APIs:
+- Market capitalization (Mossland, CoinMarketCap, CoinGecko)
+- Circulating supply (Mossland, CoinMarketCap, CoinGecko)
+- Total issuance limit (Mossland)
+- Circulating supply change plans
+- Disclosures, public documents
+
+### [nginx](/nginx)
+Provides nginx.conf needed for operating backend servers based on .NET
+
+### [web](/web)
+Source code for the website's frontend.
+
+
+
+
 # 모스랜드 공시 시스템
 
 모스랜드는 2023년 상반기에 모스랜드는 모스코인 홀더에게 보다 높은 투명성과 공정한 프로젝트 참여 가능성을 제공하기 위해서 공시 시스템을 출시했습니다. 이 시스템은 모스코인의 실시간 유통량, 향후 유통 계획, 재단이 관리하는 지갑 리스트 등과 같은 모스코인과 관련된 종합적인 정보를 제공합니다. 또한, 모스랜드의 오픈소스 개발 진행 상황과 분산화 프레임워크에서 진행되는 투표 현황과 같은 실시간 정보를 제공하여 모스코인 홀더들이 모스랜드 프로젝트의 진행 상황을 평가하는 데 큰 도움을 주고 있습니다.
