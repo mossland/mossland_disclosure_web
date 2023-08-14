@@ -95,7 +95,25 @@ $.lang.ko = {
     80: '표',
     81: '최근 투표',
     82: '(including private repository)',
-    83: '블로그'
+    83: '블로그',
+
+    84: 'Wrapped MOC (WMOC) 실시간 정보',
+    85: '랩드 모스코인 (WMOC)',
+
+    86: '&nbsp;&nbsp;실시간 스왑 시스템 정보',
+    87: '(WMOC는 MOC 유통량 안에서 발행되며 락업되어 유통량을 초과하지 않습니다)',
+
+    88: 'A: WMOC 총 발행량',
+    89: 'B: WMOC 유통량 (= A-C)',
+    90: 'C: 락업된 WMOC 수량',
+    91: 'D: 락업된 MOC 수량',
+    92: 'MOC + WMOC 유통량 <br>(= MOC 유통량 - D + B)',
+
+    93: 'MOC 락업 지갑',
+    94: 'WMOC 락업 지갑',
+    95: '스왑 시스템',
+    96: '실시간 유통량 모니터',
+    97: '값(WMOC)',
 };
 
 $.lang.en = {
@@ -186,7 +204,25 @@ $.lang.en = {
     80: 'Votes',
     81: 'Recent Votes',
     82: '(including private repository)',
-    83: 'Blog'
+    83: 'Blog',
+
+    84: 'Wrapped MOC (WMOC) Real-time Information',
+    85: 'Wrapped MOC (WMOC)',
+
+    86: 'Real-time Swap System Information',
+    87: '(WMOC is issued within the MOC circulation and locked up, not exceeding the circulating supply)',
+
+    88: 'A: WMOC total issuance ',
+    89: 'B: WMOC Circulating supply <br>(= A-C)',
+    90: 'C: WMOC Locked up quantity',
+    91: 'D: MOC Locked up quantity',
+    92: 'MOC + WMOC Circulating supply <br>(= MOC Circulating supply - D + B)',
+
+    93: 'MOC Lockup Wallet',
+    94: 'WMOC Lockup Wallet',
+    95: 'Swap system',
+    96: 'Real-time Circulating Supply Monitor',
+    97: 'Value(WMOC)',
 };
 
 
@@ -375,6 +411,10 @@ function copyToClipboard(element) {
     $temp.remove();
 }
 
+function stringToNumber(str) {
+    return parseFloat(str.replaceAll(',', ''));
+}
+
 function loadTransferList(lang) {
 
     if (TRANSFER_TIMER != null) {
@@ -394,10 +434,102 @@ function loadTransferList(lang) {
         $('.transactions_1d').html(numberWithCommas(data['count']));
         // setTimeout(() => counter($('.transactions_1d'), data["count"], ''), 1);
     });
-    // $.getJSON(BASE_URL + '/api/getTotalTx', function(data){
-    // $('.transactions_total').html(numberWithCommas(data['count']));
-    // setTimeout(() => counter($('.transactions_total'), data["count"], ''), 1);
-    // });
+
+    $.getJSON(BASE_URL + '/api/getWmocInfo', function (data) {
+        const msw = stringToNumber(data.maxSupplyWmoc);
+        const sw = stringToNumber(data.supplyableWmoc);
+        const mb = stringToNumber(data.mocBalance);
+        const mcs = stringToNumber(data.mocCirculatingSupply);
+
+        const wcs = msw-sw;
+        const tcs = mcs -mb + wcs;
+        
+        $('.max_supply_wmoc').html(numberWithCommas(msw));
+        $('.wmoc_circulating_supply').html(numberWithCommas(msw-sw));
+        $('.supplyable_wmoc').html(numberWithCommas(sw));
+        $('.moc_balance').html(numberWithCommas(mb));
+        $('.total_circulating_supply').html(numberWithCommas(tcs));
+
+        let normal;
+        let malfunction;
+        if (lang === 'en') {
+            normal = 'Normal operation';
+            malfunction = 'Malfunction';
+        }
+        else{
+            normal = '정상';
+            malfunction = '비정상';
+        }
+        const status = (tcs === mcs ? normal : malfunction);
+        const color =  (tcs === mcs ? 'green' : 'red');
+        const isNormal = `<span style = "color:${color}">${status}</span>`
+
+        $('.is_normal_wmoc_count').html(isNormal);
+
+        $('.wmoc_transfer_list_table_item').remove();
+        if (data != null) {
+
+            $.each(data.wmocLastTx, function (i, item) {
+
+                var ts = item['timeStamp'];
+                var nowTs = new Date().getTime() / 1000;
+
+
+                var totalSec = Math.floor(nowTs - ts);
+                var sec = totalSec % 60;
+                var min = Math.floor(totalSec / 60) % 60;
+                var hr = Math.floor(totalSec / 3600);
+
+
+                var age = '-';
+
+                if (lang === 'en') {
+
+                    if (hr > 0) {
+                        age = hr + ' hr' + (hr > 1 ? 's' : '') + ' ' + min + ' min' + (min > 1 ? 's' : '') + ' ago';
+                    } else if (min > 0) {
+                        age = min + ' min' + (min > 1 ? 's' : '') + ' ' + sec + ' sec' + (sec > 1 ? 's' : '') + ' ago';
+                    } else {
+                        age = sec + ' sec' + (sec > 1 ? 's' : '') + ' ago';
+                    }
+
+                } else {
+
+                    if (hr > 0) {
+                        age = hr + '시간 ' + min + '분' + ' 전';
+                    } else if (min > 0) {
+                        age = min + '분 ' + sec + '초' + ' 전';
+                    } else {
+                        age = sec + '초 전';
+                    }
+                }
+
+                var $item = $('<tr class="wmoc_transfer_list_table_item">\n' +
+                    '<td><div class="ellipsis">' +
+                    '<a href="https://etherscan.io/tx/' + item['hash'] + '" target="_blank">' + item['hash'] + '</a>' +
+                    '</div></td>\n' +
+
+                    '<td>' +
+                    age +
+                    '</td>\n' +
+
+                    '<td class="pc_show"><div class="ellipsis">' +
+                    item['from'] +
+                    '</div></td>\n' +
+                    '<td class="pc_show"><div class="ellipsis">' +
+                    item['to'] +
+                    '</div></td>\n' +
+                    '<td>' +
+                    (Big(item['value']).div(1000000000000000000).toString()) +
+                    '</td>\n' +
+                    '</tr>');
+
+                $('.wmoc_transfer_list_table').append($item);
+
+            });
+        }
+    });
+
 
     $.getJSON(BASE_URL + '/api/getLastTx', function (data) {
 
@@ -466,8 +598,7 @@ function loadTransferList(lang) {
 
         }
 
-        $('.transfer_list_date').html(getCurrentDateString(lang));
-
+        $('.transfer_list_date').html(getCurrentDateString(lang));        
         TRANSFER_TIMER = setTimeout(function () {
             loadTransferList(lang);
         }, 5000);
@@ -603,6 +734,10 @@ function loadOrderBookList(lang) {
 
 
 const numberWithCommas = (x) => {
+    if ( typeof x  == 'string' ){
+        const ret = x.replace(/(\.[0-9]*[1-9])0+$|\.0*$/,'$1');
+        return ret;
+    }
 
     if (x == undefined || isNaN(x)) {
         return;
