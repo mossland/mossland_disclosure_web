@@ -1189,7 +1189,7 @@ section.bottom_section {
     display: flex;
     flex-direction: column;
     color: #808080;
-    font-size: 12px;
+    font-size: 10px;
     white-space: nowrap;
 }
 
@@ -1872,7 +1872,7 @@ section.bottom_section {
         display: flex;
         flex-direction: column;
         color: #808080;
-        font-size: 10px;
+        font-size: 9px;
         white-space:break-spaces;
     }
 
