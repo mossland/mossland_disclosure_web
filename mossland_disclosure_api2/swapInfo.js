@@ -45,14 +45,14 @@ class SwapInfo {
 
         const contract = new ethers.Contract(this.wmocAddress, [
             'function maxSupply() public view returns (uint256)',
-            'function supplyable() public view returns (uint256)',
+            'function balanceOf(address owner) view returns (uint256)',
             'function paused() public view returns (bool)',
         ], provider);
 
         const maxSupply_r = await contract.maxSupply();
         const maxSupplyWmoc = this.numberWithCommas(Number(new big(maxSupply_r).div(big(10).pow(18))));
 
-        const supplyable_r = await contract.supplyable();
+        const supplyable_r = await contract.balanceOf(this.wmocAddress);
         const supplyableWmoc = this.numberWithCommas(Number(new big(supplyable_r).div(big(10).pow(18))));
 
         const pausedWmoc = await contract.paused();
