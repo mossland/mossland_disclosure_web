@@ -454,7 +454,7 @@ function loadTransferList(lang) {
         $('.moc_balance').html(numberWithCommas(mb));
         $('.total_circulating_supply').html(numberWithCommas(tcs));
 
-        const className =  (tcs >= mcs ? 'green_circle' : 'red_circle');
+        const className =  (mcs >= tcs ? 'green_circle' : 'red_circle');
         const isNormal = `<div class="${className}"></div>`
 
         $('.wmoc_status').html(isNormal);
