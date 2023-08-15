@@ -20,6 +20,12 @@ The Mossland Disclosure System (https://disclosure.moss.land) is an open-source 
     - Mossland open-source activity information: Github Code Frequency, Github Code Commits real-time information
     - Mossland DAO activity information: Total agenda count, cumulative voting count, recent agenda status, etc.
 
+- 2023-08-15: **[Completed]** Mossland Public Disclosure Website 2nd Update: Real-time Status of MossCoin Swap System
+  - Purpose: Providing real-time information about Wrapped MOC(WMOC) and MossCoin swap system (https://swap.moss.land) developed to enhance MossCoin liquidity level.
+  - Contents: Real-time provision of information regarding WMOC and MossCoin swap system on the website.
+    - WMOC contract code, address, and transaction details provided.
+    - Real-time status information of MossCoin swap system: WMOC/MOC lock-up quantity and wallet addresses.
+
 - 2024: Real-time updates of Mossland's decentralized governance framework information and statistics
 
 ## Source Code Directory Overview
@@ -73,8 +79,8 @@ Source code for the website's frontend.
    
 - 2023-08-15: **[개발 완료]** Mossland 공시 웹사이트 2차 업데이트: 모스코인 스왑 실시간 상태
   - 목적: 모스코인 거래수준 향상을 위해 개발된 Wrapped MOC(WMOC)과 모스코인 스왑 시스템 (https://swap.moss.land)의 실시간 정보를 제공
-  - 내용:
-    - Wrapped MOC(WMOC) 컨트랙트 코드, 주소, 거래 정보 제공
+  - 내용: WMOC와 모스코인 스왑 시스템의 정보를 웹사이트에 실시간 제공
+    - WMOC 컨트랙트 코드, 주소, 거래 정보 제공
     - 모스코인 스왑 시스템의 실시간 상태 정보 제공: WMOC/MOC 락업 수량과 지갑 주소 등
 
 - 2024년: 모스랜드 분산 거버넌스 프레임워크의 실시간 정보 및 통계 업데이트
