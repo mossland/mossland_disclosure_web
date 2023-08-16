@@ -19,7 +19,9 @@ class Github{
                         'WhiteProj',
                         'rocket_branch',
                         'mossland_team',
-                        'mossland-metaverse'
+                        'mossland-metaverse',
+                        'mossland_swap',
+                        'zendog'
                     ];
     }
     async getWeeklyCodeCount(){
