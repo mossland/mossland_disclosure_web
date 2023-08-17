@@ -173,7 +173,6 @@ app.listen(3000, () => console.log("Server start"));
 //         return {success : false};
 // }
 
-/*
 getCoinCap();
 getCoinLoop();
 
@@ -185,7 +184,6 @@ setGithubLoop();
 
 setUpbitInfo();
 setUpbitLoop();
-*/
 
 setWmocInfo();
 setWmocLoop();
