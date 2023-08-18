@@ -6,6 +6,8 @@ CREATE TABLE `wmoc_info` (
   `mocCirculatingSupply` varchar(512) NOT NULL,
   `wmocLastTx` json NOT NULL,
   `pausedWmoc` tinyint NOT NULL,
+  `totalTransfersCount` int DEFAULT NULL,
+  `holderCount` int DEFAULT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `query_type_UNIQUE` (`id`)

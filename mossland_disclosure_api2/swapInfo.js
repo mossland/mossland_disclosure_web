@@ -8,6 +8,7 @@ class SwapInfo {
         this.wmocAddress = '0xBeE20B9Df360B8442534Ed8059f3e5bAEeB74EaF';
         this.alchemyId = process.env.ALCHEMY_ID;
         this.ehterScanApiKey = process.env.ETHER_SCAN_API_KEY;
+        this.ethplorerApiKey = process.env.ETHPLORER_API_KEY;
     }
 
     numberWithCommas(x) {
@@ -39,6 +40,15 @@ class SwapInfo {
         return result;
     }
 
+    async getWmocInfoCount() {
+        const url = `https://api.ethplorer.io/getAddressInfo/${this.wmocAddress}?apiKey=${this.ethplorerApiKey}`;
+    
+        const info = await axios.get(url);
+        const holderCount = info.data.tokenInfo.holdersCount;
+        const totalTransfersCount = info.data.tokenInfo.issuancesCount + info.data.tokenInfo.transfersCount;
+        return {holderCount, totalTransfersCount};
+    }
+
 
     async getSwapVar() {
         const provider = new ethers.JsonRpcProvider(`https://eth-mainnet.g.alchemy.com/v2/${this.alchemyId}`);
@@ -66,6 +76,7 @@ class SwapInfo {
         const wmocLastTx = await this.getWmocLastTx();
         const swapVar = await this.getSwapVar();
         const mocCirculatingSupply = await this.getMocCirculatingSupply();
+        const count = await this.getWmocInfoCount();
 
         const wmocInfo = {
             maxSupplyWmoc : swapVar.maxSupplyWmoc,
@@ -73,7 +84,9 @@ class SwapInfo {
             pausedWmoc : swapVar.pausedWmoc,
             mocBalance : mocBalance,
             wmocLastTx : wmocLastTx,
-            mocCirculatingSupply : mocCirculatingSupply
+            mocCirculatingSupply : mocCirculatingSupply,
+            holderCount : count.holderCount,
+            totalTransfersCount : count.totalTransfersCount,
         }
 
         return wmocInfo;

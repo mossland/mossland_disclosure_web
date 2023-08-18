@@ -113,10 +113,13 @@ class Database{
                             mocBalance = ?,\
                             mocCirculatingSupply = ?,\
                             wmocLastTx = ?,\
-                            pausedWmoc = ?\
+                            pausedWmoc = ?,\
+                            totalTransfersCount = '?',\
+                            holderCount = '?'\
                             WHERE (`id` = '0');";
             let params = [value.maxSupplyWmoc,   value.supplyableWmoc, value.mocBalance,
-                          value.mocCirculatingSupply, jsonString, value.pausedWmoc];
+                          value.mocCirculatingSupply, jsonString, value.pausedWmoc, value.totalTransfersCount,
+                          value.holderCount];
 
             const [rows] = await connection.query(sql, params);
             connection.release();
