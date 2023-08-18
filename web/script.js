@@ -116,7 +116,8 @@ $.lang.ko = {
     97: '값(WMOC)',
     98: '1) WMOC 총 발행량에서 락업된 WMOC 수량을 제외한 실제 WMOC 유통량',
     99: '2) 유통 가능한 MOC와 WMOC의 합산 값으로 MOC 유통량을 초과하면 안됨',
-    100: '락업 지갑 (swap.moss.land)'
+    100: '락업 지갑 (swap.moss.land)',
+    101: '전체'
 };
 
 $.lang.en = {
@@ -228,7 +229,8 @@ $.lang.en = {
     97: 'Value(WMOC)',
     98: '1) The circulating supply of WMOC, excluding the quantity of locked-up WMOC, from the total supply of WMOC.',
     99: '2) The combined value of tradable MOC and WMOC in circulation must not exceed the circulating supply of MOC.',
-    100: 'Locked-up Wallet (swap.moss.land)'
+    100: 'Locked-up Wallet (swap.moss.land)',
+    101: 'Total Transfers'
 };
 
 
@@ -455,6 +457,8 @@ function loadTransferList(lang) {
         $('.supplyable_wmoc').html(numberWithCommas(sw));
         $('.moc_balance').html(numberWithCommas(mb));
         $('.total_circulating_supply').html(numberWithCommas(tcs));
+        $('.wmoc_holder_count').html(numberWithCommas(data.holderCount));
+        $('.wmoc_transfer_count').html(numberWithCommas(data.totalTransfersCount));
 
         const className =  (mcs >= tcs ? 'green_circle' : 'red_circle');
         const isNormal = `<div class="${className}"></div>`
