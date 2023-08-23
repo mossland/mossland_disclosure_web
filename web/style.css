@@ -1803,7 +1803,7 @@ section.bottom_section {
     }
 
     section.middle_section .button_container .btn_item {
-        width: calc(50% - 10px);
+        width: calc(100% - 10px);
         min-width: 162px;
         height: 105px;
     }
