@@ -78,8 +78,8 @@ $.lang.ko = {
     65: '삭제 항수',
     66: '횟수',
 
-    67: '이번주',
-    68: '저번주',
+    67: '지난 4주간',
+    68: '지난 8주간',
     69: '지난 4주간',
     70: '지난 1년간',
 
@@ -191,8 +191,8 @@ $.lang.en = {
     65: 'The number of deletions',
     66: 'Counts',
 
-    67: 'The current week',
-    68: 'The previous week',
+    67: 'Last 4 weeks',
+    68: 'Last 8 weeks',
     69: 'Last 4 weeks',
     70: 'Last 1 year',
 
@@ -907,20 +907,33 @@ function loadData(lang) {
 
         var list = data;
 
-        var lastItem = list[list.length - 1];
-        $('.github_frq_tw_add').html(numberWithCommas(lastItem['add']));
-        $('.github_frq_tw_del').html(numberWithCommas(Math.abs(lastItem['del'])));
 
-        var prevItem = list[list.length - 2];
-        $('.github_frq_pw_add').html(numberWithCommas(prevItem['add']));
-        $('.github_frq_pw_del').html(numberWithCommas(Math.abs(prevItem['del'])));
+        var last4weekAdd = 0;
+        var last4weekDel = 0;
+        for (var i = list.length -1; list.length - 5 < i; --i) {
+            var item = list[i];
+            last4weekAdd += item['add'];
+            last4weekDel += item['del'];
+        }
+
+        $('.github_frq_tw_add').html(numberWithCommas(last4weekAdd));
+        $('.github_frq_tw_del').html(numberWithCommas(Math.abs(last4weekDel)));
+
+        var last8weekAdd = 0;
+        var last8weekDel = 0;
+        for (var i = list.length -1; list.length - 9 < i; --i) {
+            var item = list[i];
+            last8weekAdd += item['add'];
+            last8weekDel += item['del'];
+        }
+        $('.github_frq_pw_add').html(numberWithCommas(last8weekAdd));
+        $('.github_frq_pw_del').html(numberWithCommas(Math.abs(last8weekDel)));
 
 
         var add1y = 0;
         var del1y = 0;
 
         for (var i = 0, l = 52; i < l; i++) {
-
             var item = list[list.length - 1 - i];
             add1y += item['add'];
             del1y += item['del'];
@@ -935,11 +948,14 @@ function loadData(lang) {
 
         var list = data['all'];
 
-        var lastItem = list[list.length - 1];
-        $('.github_commit_tw').html(numberWithCommas(lastItem));
+        var initValue = 0;
+        var last4weeks = list.slice(list.length - 4, list.length).reduce((accumulator, currentValue) => accumulator + currentValue, initValue);
 
-        var prevItem = list[list.length - 2];
-        $('.github_commit_pw').html(numberWithCommas(prevItem));
+        var initValue = 0;
+        var last8weeks = list.slice(list.length - 8, list.length).reduce((accumulator, currentValue) => accumulator + currentValue, initValue);
+
+        $('.github_commit_tw').html(numberWithCommas(last4weeks));
+        $('.github_commit_pw').html(numberWithCommas(last8weeks));
 
         var total = 0;
 
