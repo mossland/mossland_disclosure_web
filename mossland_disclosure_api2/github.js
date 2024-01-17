@@ -21,7 +21,8 @@ class Github{
                         'mossland_team',
                         'mossland-metaverse',
                         'mossland_swap',
-                        'zendog'
+                        'zendog', 
+                        'Agora'
                     ];
     }
     async getWeeklyCodeCount(){
