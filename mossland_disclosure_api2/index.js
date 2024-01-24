@@ -173,19 +173,10 @@ app.listen(3000, () => console.log("Server start"));
 //         return {success : false};
 // }
 
-getCoinCap();
 getCoinLoop();
-
-setLuniverseInfo();
 setLuniverseLoop();
-
-setGitHubInfo();
 setGithubLoop();
-
-setUpbitInfo();
 setUpbitLoop();
-
-setWmocInfo();
 setWmocLoop();
 
 

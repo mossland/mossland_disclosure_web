@@ -22,7 +22,9 @@ class Github{
                         'mossland-metaverse',
                         'mossland_swap',
                         'zendog', 
-                        'Agora'
+                        'Agora',
+                        'MossCoinForMachine',
+                        'MossCoin_AI_NFT_Research'
                     ];
     }
     async getWeeklyCodeCount(){
