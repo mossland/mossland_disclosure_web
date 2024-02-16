@@ -28,6 +28,65 @@ class Luniverse{
         let ret = await axios(options);
         return ret.data.access_token;
     }
+    /////
+    appendTx(txArray, transferEventsItem, start){
+        let isStop = false;
+        transferEventsItem.forEach( (item) => {
+            if (item.timestamp >= start){
+                txArray.push(item.timestamp);
+            }
+            else{
+                isStop = true;
+                return false;
+            }
+        });
+
+        return isStop;
+    }
+
+    async getTrasferEvent() {
+        return new Promise(async resolve => {
+            let result = [];
+
+            let now = dayjs();
+            let utcNow = dayjs.utc(now);
+
+            let start = dayjs(utcNow).subtract(24, 'hour').unix();
+
+            const options = {
+                method: 'GET',
+                url: `https://api.luniverse.io/scan/v1.0/chains/0/tokens/${this.contractAddress}/transfer-events?limit=100`,
+              };
+            let ret = await axios(options);
+    
+            let data = ret.data.data.transferEvents;
+            console.log(ret.data.data.transferEvents);
+            let isStop = this.appendTx(result, data.items, start);
+            if (data.paging.cursors.after !== null && isStop == false){
+                await this.getTrasferAfter(this.contractAddress, data.paging.cursors.after, result, start);
+            }
+            resolve(result.length);
+        });
+        
+    }
+    async getTrasferAfter(address, after, result, start) {
+        return new Promise(async resolve => {
+            const options = {
+                method: 'GET',
+                url: `https://api.luniverse.io/scan/v1.0/chains/0/tokens/${address}/transfer-events?limit=100&after=${after}`,
+              };
+            let ret = await axios(options);
+    
+            let data = ret.data.data.transferEvents;
+            let isStop = this.appendTx(result, data.items, start);
+            if (data.paging.cursors.after !== null && isStop == false){
+                await this.getTrasferAfter(address, data.paging.cursors.after, result, start)
+            }
+            resolve();
+        });
+    }
+
+    /////
     
     async getHourlyTransactionsByContract(start, end){
         let authToken = await this.getToken();
@@ -149,6 +208,8 @@ class Luniverse{
     };
     
     async getLastOneDay() {
+        let count = await this.getTrasferEvent();
+        /*
         const format = 'YYYY-MM-DD-HH';
         let now = dayjs();
         let utcNow = dayjs.utc(now);
@@ -160,6 +221,7 @@ class Luniverse{
         
         let count = await this.getTxCount(retArr);
         //console.log('getLastOneDay : ' + count);
+        */
 
         return count;
     }
