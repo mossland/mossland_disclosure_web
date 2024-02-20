@@ -208,8 +208,10 @@ class Luniverse{
     };
     
     async getLastOneDay() {
-        let count = await this.getTrasferEvent();
-        /*
+        // getHourlyTransactionsByContract 장애발생했을때 임시 사용
+        //let count = await this.getTrasferEvent();
+        
+        
         const format = 'YYYY-MM-DD-HH';
         let now = dayjs();
         let utcNow = dayjs.utc(now);
@@ -221,7 +223,6 @@ class Luniverse{
         
         let count = await this.getTxCount(retArr);
         //console.log('getLastOneDay : ' + count);
-        */
 
         return count;
     }
