@@ -15,18 +15,12 @@ class Luniverse{
         this.baseURL = "https://web3.luniverse.io";
     }
     async getToken() {
-        const options = {
-            method: 'POST',
-            url: 'https://web3.luniverse.io/v1/auth-token',
-            headers: {
-              accept: 'application/json',
-              'X-NODE-ID': config.Node.NodeId,
-              'X-Key-ID': config.Node.KeyId,
-              'X-Key-Secret': config.Node.SecretKey,
-            },
-          };
-        let ret = await axios(options);
-        return ret.data.access_token;
+        const auth_tokens = await axios.post("https://api.luniverse.io/tx/v2.0/auth-tokens", {
+            accessKey: config.Node.ACCESSKEY,
+            secretKey: config.Node.SECRETKEY,
+            expiresIn: 300
+        });
+        return auth_tokens.data.data.authToken.token;
     }
     /////
     appendTx(txArray, transferEventsItem, start){
