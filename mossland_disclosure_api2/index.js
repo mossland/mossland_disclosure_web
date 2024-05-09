@@ -185,7 +185,7 @@ function setLuniverseLoop (){
     setTimeout(() => {
         setLuniverseInfo();
         setLuniverseLoop();
-    }, 60 * 1000);
+    }, 60 * 1000 * 30);
 }
 
 function setGithubLoop (){    

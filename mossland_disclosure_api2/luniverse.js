@@ -12,15 +12,18 @@ class Luniverse{
         this.protocol = "luniverse"; // e.g., luniverse, ethereum
         this.network = "mainnet"; // e.g., mainnet, goerli
         this.contractAddress = "0x878120A5C9828759A250156c66D629219F07C5c6"; // e.g., 0xabc...
-        this.baseURL = "https://web3.luniverse.io";
+        this.baseURL = "https://web3.nodit.io";
     }
     async getToken() {
+        return config.Node['X-API-KEY'];
+        /*
         const auth_tokens = await axios.post("https://api.luniverse.io/tx/v2.0/auth-tokens", {
             accessKey: config.Node.ACCESSKEY,
             secretKey: config.Node.SECRETKEY,
             expiresIn: 300
         });
         return auth_tokens.data.data.authToken.token;
+        */
     }
     /////
     appendTx(txArray, transferEventsItem, start){
@@ -84,42 +87,61 @@ class Luniverse{
     
     async getHourlyTransactionsByContract(start, end){
         let authToken = await this.getToken();
-        const url = `/v1/${this.protocol}/${this.network}/stats/hourly/contract/${this.contractAddress.toLowerCase()}/transactions`;
-        const config = {
+        const url = `/v1/${this.protocol}/${this.network}/stats/getHourlyActiveAccountsStatsByContract`;
+        const axiosConfig = {
             baseURL : this.baseURL,
             url,
             headers: {
-                "Authorization": `Bearer ${authToken}`
+                "X-API-KEY": `${authToken}`
             },
-            method: "get",
-            params: {
+            method: "post",
+            data: {
+                contractAddress: this.contractAddress.toLowerCase(),
                 startDateTime: start,
                 endDateTime: end,
             }
         };
     
-        let res = await axios(config);
-        return res.data.data.items;
+        let res;
+        try{
+            await new Promise(resolve => setTimeout(resolve, config.Node.delay));
+            res = await axios(axiosConfig);
+        } catch(error){
+            return null;
+        }
+        
+        
+        return res.data.items;
     }
     
     async getDailyTransactionsByContract(start, end) {
         let authToken = await this.getToken();
-        const url = `/v1/${this.protocol}/${this.network}/stats/daily/contract/${this.contractAddress.toLowerCase()}/transactions`;
-        const config = {
+        const url = `/v1/${this.protocol}/${this.network}/stats/getDailyTransactionsStatsByContract`;
+        const axiosConfig = {
             baseURL : this.baseURL,
             url,
             headers: {
-                "Authorization": `Bearer ${authToken}`
+                "X-API-KEY": `${authToken}`
             },
-            method: "get",
-            params: {
+            method: "post",
+            data: {
+                contractAddress: this.contractAddress.toLowerCase(),
                 startDate: start,
                 endDate: end,
             }
         }
     
-        let res = await axios(config);
-        return res.data.data.items;
+        let res;
+        try{
+            await new Promise(resolve => setTimeout(resolve, config.Node.delay));
+            res = await axios(axiosConfig);
+        } catch(error){
+            console.error("Error occurred:", error.message);
+            return null;
+        }
+        
+        
+        return res.data.items;
     }
     
     async getLastTransactions (limitCount) {
