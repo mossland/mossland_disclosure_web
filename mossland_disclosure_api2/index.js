@@ -368,7 +368,7 @@ function updateMarketCap(marketInfo){
     pool.getConnection((error, connection) =>{
         if (!error){
            {
-                console.log(marketInfo.name + "_circulating_supply");
+                //console.log(marketInfo.name + "_circulating_supply");
                 let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
                 let params = [marketInfo.circulatingSupply, marketInfo.name + '_circulating_supply']
                 connection.query(sql, params, (error, result, field)=>{
@@ -396,7 +396,7 @@ function updateMarketCap(marketInfo){
                 })
             }
             {
-                console.log(marketInfo.name + "_marketcap_usd");
+                //console.log(marketInfo.name + "_marketcap_usd");
                 let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
                 let params = [marketInfo.marketCap_usd, marketInfo.name + '_marketcap_usd']
                 connection.query(sql, params, (error, result, field)=>{
@@ -411,7 +411,7 @@ function updateMarketCap(marketInfo){
             }
             {
                 if (marketInfo.name == "mossland"){
-                    console.log(marketInfo.name + "_max_supply");
+                    //console.log(marketInfo.name + "_max_supply");
                     let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
                     let params = [marketInfo.maxSupply, marketInfo.name + '_max_supply']
                     connection.query(sql, params, (error, result, field)=>{

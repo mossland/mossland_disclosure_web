@@ -17,14 +17,14 @@ class Github{
                         'Brand-Identity',
                         'WhiteProjFront',
                         'WhiteProj',
-                        'rocket_branch',
                         'mossland_team',
                         'mossland-metaverse',
                         'mossland_swap',
                         'zendog', 
                         'Agora',
                         'MossCoinForMachine',
-                        'MossCoin_AI_NFT_Research'
+                        'MossCoin_AI_NFT_Research',
+                        'WhiteProjOriginalGame'
                     ];
     }
     async getWeeklyCodeCount(){
