@@ -87,7 +87,7 @@ class Luniverse{
     
     async getHourlyTransactionsByContract(start, end){
         let authToken = await this.getToken();
-        const url = `/v1/${this.protocol}/${this.network}/stats/getHourlyActiveAccountsStatsByContract`;
+        const url = `/v1/${this.protocol}/${this.network}/stats/getHourlyTransactionsStatsByContract`;
         const axiosConfig = {
             baseURL : this.baseURL,
             url,
@@ -225,9 +225,9 @@ class Luniverse{
     
     async getLastOneDay() {
         // getHourlyTransactionsByContract 장애발생했을때 임시 사용
-        //let count = await this.getTrasferEvent();
+        let count = await this.getTrasferEvent();
         
-        
+        /*
         const format = 'YYYY-MM-DD-HH';
         let now = dayjs();
         let utcNow = dayjs.utc(now);
@@ -238,6 +238,7 @@ class Luniverse{
         const retArr = await this.getHourlyTransactionsByContract(start, end);
         
         let count = await this.getTxCount(retArr);
+        */
         //console.log('getLastOneDay : ' + count);
 
         return count;
