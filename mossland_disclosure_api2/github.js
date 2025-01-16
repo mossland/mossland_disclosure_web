@@ -24,7 +24,8 @@ class Github{
                         'Agora',
                         'MossCoinForMachine',
                         'MossCoin_AI_NFT_Research',
-                        'WhiteProjOriginalGame'
+                        'WhiteProjOriginalGame',
+                        'MosslandAI'
                     ];
     }
     async getWeeklyCodeCount(){
