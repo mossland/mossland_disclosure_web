@@ -7,6 +7,7 @@ const https = require('https');
 const fs = require('fs');
 const Luniverse = require("./luniverse.js");
 const Upbit = require("./upbit.js");
+const Bithumb = require("./bithumb.js");
 const GitHub = require("./github.js");
 const Database = require("./database.js");
 const SwapInfo = require("./swapInfo.js");
@@ -80,50 +81,107 @@ app.get("/api/getLastTx", async (req, res) => {
 
 app.get("/api/getTickerKrw", async (req, res) => {
     const key = 'getTickerKrw';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getYearKrw", async (req, res) => {
     const key = 'getYearKrw';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getMonthKrw", async (req, res) => {
     const key = 'getMonthKrw';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getWeekKrw", async (req, res) => {
     const key = 'getWeekKrw';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getDayKrw", async (req, res) => {
     const key = 'getDayKrw';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getOrderbookKrw", async (req, res) => {
     const key = 'getOrderbookKrw';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getLastKrwTx", async (req, res) => {
     const key = 'getLastKrwTx';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getAccTradeVolumeKrw", async (req, res) => {
     const key = 'getAccTradeVolumeKrw';
-    const ret = await db.getUpbitData(key);
-    return res.send(ret);
+    const { exchange } = req.query;
+    if (exchange === 'bithumb'){
+        const ret = await db.getBithumbData(key);
+        return res.send(ret);
+    }
+    else{
+        const ret = await db.getUpbitData(key);
+        return res.send(ret);
+    }
 });
 
 app.get("/api/getCommitCount", async (req, res) => {
@@ -178,6 +236,8 @@ setLuniverseLoop();
 setGithubLoop();
 setUpbitLoop();
 setWmocLoop();
+//setBithumbInfo();
+setBithumbLoop();
 
 
 
@@ -200,6 +260,13 @@ function setUpbitLoop (){
     setTimeout(() => {
         setUpbitInfo();
         setUpbitLoop();
+    }, 1000 * 10);
+}
+
+function setBithumbLoop (){    
+    setTimeout(() => {
+        setBithumbInfo();
+        setBithumbLoop();
     }, 1000 * 10);
 }
 
@@ -276,6 +343,70 @@ async function setUpbitInfo(){
         let ret =  await ub.getAccTradeVolumeKrw();
         const jsonString = JSON.stringify(ret);
         await  db.setUpbitData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
+    }
+}
+
+
+
+async function setBithumbInfo(){    
+    const bt = new Bithumb();
+    {
+        const key = 'getTickerKrw';
+        const ret =  await bt.getTickerKrw();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());        
+        //memDB.set(key, jsonString.toString());
+    }
+    {
+        const key = 'getYearKrw';
+        const ret =  await bt.getYearKrw();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
+    }
+    {
+        const key = 'getMonthKrw';
+        const ret =  await bt.getMonthKrw();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
+    }
+
+    {
+        const key = 'getWeekKrw';
+        const ret =  await bt.getWeekKrw();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
+    }
+
+    {
+        const key = 'getDayKrw';
+        const ret =  await bt.getDayKrw();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
+    }
+    {
+        const key = 'getOrderbookKrw';
+        const ret =  await bt.getOrderbookKrw();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
+    }
+    {
+        const key = 'getLastKrwTx';
+        let ret =  await bt.getLastKrwTx();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());
+        //memDB.set(key, jsonString.toString());
+    }
+    {
+        const key = 'getAccTradeVolumeKrw';
+        let ret =  await bt.getAccTradeVolumeKrw();
+        const jsonString = JSON.stringify(ret);
+        await  db.setBithumbData(key, jsonString.toString());
         //memDB.set(key, jsonString.toString());
     }
 }

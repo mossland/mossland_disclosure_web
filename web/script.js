@@ -35,7 +35,7 @@ $.lang.ko = {
     24: '모스코인 트랜잭션 활성화',
     25: '모스코인 (MOC)',
     26: '트랜잭션',
-    27: '모스코인 마켓 활성화',
+    27: '모스코인 마켓 활성화 (Upbit)',
     28: '거래량 (24h)',
     29: '거래대금 (24h)',
     30: '52주 최고/52주 최저',
@@ -117,7 +117,9 @@ $.lang.ko = {
     98: '1) WMOC 총 발행량에서 락업된 WMOC 수량을 제외한 실제 WMOC 유통량',
     99: '2) 유통 가능한 MOC와 WMOC의 합산 값으로 MOC 유통량을 초과하면 안됨',
     100: '락업 지갑 (swap.moss.land)',
-    101: '전체'
+    101: '전체',
+    102: '모스코인 마켓 활성화 (Bithumb)',
+
 };
 
 $.lang.en = {
@@ -148,7 +150,7 @@ $.lang.en = {
     24: 'MossCoin Transaction Activity',
     25: 'MossCoin (MOC)',
     26: 'Trades',
-    27: 'MossCoin Market Activity',
+    27: 'MossCoin Market Activity(Upbit)',
     28: 'Volume (24h)',
     29: 'Value (24h)',
     30: '52w High/52w Low',
@@ -230,7 +232,8 @@ $.lang.en = {
     98: '1) The circulating supply of WMOC, excluding the quantity of locked-up WMOC, from the total supply of WMOC.',
     99: '2) The combined value of tradable MOC and WMOC in circulation must not exceed the circulating supply of MOC.',
     100: 'Locked-up Wallet (swap.moss.land)',
-    101: 'Total Transfers'
+    101: 'Total Transfers',
+    102: 'MossCoin Market Activity (Bithumb)',
 };
 
 
@@ -640,11 +643,31 @@ function loadTransactionList(lang) {
         $('.krw_total_high').html(numberWithCommas(data['high_price']));
         $('.krw_total_low').html(numberWithCommas(data['low_price']));
     });
+    /****/
+    $.getJSON(BASE_URL + '/api/getYearKrw', { exchange: 'bithumb' },function (data) {
+        $('.bithumb_krw_1y_high').html(numberWithCommas(data['high_price']));
+        $('.bithumb_krw_1y_low').html(numberWithCommas(data['low_price']));
+    });
+
+    $.getJSON(BASE_URL + '/api/getMonthKrw', { exchange: 'bithumb' }, function (data) {
+        $('.bithumb_krw_1m_high').html(numberWithCommas(data['high_price']));
+        $('.bithumb_krw_1m_low').html(numberWithCommas(data['low_price']));
+    });
+
+
+    $.getJSON(BASE_URL + '/api/getDayKrw', { exchange: 'bithumb' }, function (data) {
+        $('.bithumb_krw_1d_high').html(numberWithCommas(data['high_price']));
+        $('.bithumb_krw_1d_low').html(numberWithCommas(data['low_price']));
+    });
+
+    $.getJSON(BASE_URL + '/api/getAccTradeVolumeKrw', { exchange: 'bithumb' }, function (data) {
+        $('.bithumb_krw_total_high').html(numberWithCommas(data['high_price']));
+        $('.bithumb_krw_total_low').html(numberWithCommas(data['low_price']));
+    });
+    /****/
 
     $.getJSON(BASE_URL + '/api/getLastKrwTx', function (data) {
-
-        $('.transaction_list_table_item').remove();
-
+        $('.upbit_transaction_list_table_item').remove();
         if (data != null) {
 
             $.each(data, function (i, item) {
@@ -659,17 +682,16 @@ function loadTransactionList(lang) {
                 var d = new Date(item['timestamp']);
                 var tradeDate = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate()) + ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
 
-                var $item = $('<tr class="transaction_list_table_item">\n' +
+                var $item = $('<tr class="upbit_transaction_list_table_item">\n' +
                     '                    <td>' + tradeDate + '</td>\n' +
                     '                    <td>' + tradePrice + '</td>\n' +
                     '                    <td>' + tradeVolume + '</td>\n' +
                     '                    <td>' + tradeAmount + '</td>\n' +
                     '                    </tr>');
 
-                $('.transaction_list_table').append($item);
+                $('.upbit_transaction_list_table').append($item);
 
             });
-
         }
 
         $('.transaction_list_date').html(getCurrentDateString(lang));
@@ -680,6 +702,35 @@ function loadTransactionList(lang) {
         }, 5000);
         */
     });
+
+    $.getJSON(BASE_URL + '/api/getLastKrwTx', { exchange: 'bithumb' }, function (data) {
+        $('.bithumb_transaction_list_table_item').remove();
+        if (data != null) {
+
+            $.each(data, function (i, item) {
+
+                // "trade_price": 105,
+                //     "trade_volume": 172.5,
+
+                var tradePrice = item['trade_price'];
+                var tradeVolume = item['trade_volume'];
+                var tradeAmount = numberWithCommas(Math.round(tradePrice * tradeVolume));
+
+                var d = new Date(item['timestamp']);
+                var tradeDate = d.getFullYear() + '-' + pad0(d.getMonth() + 1) + '-' + pad0(d.getDate()) + ' ' + pad0(d.getHours()) + ':' + pad0(d.getMinutes());
+
+                var $item = $('<tr class="bithumb_transaction_list_table_item">\n' +
+                    '                    <td>' + tradeDate + '</td>\n' +
+                    '                    <td>' + tradePrice + '</td>\n' +
+                    '                    <td>' + tradeVolume + '</td>\n' +
+                    '                    <td>' + tradeAmount + '</td>\n' +
+                    '                    </tr>');
+
+                $('.bithumb_transaction_list_table').append($item);
+
+            });
+        }
+    });
 }
 
 function loadOrderBookList(lang) {
@@ -687,6 +738,46 @@ function loadOrderBookList(lang) {
     if (ORDER_BOOK_TIMER != null) {
         clearInterval(ORDER_BOOK_TIMER);
     }
+
+    $.getJSON(BASE_URL + '/api/getOrderbookKrw', { exchange: 'bithumb' }, function (data) {
+
+        $('.bithumb_order_book_table_item').remove();
+
+        if (data != null) {
+
+            var orderbook_units = data[0]['orderbook_units'];
+
+            var bidTotal = 0;
+            var askTotal = 0;
+
+            for (var i = 0, l = 10; i < l; i++) {
+
+                var item = orderbook_units[i];
+                if (item == undefined) {
+                    break;
+                }
+
+                bidTotal += item['bid_size'];
+                askTotal += item['ask_size'];
+
+                var $itemBid = $('<tr class="bithumb_order_book_table_item">\n' +
+                    '                    <td>' + numberWithCommas(Math.floor(item['bid_size'])) + '</td>\n' +
+                    '                    <td>' + numberWithCommas(Math.floor(bidTotal)) + '</td>\n' +
+                    '                    <td>' + numberWithCommas(item['bid_price']) + '</td>\n' +
+                    '                    </tr>');
+
+                $('.bithumb_order_book_bid_table').append($itemBid);
+
+                var $itemAsk = $('<tr class="bithumb_order_book_table_item">\n' +
+                    '                    <td>' + numberWithCommas(item['ask_price']) + '</td>\n' +
+                    '                    <td>' + numberWithCommas(Math.floor(askTotal)) + '</td>\n' +
+                    '                    <td>' + numberWithCommas(Math.floor(item['ask_size'])) + '</td>\n' +
+                    '                    </tr>');
+
+                $('.bithumb_order_book_ask_table').append($itemAsk);
+            }
+        }
+    });
 
     $.getJSON(BASE_URL + '/api/getOrderbookKrw', function (data) {
 
@@ -836,6 +927,28 @@ function loadData(lang) {
 
             $('.acc_trade_volume_24h_per').html(numberWithCommas((item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
             $('.acc_trade_price_24h_per').html(numberWithCommas((MOSSLAND_CIRCULATING_SUPPLY * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
+
+        });
+
+        $.getJSON(BASE_URL + '/api/getTickerKrw', { exchange: 'bithumb' }, function (data) {
+            var item = data[0];
+            // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
+            $('.bithumb_w52_high').html(numberWithCommas(item['highest_52_week_price']) + ' KRW');
+            $('.bithumb_w52_high_date').html(item['highest_52_week_date']);
+            // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
+            $('.bithumb_w52_low').html(numberWithCommas(item['lowest_52_week_price']) + ' KRW');
+            $('.bithumb_w52_low_date').html(item['lowest_52_week_date']);
+
+            $('.bithumb_acc_trade_volume_24h').html(numberWithCommas(Math.floor(item['acc_trade_volume_24h'])) + ' MOC');
+
+            if (lang == 'en') {
+                $('.bithumb_acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + ' KRW (24h)');
+            } else {
+                $('.bithumb_acc_trade_price_24h').html(numberWithCommas(Math.floor(item['acc_trade_price_24h'])) + ' KRW');
+            }
+
+            $('.bithumb_acc_trade_volume_24h_per').html(numberWithCommas((item['acc_trade_volume_24h'] * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
+            $('.bithumb_acc_trade_price_24h_per').html(numberWithCommas((MOSSLAND_CIRCULATING_SUPPLY * 100 / MOSSLAND_MAX_SUPPLY).toFixed(2)) + '%');
 
         });
     });

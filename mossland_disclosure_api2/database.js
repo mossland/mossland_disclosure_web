@@ -163,6 +163,12 @@ class Database{
     async setUpbitData(key, value){
         return await this.setData('upbit', key, value);
     }
+    async getBithumbData(key){
+        return await this.getData('bithumb', key);
+    }
+    async setBithumbData(key, value){
+        return await this.setData('bithumb', key, value);
+    }
     async getMaterials(){
         return await this.getData2('materials');
     }
