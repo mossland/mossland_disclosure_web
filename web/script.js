@@ -294,26 +294,42 @@ createApp({
                     });
                 }
 
-                const totalResponse = v.responses.length;
-                let ratioSum = Big(0);
-                let percentSum = Big(0);
-                v.responses.forEach((r, ridx) => {
-                    acc[v.id][r.selection].count += 1;
-                    const rat = Big(acc[v.id][r.selection].count).div(totalResponse).toFixed(2, 0);
-                    acc[v.id][r.selection].ratio = rat;
-                    ratioSum = ratioSum.plus(rat);
-                    const perc = Big(acc[v.id][r.selection].ratio).times(100).toFixed(2, 0);
-                    acc[v.id][r.selection].percent = perc;
-                    percentSum = percentSum.plus(perc);
+                
+                // const totalResponse = v.voteCount.totalMoc;
+                // let ratioSum = Big(0);
+                // let percentSum = Big(0);
+                // For = 0
+                acc[v.id][0].count = v.voteCount.forMoc;
+                acc[v.id][0].ratio = Big(v.voteCount.forMocPercentage).div(100).toFixed(2, 0);
+                acc[v.id][0].percent = Big(v.voteCount.forMocPercentage).div(100).times(100).toFixed(2, 0);
 
-                    if (ridx === r.length - 1) {
-                        const diff = Big(100).sub(percentSum);
-                        acc[v.id][r.selection].percent = Big(acc[v.id][r.selection].percent).plus(diff).toString();
+                // Against = 1
+                acc[v.id][1].count = v.voteCount.againstMoc;
+                acc[v.id][1].ratio = Big(v.voteCount.againstMocPercentage).div(100).toFixed(2, 0);
+                acc[v.id][1].percent = Big(v.voteCount.againstMocPercentage).div(100).times(100).toFixed(2, 0);
 
-                        const ratDiff = Big(1).sub(ratioSum);
-                        acc[v.id][r.selection].ratio = Big(acc[v.id][r.selection].ratio).plus(ratDiff).toString();
-                    }
-                });
+                // Abstain = 2
+                acc[v.id][2].count = v.voteCount.abstainMoc;
+                acc[v.id][2].ratio = Big(1).sub(Big(acc[v.id][0].ratio).plus(Big(acc[v.id][1].ratio))).toFixed(2, 0);
+                acc[v.id][2].percent = Big(100).sub(Big(acc[v.id][0].percent).plus(Big(acc[v.id][1].percent))).toFixed(2, 0);
+
+                // v.responses.forEach((r, ridx) => {
+                //     acc[v.id][r.selection].count += 1;
+                //     const rat = Big(acc[v.id][r.selection].count).div(totalResponse).toFixed(2, 0);
+                //     acc[v.id][r.selection].ratio = rat;
+                //     ratioSum = ratioSum.plus(rat);
+                //     const perc = Big(acc[v.id][r.selection].ratio).times(100).toFixed(2, 0);
+                //     acc[v.id][r.selection].percent = perc;
+                //     percentSum = percentSum.plus(perc);
+
+                //     if (ridx === r.length - 1) {
+                //         const diff = Big(100).sub(percentSum);
+                //         acc[v.id][r.selection].percent = Big(acc[v.id][r.selection].percent).plus(diff).toString();
+
+                //         const ratDiff = Big(1).sub(ratioSum);
+                //         acc[v.id][r.selection].ratio = Big(acc[v.id][r.selection].ratio).plus(ratDiff).toString();
+                //     }
+                // });
 
                 return acc;
             }, {});
