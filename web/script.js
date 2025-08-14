@@ -310,8 +310,8 @@ createApp({
 
                 // Abstain = 2
                 acc[v.id][2].count = v.voteCount.abstainMoc;
-                acc[v.id][2].ratio = Big(1).sub(Big(acc[v.id][0].ratio).plus(Big(acc[v.id][1].ratio))).toFixed(2, 0);
-                acc[v.id][2].percent = Big(100).sub(Big(acc[v.id][0].percent).plus(Big(acc[v.id][1].percent))).toFixed(2, 0);
+                acc[v.id][2].ratio = Big(v.voteCount.abstainMoc).eq(0) ? '0' : Big(1).sub(Big(acc[v.id][0].ratio).plus(Big(acc[v.id][1].ratio))).toFixed(2, 0);
+                acc[v.id][2].percent = Big(v.voteCount.abstainMoc).eq(0) ? '0' : Big(100).sub(Big(acc[v.id][0].percent).plus(Big(acc[v.id][1].percent))).toFixed(2, 0);
 
                 // v.responses.forEach((r, ridx) => {
                 //     acc[v.id][r.selection].count += 1;
