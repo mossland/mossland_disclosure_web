@@ -867,11 +867,11 @@
                                 <div v-for="v, vidx in dupVoteList" :key="`${v.id}`" :data-id="v.id">
                                     <div class="info">
                                         <div class="title td">
-                                            <mark data-langNum="78" class="surveying" v-if="v.status === 'surveying'">
-                                                {{ locale === 'ko' ? '진행중' : 'Active' }}
+                                            <mark data-langNum="78" class="surveying" v-if="v.votingStatus === 'Ended'">
+                                                {{ locale === 'ko' ? '마감' : 'Closed' }}
                                             </mark>
                                             <mark data-langNum="79" class="end" v-else>
-                                                {{ locale === 'ko' ? '마감' : 'Closed' }}
+                                                {{ locale === 'ko' ? '진행중' : 'Active' }}
                                             </mark>
                                             <a :href="`https://meta.moss.land/mocSurvey`" taget="_blank">
                                                 {{ v.title }}
