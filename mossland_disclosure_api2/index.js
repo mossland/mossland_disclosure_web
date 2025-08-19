@@ -1,718 +1,577 @@
-const express = require("express");
-const cors = require('cors');
-const axios = require('axios');
-const app = express();
-const mysql = require('mysql2'); 
-const https = require('https');
-const fs = require('fs');
+// server.js (fixed: define updateAllMarketCaps before scheduling)
+
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const axios = require("axios");
+const mysql = require("mysql2");
+const https = require("https");
+const fs = require("fs");
+
 const Luniverse = require("./luniverse.js");
 const Upbit = require("./upbit.js");
 const Bithumb = require("./bithumb.js");
 const GitHub = require("./github.js");
 const Database = require("./database.js");
 const SwapInfo = require("./swapInfo.js");
+const Coinone = require("./coinone.js"); // 선택
 
-require("dotenv").config();
+const app = express();
+
+/* ---------------------------
+ * App & DB 기본 설정
+ * ------------------------- */
 const config = {
-        host: process.env.DB_HOST,
-        port: process.env.DB_PORT,
-        user: process.env.DB_USERNAME,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_SCHEMA, 
-        connectionLimit : 10
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_SCHEMA,
+  connectionLimit: 10,
 };
-
 const pool = mysql.createPool(config);
+const poolP = pool.promise();
+
 const db = new Database();
 
-//let memDB = new Map();
-
 app.use(express.json());
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-
-app.get("/api/getWmocInfo", async (req, res) => {
-    const ret = await db.getWmocInfo();
-    return res.send(ret);
+// 외부 API 공용 axios
+const http = axios.create({
+  timeout: 10_000,
+  headers: { "Accept-Encoding": "gzip,deflate,compress" },
 });
 
-app.get("/api/getTotalTx", async (req, res) => {
-    const key = 'getTotalTx';
-    const ret = await db.getLuniverseData(key);
-    return res.send(ret);
-});
+/* ---------------------------
+ * 유틸리티 & 스케줄러
+ * ------------------------- */
+const asyncHandler = (fn) => (req, res, next) =>
+  Promise.resolve(fn(req, res, next)).catch(next);
 
-app.get("/api/getLastYearTx", async (req, res) => {
-    const key = 'getLastYearTx';
-    const ret = await db.getLuniverseData(key);
-    return res.send(ret);
-});
+// 안전 스케줄러: setTimeout 재귀 + 중복 방지 + 기동 지연 + 지터 + (선택) DB 쓰로틀
+function scheduleJob(name, fn, intervalMs, opts = {}) {
+  const {
+    runAtStart = false,
+    startupHoldoffMs = 0,
+    startupJitterMs = 0,
+    jitterPct = 0,
+    dbThrottleMinIntervalMs = 0,
+  } = opts;
 
-app.get("/api/getLastMonthTx", async (req, res) => {
-    const key = 'getLastMonthTx';
-    const ret = await db.getLuniverseData(key);
-    return res.send(ret);
-});
+  let running = false;
+  let stopped = false;
 
-app.get("/api/getLastWeekTx", async (req, res) => {
-    const key = 'getLastWeekTx';
-    const ret = await db.getLuniverseData(key);
-    return res.send(ret);
-});
+  const jittered = () => {
+    if (!jitterPct) return intervalMs;
+    const r = (Math.random() * 2 - 1) * jitterPct;
+    return Math.max(50, Math.floor(intervalMs * (1 + r)));
+  };
 
-app.get("/api/getLastDayTx", async (req, res) => {
-    const key = 'getLastDayTx';
-    const ret = await db.getLuniverseData(key);
-    return res.send(ret);
-});
+  const scheduleNext = (delay) => {
+    if (stopped) return;
+    setTimeout(tick, delay ?? jittered());
+  };
 
-app.get("/api/getHolderCount", async (req, res) => {
-    const key = 'getHolderCount';
-    const ret = await db.getLuniverseData(key);
-    return res.send(ret);
-});
-
-app.get("/api/getLastTx", async (req, res) => {
-    const key = 'getLastTx';
-    const ret = await db.getLuniverseData(key);
-    return res.send(ret);
-});
-
-app.get("/api/getTickerKrw", async (req, res) => {
-    const key = 'getTickerKrw';
-
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
+  const canRunNow = async () => {
+    if (!dbThrottleMinIntervalMs) return true;
+    try {
+      await poolP.execute(
+        "CREATE TABLE IF NOT EXISTS scheduler_meta (job VARCHAR(64) PRIMARY KEY, last_run_ms BIGINT NOT NULL)"
+      );
+      const now = Date.now();
+      await poolP.execute(
+        "INSERT INTO scheduler_meta (job, last_run_ms) VALUES (?, ?) " +
+          "ON DUPLICATE KEY UPDATE last_run_ms = IF(VALUES(last_run_ms) - last_run_ms >= ?, VALUES(last_run_ms), last_run_ms)",
+        [name, now, dbThrottleMinIntervalMs]
+      );
+      const [rows] = await poolP.execute(
+        "SELECT last_run_ms FROM scheduler_meta WHERE job = ?",
+        [name]
+      );
+      return rows?.[0]?.last_run_ms === now;
+    } catch (e) {
+      console.error(`[${name}] db-throttle error:`, e?.message || e);
+      return true; // fail-open
     }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
+  };
+
+  async function tick() {
+    if (stopped) return;
+    if (running) return scheduleNext();
+    const ok = await canRunNow();
+    if (!ok) return scheduleNext();
+
+    running = true;
+    try {
+      await fn();
+    } catch (e) {
+      console.error(`[${name}]`, e);
+    } finally {
+      running = false;
+      scheduleNext();
     }
-});
+  }
 
-app.get("/api/getYearKrw", async (req, res) => {
-    const key = 'getYearKrw';
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
-    }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
-    }
-});
+  const initialDelay =
+    (runAtStart ? 0 : intervalMs) +
+    startupHoldoffMs +
+    Math.floor(Math.random() * (startupJitterMs || 0));
 
-app.get("/api/getMonthKrw", async (req, res) => {
-    const key = 'getMonthKrw';
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
-    }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
-    }
-});
-
-app.get("/api/getWeekKrw", async (req, res) => {
-    const key = 'getWeekKrw';
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
-    }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
-    }
-});
-
-app.get("/api/getDayKrw", async (req, res) => {
-    const key = 'getDayKrw';
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
-    }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
-    }
-});
-
-app.get("/api/getOrderbookKrw", async (req, res) => {
-    const key = 'getOrderbookKrw';
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
-    }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
-    }
-});
-
-app.get("/api/getLastKrwTx", async (req, res) => {
-    const key = 'getLastKrwTx';
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
-    }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
-    }
-});
-
-app.get("/api/getAccTradeVolumeKrw", async (req, res) => {
-    const key = 'getAccTradeVolumeKrw';
-    const { exchange } = req.query;
-    if (exchange === 'bithumb'){
-        const ret = await db.getBithumbData(key);
-        return res.send(ret);
-    }
-    else{
-        const ret = await db.getUpbitData(key);
-        return res.send(ret);
-    }
-});
-
-app.get("/api/getCommitCount", async (req, res) => {
-    const key = 'getCommitCount';
-    const ret = await db.getGithubData(key);
-    return res.send(ret);
-});
-
-app.get("/api/getCodeFrequency", async (req, res) => {
-    const key = 'getCodeFrequency';
-    const ret = await db.getGithubData(key);
-    return res.send(ret);
-});
-
-app.get("/api/market", async (req, res) => {
-    const ret = await db.getMarket();
-    return res.send(ret);
-});
-
-app.get("/api/recent_release",  async (req, res) => {
-    const ret = await db.getRecentRelease();
-    return res.send(ret);
-});
-
-app.get("/api/expected_release", async (req, res) => {
-    const ret = await db.getExpectedEelease();
-    return res.send(ret);
-});
-
-app.get("/api/disclosure", async (req, res) => {
-    const ret = await db.getDisclosure();
-    return res.send(ret);
-});
-
-app.get("/api/materials", async (req, res) => {
-    const ret = await db.getMaterials();
-    return res.send(ret);
-});
-
-app.listen(3000, () => console.log("Server start"));
-
-
-// function getMocInfo (key){    
-//     if (memDB.has(key))
-//         return memDB.get(key);
-//     else
-//         return {success : false};
-// }
-
-getCoinLoop();
-setLuniverseLoop();
-setGithubLoop();
-setUpbitLoop();
-setWmocLoop();
-//setBithumbInfo();
-setBithumbLoop();
-
-
-
-function setLuniverseLoop (){    
-    setTimeout(() => {
-        setLuniverseInfo();
-        setLuniverseLoop();
-    }, 60 * 1000 * 30);
+  scheduleNext(initialDelay);
+  return () => {
+    stopped = true;
+  };
 }
 
-function setGithubLoop (){    
-    setTimeout(() => {
-        setGitHubInfo();
-        setGithubLoop();
-    }, 1000 * 60 * 60);
+/* ---------------------------
+ * 마켓캡 갱신 로직 (스케줄러보다 위에 둠)
+ * ------------------------- */
+async function updateMarketCap(marketInfo) {
+  const sql =
+    "UPDATE `mossland_disclosure`.`market_data` SET `number` = ? WHERE (`market_type` = ?)";
+  try {
+    const jobs = [
+      poolP.execute(sql, [
+        marketInfo.circulatingSupply,
+        `${marketInfo.name}_circulating_supply`,
+      ]),
+      poolP.execute(sql, [
+        marketInfo.marketCap_krw,
+        `${marketInfo.name}_marketcap_krw`,
+      ]),
+      poolP.execute(sql, [
+        marketInfo.marketCap_usd,
+        `${marketInfo.name}_marketcap_usd`,
+      ]),
+    ];
+    if (marketInfo.name === "mossland") {
+      jobs.push(
+        poolP.execute(sql, [
+          marketInfo.maxSupply,
+          `${marketInfo.name}_max_supply`,
+        ])
+      );
+    }
+    await Promise.all(jobs);
+  } catch (err) {
+    console.error("[updateMarketCap] error:", err?.message || err);
+  }
 }
 
+async function getCoinmarketCap() {
+  try {
+    const cmcUSD = await http.get(
+      "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest",
+      {
+        params: { id: 2915, convert: "USD" },
+        headers: { "X-CMC_PRO_API_KEY": process.env.COINMARKETCAP_API_KEY },
+      }
+    );
+    const cmcKRW = await http.get(
+      "https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest",
+      {
+        params: { id: 2915, convert: "KRW" },
+        headers: { "X-CMC_PRO_API_KEY": process.env.COINMARKETCAP_API_KEY },
+      }
+    );
 
-function setUpbitLoop (){    
-    setTimeout(() => {
-        setUpbitInfo();
-        setUpbitLoop();
-    }, 1000 * 10);
+    const usd = cmcUSD.data?.data?.["2915"];
+    const krw = cmcKRW.data?.data?.["2915"];
+    if (!usd || !krw) throw new Error("CMC data missing");
+
+    const ret = {
+      name: "coinmarketcap",
+      maxSupply: usd.max_supply ?? 0,
+      circulatingSupply: usd.circulating_supply ?? 0,
+      marketCap_usd: usd.quote?.USD?.market_cap ?? 0,
+      marketCap_krw: krw.quote?.KRW?.market_cap ?? 0,
+    };
+
+    await updateMarketCap(ret);
+    console.log("[CMC]", ret);
+    return ret;
+  } catch (ex) {
+    console.error("[CMC] error:", ex?.message || ex);
+  }
 }
 
-function setBithumbLoop (){    
-    setTimeout(() => {
-        setBithumbInfo();
-        setBithumbLoop();
-    }, 1000 * 10);
+async function getCoingeckoCap() {
+  try {
+    const usd = await http.get(
+      "https://api.coingecko.com/api/v3/coins/markets",
+      { params: { vs_currency: "usd", ids: "mossland" } }
+    );
+    const krw = await http.get(
+      "https://api.coingecko.com/api/v3/coins/markets",
+      { params: { vs_currency: "krw", ids: "mossland" } }
+    );
+
+    const u = usd.data?.[0];
+    const k = krw.data?.[0];
+    if (!u || !k) throw new Error("Coingecko data missing");
+
+    const ret = {
+      name: "coingecko",
+      maxSupply: u.max_supply ?? 0,
+      circulatingSupply: u.circulating_supply ?? 0,
+      marketCap_usd: u.market_cap ?? 0,
+      marketCap_krw: k.market_cap ?? 0,
+    };
+
+    await updateMarketCap(ret);
+    console.log("[Coingecko]", ret);
+    return ret;
+  } catch (ex) {
+    console.error("[Coingecko] error:", ex?.message || ex);
+  }
 }
 
+async function getMosslandCap() {
+  try {
+    const resp = await http.get("https://api.moss.land/MOC/info");
+    const arr = resp.data || [];
+    const ret = {
+      name: "mossland",
+      maxSupply: 0,
+      circulatingSupply: 0,
+      marketCap_usd: 0,
+      marketCap_krw: 0,
+    };
 
-function setWmocLoop (){    
-    setTimeout(() => {
-        setWmocInfo();
-        setWmocLoop();
-    }, 1000 * 10);
+    for (const row of arr) {
+      if (row.currencyCode === "USD") {
+        ret.maxSupply = row.maxSupply ?? 0;
+        ret.circulatingSupply = row.circulatingSupply ?? 0;
+        ret.marketCap_usd = row.marketCap ?? 0;
+      } else if (row.currencyCode === "KRW") {
+        ret.marketCap_krw = row.marketCap ?? 0;
+      }
+    }
+
+    await updateMarketCap(ret);
+    console.log("[Mossland]", ret);
+    return ret;
+  } catch (ex) {
+    console.error("[Mossland] error:", ex?.message || ex);
+  }
 }
 
-
-async function setWmocInfo(){    
-    const si = new SwapInfo();
-    const ret = await si.getWmocInfo();
-    await  db.setWmocInfo(ret);
+async function updateAllMarketCaps() {
+  await Promise.allSettled([
+    getCoinmarketCap(),
+    getCoingeckoCap(),
+    getMosslandCap(),
+  ]);
 }
 
-async function setUpbitInfo(){    
-    const ub = new Upbit();
-    {
-        const key = 'getTickerKrw';
-        const ret =  await ub.getTickerKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getYearKrw';
-        const ret =  await ub.getYearKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getMonthKrw';
-        const ret =  await ub.getMonthKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-
-    {
-        const key = 'getWeekKrw';
-        const ret =  await ub.getWeekKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-
-    {
-        const key = 'getDayKrw';
-        const ret =  await ub.getDayKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getOrderbookKrw';
-        const ret =  await ub.getOrderbookKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getLastKrwTx';
-        let ret =  await ub.getLastKrwTx();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getAccTradeVolumeKrw';
-        let ret =  await ub.getAccTradeVolumeKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setUpbitData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
+/* ---------------------------
+ * 데이터 적재 루틴들
+ * ------------------------- */
+async function setWmocInfo() {
+  const si = new SwapInfo();
+  const ret = await si.getWmocInfo();
+  await db.setWmocInfo(ret);
 }
 
-
-
-async function setBithumbInfo(){    
-    const bt = new Bithumb();
-    {
-        const key = 'getTickerKrw';
-        const ret =  await bt.getTickerKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+async function setUpbitInfo() {
+  const ub = new Upbit();
+  const plan = [
+    "getTickerKrw",
+    "getYearKrw",
+    "getMonthKrw",
+    "getWeekKrw",
+    "getDayKrw",
+    "getOrderbookKrw",
+    "getLastKrwTx",
+    "getAccTradeVolumeKrw",
+  ];
+  for (const key of plan) {
+    try {
+      const ret = await ub[key]();
+      await db.setUpbitData(key, JSON.stringify(ret));
+    } catch (err) {
+      console.error(`[Upbit] ${key} failed:`, err?.message || err);
     }
-    {
-        const key = 'getYearKrw';
-        const ret =  await bt.getYearKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getMonthKrw';
-        const ret =  await bt.getMonthKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-
-    {
-        const key = 'getWeekKrw';
-        const ret =  await bt.getWeekKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-
-    {
-        const key = 'getDayKrw';
-        const ret =  await bt.getDayKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getOrderbookKrw';
-        const ret =  await bt.getOrderbookKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getLastKrwTx';
-        let ret =  await bt.getLastKrwTx();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getAccTradeVolumeKrw';
-        let ret =  await bt.getAccTradeVolumeKrw();
-        const jsonString = JSON.stringify(ret);
-        await  db.setBithumbData(key, jsonString.toString());
-        //memDB.set(key, jsonString.toString());
-    }
+  }
 }
 
-async function setGitHubInfo(){    
-    const gb = new GitHub();
-    {
-        const key = 'getCodeFrequency';
-        let ret =  await gb.getWeeklyCodeCount();
-        const jsonString = JSON.stringify(ret);
-        await  db.setGithubData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+async function setBithumbInfo() {
+  const bt = new Bithumb();
+  const plan = [
+    "getTickerKrw",
+    "getYearKrw",
+    "getMonthKrw",
+    "getWeekKrw",
+    "getDayKrw",
+    "getOrderbookKrw",
+    "getLastKrwTx",
+    "getAccTradeVolumeKrw",
+  ];
+  for (const key of plan) {
+    try {
+      const ret = await bt[key]();
+      await db.setBithumbData(key, JSON.stringify(ret));
+    } catch (err) {
+      console.error(`[Bithumb] ${key} failed:`, err?.message || err);
     }
-    {
-        const key = 'getCommitCount';
-        let ret =  await gb.getWeeklyCommitCount();
-        const jsonString = JSON.stringify(ret)
-        await  db.setGithubData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
+  }
 }
 
-async function setLuniverseInfo(){    
-    const ln = new Luniverse();
-    {
-        const key = 'getTotalTx';
-        const ret =  await ln.getTotalTx();
-        const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
+async function setCoinoneInfo() {
+  const bt = new Coinone();
+  const plan = [
+    "getTickerKrw",
+    "getYearKrw",
+    "getMonthKrw",
+    "getWeekKrw",
+    "getDayKrw",
+    "getOrderbookKrw",
+    "getLastKrwTx",
+    "getAccTradeVolumeKrw",
+  ];
+  for (const key of plan) {
+    try {
+      const ret = await bt[key]();
+      await db.setCoinoneData(key, JSON.stringify(ret));
+    } catch (err) {
+      console.error(`[Coinone] ${key} failed:`, err?.message || err);
     }
-    {
-        const key = 'getLastYearTx';
-        const ret =  await ln.getLastOneYear();
-        const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getLastMonthTx';
-        const ret =  await ln.getLastOneMonth();
-        const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getLastWeekTx';
-        const ret =  await ln.getLastOneWeek();
-        const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getLastDayTx';
-        const ret =  await ln.getLastOneDay();
-        const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getHolderCount';
-        const ret =  await ln.getHolderCount();
-        const jsonString = JSON.stringify({count : ret.toString()});
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
-    {
-        const key = 'getLastTx';
-        const ret =  await ln.getLastTx();
-        const jsonString = JSON.stringify(ret);
-        await  db.setLuniverseData(key, jsonString.toString());        
-        //memDB.set(key, jsonString.toString());
-    }
+  }
 }
 
-function getCoinLoop (){    
-    setTimeout(() => {
-        getCoinCap();
-        getCoinLoop();
-    }, 1000 * 60 * 10);
+async function setGitHubInfo() {
+  const gb = new GitHub();
+  try {
+    const codeFreq = await gb.getWeeklyCodeCount();
+    await db.setGithubData("getCodeFrequency", JSON.stringify(codeFreq));
+  } catch (e) {
+    console.error("[GitHub] getCodeFrequency failed:", e?.message || e);
+  }
+  try {
+    const commits = await gb.getWeeklyCommitCount();
+    await db.setGithubData("getCommitCount", JSON.stringify(commits));
+  } catch (e) {
+    console.error("[GitHub] getCommitCount failed:", e?.message || e);
+  }
 }
 
-async function getCoinCap (){    
-    getCoinmarketCap();
-    getCoingeckoCap();
-    getMosslandCap();
+async function setLuniverseInfo() {
+  const ln = new Luniverse();
+  const tasks = [
+    ["getTotalTx", () => ln.getTotalTx(), (v) => ({ count: String(v) })],
+    ["getLastYearTx", () => ln.getLastOneYear(), (v) => ({ count: String(v) })],
+    [
+      "getLastMonthTx",
+      () => ln.getLastOneMonth(),
+      (v) => ({ count: String(v) }),
+    ],
+    ["getLastWeekTx", () => ln.getLastOneWeek(), (v) => ({ count: String(v) })],
+    ["getLastDayTx", () => ln.getLastOneDay(), (v) => ({ count: String(v) })],
+    [
+      "getHolderCount",
+      () => ln.getHolderCount(),
+      (v) => ({ count: String(v) }),
+    ],
+    ["getLastTx", () => ln.getLastTx(), (v) => v],
+  ];
+  for (const [key, fn, map] of tasks) {
+    try {
+      const raw = await fn();
+      await db.setLuniverseData(key, JSON.stringify(map(raw)));
+    } catch (e) {
+      console.error(`[Luniverse] ${key} failed:`, e?.message || e);
+    }
+  }
 }
 
-function updateMarketCap(marketInfo){
-    pool.getConnection((error, connection) =>{
-        if (!error){
-           {
-                //console.log(marketInfo.name + "_circulating_supply");
-                let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                let params = [marketInfo.circulatingSupply, marketInfo.name + '_circulating_supply']
-                connection.query(sql, params, (error, result, field)=>{
-                    if (!error){
-                        console.log(result);
-                        connection.release()
-                    }
-                    else{
-                        throw error
-                    }
-                })
-            }
-            {
-                console.log(marketInfo.name + "_marketcap_krw");
-                let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                let params = [marketInfo.marketCap_krw, marketInfo.name + '_marketcap_krw']
-                connection.query(sql, params, (error, result, field)=>{
-                    if (!error){
-                        console.log(result);
-                        connection.release()
-                    }
-                    else{
-                        throw error
-                    }
-                })
-            }
-            {
-                //console.log(marketInfo.name + "_marketcap_usd");
-                let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                let params = [marketInfo.marketCap_usd, marketInfo.name + '_marketcap_usd']
-                connection.query(sql, params, (error, result, field)=>{
-                    if (!error){
-                        console.log(result);
-                        connection.release()
-                    }
-                    else{
-                        throw error
-                    }
-                })
-            }
-            {
-                if (marketInfo.name == "mossland"){
-                    //console.log(marketInfo.name + "_max_supply");
-                    let sql = "UPDATE `mossland_disclosure`.`market_data` SET `number` = '?' WHERE (`market_type` = ?)";
-                    let params = [marketInfo.maxSupply, marketInfo.name + '_max_supply']
-                    connection.query(sql, params, (error, result, field)=>{
-                        if (!error){
-                            console.log(result);
-                            connection.release()
-                        }
-                        else{
-                            throw error
-                        }
-                    })
-                }
-            }
-            
-        }
-        else{
-            console.log(error);
-        }
-    });
+/* ---------------------------
+ * 라우터 (원본과 동일)
+ * ------------------------- */
+app.get(
+  "/api/getWmocInfo",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getWmocInfo());
+  })
+);
 
+app.get(
+  "/api/getTotalTx",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getLuniverseData("getTotalTx"));
+  })
+);
+app.get(
+  "/api/getLastYearTx",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getLuniverseData("getLastYearTx"));
+  })
+);
+app.get(
+  "/api/getLastMonthTx",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getLuniverseData("getLastMonthTx"));
+  })
+);
+app.get(
+  "/api/getLastWeekTx",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getLuniverseData("getLastWeekTx"));
+  })
+);
+app.get(
+  "/api/getLastDayTx",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getLuniverseData("getLastDayTx"));
+  })
+);
+app.get(
+  "/api/getHolderCount",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getLuniverseData("getHolderCount"));
+  })
+);
+app.get(
+  "/api/getLastTx",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getLuniverseData("getLastTx"));
+  })
+);
+
+const exchangeGetter = {
+  upbit: (key) => db.getUpbitData(key),
+  bithumb: (key) => db.getBithumbData(key),
+  coinone: (key) => db.getCoinoneData(key),
+};
+function registerExchangeRoute(path, key) {
+  app.get(
+    `/api/${path}`,
+    asyncHandler(async (req, res) => {
+      const ex = String(req.query.exchange || "upbit").toLowerCase();
+      const getter = exchangeGetter[ex] || exchangeGetter.upbit;
+      res.send(await getter(key));
+    })
+  );
 }
-function getCoinmarketCap() {    
-    let response = null;
-    new Promise(async (resolve, reject) => {
-        let ret = {
-            name : 'coinmarketcap',
-            maxSupply : 0, 
-            circulatingSupply : 0,
-            marketCap_usd : 0,
-            marketCap_krw : 0
-        };
-        try {
-            response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=2915&convert=USD', {
-            headers: {
-                'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY,
-            },
-            });
-        } catch(ex) {
-            response = null;
-            // error
-            console.log(ex);
-            reject(ex);
-        }
-        if (response) {
-            // success
-            const json = response.data;
+[
+  "getTickerKrw",
+  "getYearKrw",
+  "getMonthKrw",
+  "getWeekKrw",
+  "getDayKrw",
+  "getOrderbookKrw",
+  "getLastKrwTx",
+  "getAccTradeVolumeKrw",
+].forEach((key) => registerExchangeRoute(key, key));
 
-            ret.maxSupply = json.data['2915'].max_supply;
-            ret.circulatingSupply = json.data['2915'].circulating_supply;
-            ret.marketCap_usd = json.data['2915'].quote.USD.market_cap;
-        }
+app.get(
+  "/api/getCommitCount",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getGithubData("getCommitCount"));
+  })
+);
+app.get(
+  "/api/getCodeFrequency",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getGithubData("getCodeFrequency"));
+  })
+);
 
-        try {
-            response = await axios.get('https://pro-api.coinmarketcap.com/v2/cryptocurrency/quotes/latest?id=2915&convert=KRW', {
-            headers: {
-                'X-CMC_PRO_API_KEY': process.env.COINMARKETCAP_API_KEY,
-            },
-            });
-        } catch(ex) {
-            response = null;
-            // error
-            console.log(ex);
-            reject(ex);
-        }
-        if (response) {
-            // success
-            const json = response.data;
-            ret.marketCap_krw = json.data['2915'].quote.KRW.market_cap;
-            
-        }
+app.get(
+  "/api/market",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getMarket());
+  })
+);
+app.get(
+  "/api/recent_release",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getRecentRelease());
+  })
+);
+app.get(
+  "/api/expected_release",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getExpectedEelease());
+  })
+);
+app.get(
+  "/api/disclosure",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getDisclosure());
+  })
+);
+app.get(
+  "/api/materials",
+  asyncHandler(async (req, res) => {
+    res.send(await db.getMaterials());
+  })
+);
 
-        updateMarketCap(ret);
-        console.log(ret);
-        resolve(ret);
-    });
-}
+/* ---------------------------
+ * 스케줄링 (이제 정의 위반 없음)
+ * ------------------------- */
+scheduleJob("MarketCapLoop", updateAllMarketCaps, 10 * 60 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.1,
+  dbThrottleMinIntervalMs: 8 * 60 * 1000,
+});
+scheduleJob("LuniverseLoop", setLuniverseInfo, 30 * 60 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.1,
+  dbThrottleMinIntervalMs: 20 * 60 * 1000,
+});
+scheduleJob("GithubLoop", setGitHubInfo, 60 * 60 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.1,
+  dbThrottleMinIntervalMs: 45 * 60 * 1000,
+});
+scheduleJob("WmocLoop", setWmocInfo, 10 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.2,
+  dbThrottleMinIntervalMs: 7 * 1000,
+});
+scheduleJob("UpbitLoop", setUpbitInfo, 10 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.2,
+  dbThrottleMinIntervalMs: 7 * 1000,
+});
+scheduleJob("BithumbLoop", setBithumbInfo, 10 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.2,
+  dbThrottleMinIntervalMs: 7 * 1000,
+});
+scheduleJob("CoinoneLoop", setCoinoneInfo, 10 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.2,
+  dbThrottleMinIntervalMs: 7 * 1000,
+});
 
-function getCoingeckoCap() {    
-    let response = null;
-    new Promise(async (resolve, reject) => {
-        let ret = {
-            name : 'coingecko',
-            maxSupply : 0, 
-            circulatingSupply : 0,
-            marketCap_usd : 0,
-            marketCap_krw : 0
-        };
+/* ---------------------------
+ * 에러 핸들러 & 서버 시작
+ * ------------------------- */
+app.use((err, req, res, next) => {
+  console.error("[Express] unhandled:", err?.stack || err);
+  res
+    .status(500)
+    .json({ ok: false, error: err?.message || "Internal Server Error" });
+});
 
-        try {
-            response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=mossland', {
-                headers: {
-                    "Accept-Encoding": "gzip,deflate,compress"
-                },
-            });
-        } catch(ex) {
-            response = null;
-            console.log(ex);
-            reject(ex);
-        }
-        if (response) {
-            console.log('success');
-            const json = response.data;
-
-            ret.marketCap_usd =  json[0].market_cap;
-            ret.maxSupply =  json[0].max_supply;
-            ret.circulatingSupply =  json[0].circulating_supply;
-        }
-
-        try {
-            response = await axios.get('https://api.coingecko.com/api/v3/coins/markets?vs_currency=krw&ids=mossland', {
-                headers: {
-                    "Accept-Encoding": "gzip,deflate,compress"
-                },
-            });
-        } catch(ex) {
-            response = null;
-            console.log(ex);
-            reject(ex);
-        }
-        if (response) {
-            console.log('success');
-            const json = response.data;
-            ret.marketCap_krw =  json[0].market_cap;
-        }
-
-        updateMarketCap(ret);
-        console.log(ret);
-        resolve(true);
-    });
-}
-
-
-function getMosslandCap() {    
-    let response = null;
-    new Promise(async (resolve, reject) => {
-        try {
-            response = await axios.get('https://api.moss.land/MOC/info ', {
-            });
-        } catch(ex) {
-            response = null;
-            // error
-            console.log(ex);
-            reject(ex);
-        }
-        if (response) {
-            // success
-            const json = response.data;
-
-            let ret = {
-                name : 'mossland',
-                maxSupply : 0, 
-                circulatingSupply : 0,
-                marketCap_usd : 0,
-                marketCap_krw : 0
-            };
-            
-            json.forEach(function(data, idx){
-                if (data.currencyCode ==='USD'){
-                    ret.maxSupply = data.maxSupply;
-                    ret.circulatingSupply = data.circulatingSupply;
-                    ret.marketCap_usd = data.marketCap;
-                }
-                if (data.currencyCode ==='KRW'){
-                    ret.marketCap_krw = data.marketCap;
-                }
-            });
-
-            updateMarketCap(ret);
-            console.log(ret);
-            resolve(ret);
-        }
-    });
-}
+const PORT = Number(process.env.PORT || 3000);
+app.listen(PORT, () => console.log(`Server start on :${PORT}`));

@@ -49,11 +49,66 @@ class SwapInfo {
   async getWmocInfoCount() {
     const url = `https://api.ethplorer.io/getAddressInfo/${this.wmocAddress}?apiKey=${this.ethplorerApiKey}`;
 
-    const info = await axios.get(url);
-    const holderCount = info.data.tokenInfo.holdersCount;
-    const totalTransfersCount =
-      info.data.tokenInfo.issuancesCount + info.data.tokenInfo.transfersCount;
-    return { holderCount, totalTransfersCount };
+    // br(브로틀리) 제외 → zlib Brotli 디코딩 에러 방지
+    const headers = { "Accept-Encoding": "identity" }; // 또는 "gzip, deflate"
+
+    const MAX_RETRY = 3;
+    const BASE_DELAY = 200; // ms
+
+    for (let i = 0; i < MAX_RETRY; i++) {
+      try {
+        const res = await axios.get(url, {
+          headers,
+          timeout: 10_000,
+          responseType: "json",
+          validateStatus: (s) => s >= 200 && s < 300,
+        });
+
+        const data = res.data || {};
+        const ti = data.tokenInfo || {};
+
+        // 필드 검증 (없으면 에러)
+        if (
+          ti == null ||
+          ti.holdersCount == null ||
+          ti.transfersCount == null ||
+          ti.issuancesCount == null
+        ) {
+          throw new Error("ethplorer: missing fields in tokenInfo");
+        }
+
+        const holderCount = Number(ti.holdersCount) || 0;
+        const totalTransfersCount =
+          (Number(ti.issuancesCount) || 0) + (Number(ti.transfersCount) || 0);
+
+        return { holderCount, totalTransfersCount };
+      } catch (e) {
+        const msg = `${e?.code || ""} ${e?.message || ""}`.toLowerCase();
+        const retriable =
+          msg.includes("z_buf_error") || // 브로틀리 디코드 실패
+          msg.includes("unexpected end of") || // 트렁케이션
+          msg.includes("socket hang up") ||
+          msg.includes("timeout") ||
+          msg.includes("network") ||
+          msg.includes("ecconnreset") ||
+          [
+            "ECONNRESET",
+            "ECONNABORTED",
+            "ETIMEDOUT",
+            "EAI_AGAIN",
+            "ENOTFOUND",
+            "EPIPE",
+          ].includes(e?.code);
+
+        if (retriable && i < MAX_RETRY - 1) {
+          const delay = BASE_DELAY * Math.pow(2, i); // 200 → 400 → 800ms
+          await new Promise((r) => setTimeout(r, delay));
+          continue;
+        }
+        // 마지막 시도 실패 또는 비재시도 오류는 그대로 던짐
+        throw e;
+      }
+    }
   }
 
   async getSwapVar() {
