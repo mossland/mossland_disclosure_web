@@ -19,7 +19,7 @@ console.log('[ENV CHECK]');
 console.log('  DB_HOST    =', env.DB_HOST);
 console.log('  DB_PORT    =', env.DB_PORT);
 console.log('  DB_USERNAME=', env.DB_USERNAME);
-console.log('  DB_PASSWORD=', mask(env.DB_PASSWORD));
+console.log('  DB_PASSWORD=', env.DB_PASSWORD);
 console.log('  DB_SCHEMA  =', env.DB_SCHEMA);
 
 
