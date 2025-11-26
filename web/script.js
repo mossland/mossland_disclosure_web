@@ -120,6 +120,8 @@ $.lang.ko = {
   101: "전체",
   102: "모스코인 마켓 활성화 (Bithumb)",
   103: "모스코인 마켓 활성화 (Bithumb)",
+  104: "전체 트랜잭션",
+  105: "일일 트랜잭션 수 (어제)",
 };
 
 $.lang.en = {
@@ -235,6 +237,8 @@ $.lang.en = {
   101: "Total Transfers",
   102: "MossCoin Market Activity (Bithumb)",
   103: "MossCoin Market Activity (Coinone)",
+  104: "Total Transactions",
+  105: "Daily Transfers (Previous Day)",
 };
 
 const { createApp } = Vue;
@@ -492,111 +496,13 @@ function loadTransferList(lang) {
     // setTimeout(() => counter($('.holder_count'), data["count"], ''), 1);
   });
 
-  $.getJSON(BASE_URL + "/api/getLastYearTx", function (data) {
+  $.getJSON(BASE_URL + "/api/getTotalTx", function (data) {
     $(".transactions_1y").html(numberWithCommas(data["count"]));
     // setTimeout(() => counter($('.transactions_1y'), data["count"], ''), 1);
   });
   $.getJSON(BASE_URL + "/api/getLastDayTx", function (data) {
     $(".transactions_1d").html(numberWithCommas(data["count"]));
     // setTimeout(() => counter($('.transactions_1d'), data["count"], ''), 1);
-  });
-
-  $.getJSON(BASE_URL + "/api/getWmocInfo", function (data) {
-    const msw = stringToNumber(data.maxSupplyWmoc);
-    const sw = stringToNumber(data.supplyableWmoc);
-    const mb = stringToNumber(data.mocBalance);
-    const mcs = stringToNumber(data.mocCirculatingSupply);
-
-    const wcs = msw - sw;
-    const tcs = mcs - mb + wcs;
-
-    $(".max_supply_wmoc").html(numberWithCommas(msw));
-    $(".wmoc_circulating_supply").html(numberWithCommas(msw - sw));
-    $(".supplyable_wmoc").html(numberWithCommas(sw));
-    $(".moc_balance").html(numberWithCommas(mb));
-    $(".total_circulating_supply").html(numberWithCommas(tcs));
-    $(".wmoc_holder_count").html(numberWithCommas(data.holderCount));
-    $(".wmoc_transfer_count").html(numberWithCommas(data.totalTransfersCount));
-
-    const className = mcs >= tcs ? "green_circle" : "red_circle";
-    const isNormal = `<div class="${className}"></div>`;
-
-    $(".wmoc_status").html(isNormal);
-
-    $(".wmoc_transfer_list_table_item").remove();
-    if (data != null) {
-      $.each(data.wmocLastTx, function (i, item) {
-        var ts = item["timeStamp"];
-        var nowTs = new Date().getTime() / 1000;
-
-        var totalSec = Math.floor(nowTs - ts);
-        var sec = totalSec % 60;
-        var min = Math.floor(totalSec / 60) % 60;
-        var hr = Math.floor(totalSec / 3600);
-
-        var age = "-";
-
-        if (lang === "en") {
-          if (hr > 0) {
-            age =
-              hr +
-              " hr" +
-              (hr > 1 ? "s" : "") +
-              " " +
-              min +
-              " min" +
-              (min > 1 ? "s" : "") +
-              " ago";
-          } else if (min > 0) {
-            age =
-              min +
-              " min" +
-              (min > 1 ? "s" : "") +
-              " " +
-              sec +
-              " sec" +
-              (sec > 1 ? "s" : "") +
-              " ago";
-          } else {
-            age = sec + " sec" + (sec > 1 ? "s" : "") + " ago";
-          }
-        } else {
-          if (hr > 0) {
-            age = hr + "시간 " + min + "분" + " 전";
-          } else if (min > 0) {
-            age = min + "분 " + sec + "초" + " 전";
-          } else {
-            age = sec + "초 전";
-          }
-        }
-
-        var $item = $(
-          '<tr class="wmoc_transfer_list_table_item">\n' +
-            '<td><div class="ellipsis">' +
-            '<a href="https://etherscan.io/tx/' +
-            item["hash"] +
-            '" target="_blank">' +
-            item["hash"] +
-            "</a>" +
-            "</div></td>\n" +
-            "<td>" +
-            age +
-            "</td>\n" +
-            '<td class="pc_show"><div class="ellipsis">' +
-            item["from"] +
-            "</div></td>\n" +
-            '<td class="pc_show"><div class="ellipsis">' +
-            item["to"] +
-            "</div></td>\n" +
-            "<td>" +
-            Big(item["value"]).div(1000000000000000000).toString() +
-            "</td>\n" +
-            "</tr>"
-        );
-
-        $(".wmoc_transfer_list_table").append($item);
-      });
-    }
   });
 
   $.getJSON(BASE_URL + "/api/getLastTx", function (data) {
@@ -651,7 +557,7 @@ function loadTransferList(lang) {
         var $item = $(
           '<tr class="transfer_list_table_item">\n' +
             '<td><div class="ellipsis">' +
-            '<a href="https://scan.luniverse.io/transactions/' +
+            '<a href="https://etherscan.io/tx/' +
             item["txHash"] +
             '" target="_blank">' +
             item["txHash"] +
