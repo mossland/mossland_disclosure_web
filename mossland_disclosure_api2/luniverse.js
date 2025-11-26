@@ -11,7 +11,7 @@ class Luniverse {
   constructor() {
     this.protocol = "luniverse"; // e.g., luniverse, ethereum
     this.network = "mainnet"; // e.g., mainnet, goerli
-    this.contractAddress = "0x878120A5C9828759A250156c66D629219F07C5c6"; // e.g., 0xabc...
+    this.contractAddress = "0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab"; // e.g., 0xabc...
     this.baseURL = "https://web3.nodit.io";
   }
   async getToken() {
@@ -167,28 +167,27 @@ class Luniverse {
   }
 
   async getTotalTransactionsCount() {
-    const url = `/scan/v1.0/chains/0/accounts/${this.contractAddress.toLowerCase()}`;
-    const config = {
-      baseURL: "https://api.luniverse.io",
-      url,
-      method: "get",
-    };
-    let res = await axios(config);
-
-    return res.data.data.account.transactionsCount;
+    const url = `https://api.ethplorer.io/getTokenInfo/${this.contractAddress}?apiKey=${process.env.ETHPLORER_API_KEY}`;
+    try {
+      const res = await axios.get(url);
+      const data = res.data;
+      return data.transfersCount || 0;
+    } catch (error) {
+      console.log(error);
+      return 0;
+    }
   }
 
   async getHolderCount() {
-    const url = `/scan/v1.0/chains/0/tokens/${this.contractAddress.toLowerCase()}`;
-    const config = {
-      baseURL: "https://api.luniverse.io",
-      url,
-      method: "get",
-    };
-    let res = await axios(config);
-    //console.log('getHolderCount : ' + res.data.data.token.holdersCount);
-
-    return res.data.data.token.holdersCount;
+    const url = `https://api.ethplorer.io/getTokenInfo/${this.contractAddress}?apiKey=${process.env.ETHPLORER_API_KEY}`;
+    try {
+      const res = await axios.get(url);
+      const data = res.data;
+      return data.holdersCount || 0;
+    } catch (error) {
+      console.log(error);
+      return 0;
+    }
   }
 
   async getTxCount(arr) {
@@ -225,32 +224,111 @@ class Luniverse {
   }
 
   async getLastTx() {
-    return await this.getLastTransactions(10);
+    const ethplorerConfig = {
+      baseURL: "https://api.ethplorer.io",
+      url: `/getTokenHistory/${this.contractAddress}`,
+      method: "get",
+      params: {
+        limit: 10,
+        apiKey: process.env.ETHPLORER_API_KEY,
+      },
+      headers: {
+        "Accept-Encoding": "identity",
+      },
+      decompress: false,
+    };
+
+    try {
+      const res = await axios(ethplorerConfig);
+      const operations = res.data.operations || [];
+
+      return operations.map((op) => ({
+        txHash: op.transactionHash,
+        from: op.from,
+        to: op.to,
+        value: op.value,
+        timestamp: op.timestamp,
+      }));
+    } catch (error) {
+      console.error("Ethplorer API Error (Last 10 Txs):", error.message);
+      console.error(error);
+      return [];
+    }
   }
 
   async getTotalHolder() {
     return await this.getHolderCount();
   }
 
+  async _fetch24HourTxListRecursive(
+    startTimestamp,
+    offsetTimestamp,
+    accumulatedTxs = []
+  ) {
+    const ethplorerConfig = {
+      baseURL: "https://api.ethplorer.io",
+      url: `/getTokenHistory/${this.contractAddress}`,
+      method: "get",
+      params: {
+        limit: 1000,
+        apiKey: process.env.ETHPLORER_API_KEY,
+        ...(offsetTimestamp > 0 && { timestamp: offsetTimestamp }),
+      },
+    };
+
+    try {
+      const res = await axios(ethplorerConfig);
+      const operations = res.data.operations || [];
+
+      if (operations.length === 0) {
+        // 더 이상 트랜잭션이 없으면 종료
+        return accumulatedTxs;
+      }
+
+      // 24시간 이전 트랜잭션이 시작되는 인덱스 찾기
+      const firstOldIndex = operations.findIndex(
+        (op) => op.timestamp < startTimestamp
+      );
+
+      if (firstOldIndex !== -1) {
+        // 24시간 이내의 트랜잭션만 현재 목록에 추가하고 종료
+        const newTransfers = operations.slice(0, firstOldIndex);
+        return accumulatedTxs.concat(newTransfers);
+      } else {
+        // 1000개 모두 24시간 이내인 경우 (추가 요청 필요)
+
+        // 1000개 트랜잭션 전체를 누적
+        accumulatedTxs = accumulatedTxs.concat(operations);
+
+        // 마지막 트랜잭션의 timestamp를 다음 요청의 오프셋으로 설정
+        const nextOffsetTimestamp = operations[operations.length - 1].timestamp;
+
+        // Rate Limit 방지를 위해 잠시 대기
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // 다음 페이지 재귀 호출
+        return this._fetch24HourTxListRecursive(
+          startTimestamp,
+          nextOffsetTimestamp,
+          accumulatedTxs
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Ethplorer API Error (24h Tx List Recursive):",
+        error.message
+      );
+
+      return accumulatedTxs;
+    }
+  }
+
   async getLastOneDay() {
-    // getHourlyTransactionsByContract 장애발생했을때 임시 사용
-    let count = await this.getTrasferEvent();
+    const startTimestamp = dayjs().subtract(24, "hour").unix();
+    // 목록을 가져오는 함수 호출
+    const tx24hList = await this._fetch24HourTxListRecursive(startTimestamp, 0);
 
-    /*
-        const format = 'YYYY-MM-DD-HH';
-        let now = dayjs();
-        let utcNow = dayjs.utc(now);
-    
-        let end = utcNow.format(format);
-        let start = dayjs(utcNow).subtract(24, 'hour').format(format);
-    
-        const retArr = await this.getHourlyTransactionsByContract(start, end);
-        
-        let count = await this.getTxCount(retArr);
-        */
-    //console.log('getLastOneDay : ' + count);
-
-    return count;
+    return tx24hList.length;
   }
 
   async getLastOneWeek() {

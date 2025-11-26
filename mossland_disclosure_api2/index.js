@@ -271,9 +271,11 @@ async function updateAllMarketCaps() {
  * 데이터 적재 루틴들
  * ------------------------- */
 async function setWmocInfo() {
+  /*
   const si = new SwapInfo();
   const ret = await si.getWmocInfo();
   await db.setWmocInfo(ret);
+  */
 }
 
 async function setUpbitInfo() {
@@ -362,13 +364,6 @@ async function setLuniverseInfo() {
   const ln = new Luniverse();
   const tasks = [
     ["getTotalTx", () => ln.getTotalTx(), (v) => ({ count: String(v) })],
-    ["getLastYearTx", () => ln.getLastOneYear(), (v) => ({ count: String(v) })],
-    [
-      "getLastMonthTx",
-      () => ln.getLastOneMonth(),
-      (v) => ({ count: String(v) }),
-    ],
-    ["getLastWeekTx", () => ln.getLastOneWeek(), (v) => ({ count: String(v) })],
     ["getLastDayTx", () => ln.getLastOneDay(), (v) => ({ count: String(v) })],
     [
       "getHolderCount",
@@ -510,6 +505,7 @@ app.get(
   })
 );
 
+setLuniverseInfo();
 /* ---------------------------
  * 스케줄링 (이제 정의 위반 없음)
  * ------------------------- */
