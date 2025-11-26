@@ -260,73 +260,92 @@ class Luniverse {
     return await this.getHolderCount();
   }
 
-  async _fetch24HourTxListRecursive(
+  async _fetchTxListRecursive(
     startTimestamp,
-    offsetTimestamp,
-    accumulatedTxs = []
+    endTimestamp,
+    nextTimestampParam = null,
+    collectedTxs = []
   ) {
+    const pageSize = 1000;
+
     const ethplorerConfig = {
       baseURL: "https://api.ethplorer.io",
       url: `/getTokenHistory/${this.contractAddress}`,
       method: "get",
       params: {
-        limit: 1000,
         apiKey: process.env.ETHPLORER_API_KEY,
-        ...(offsetTimestamp > 0 && { timestamp: offsetTimestamp }),
+        limit: pageSize,
+        ...(nextTimestampParam && { timestamp: nextTimestampParam }),
       },
+      headers: { "Accept-Encoding": "identity" },
+      decompress: false,
+      timeout: 30000,
     };
 
     try {
-      const res = await axios(ethplorerConfig);
-      const operations = res.data.operations || [];
+      const response = await axios(ethplorerConfig);
+      const operations = response.data.operations || [];
 
       if (operations.length === 0) {
-        // 더 이상 트랜잭션이 없으면 종료
-        return accumulatedTxs;
+        console.log("더 이상 가져올 데이터가 없습니다.");
+        return collectedTxs;
       }
 
-      // 24시간 이전 트랜잭션이 시작되는 인덱스 찾기
-      const firstOldIndex = operations.findIndex(
-        (op) => op.timestamp < startTimestamp
+      const filteredBatch = [];
+      let stopRecursion = false;
+
+      for (const tx of operations) {
+        const txTime = tx.timestamp;
+
+        if (txTime >= endTimestamp) {
+          continue;
+        }
+
+        if (txTime < startTimestamp) {
+          stopRecursion = true;
+          break;
+        }
+
+        filteredBatch.push(tx);
+      }
+
+      collectedTxs.push(...filteredBatch);
+
+      if (stopRecursion) {
+        return collectedTxs;
+      }
+
+      if (operations.length < pageSize) {
+        console.log(`[종료] 데이터 끝. 총 수집: ${collectedTxs.length}개`);
+        return collectedTxs;
+      }
+
+      const lastTx = operations[operations.length - 1];
+      const nextTimestamp = lastTx.timestamp;
+
+      return this._fetchTxListRecursive(
+        startTimestamp,
+        endTimestamp,
+        nextTimestamp,
+        collectedTxs
       );
-
-      if (firstOldIndex !== -1) {
-        // 24시간 이내의 트랜잭션만 현재 목록에 추가하고 종료
-        const newTransfers = operations.slice(0, firstOldIndex);
-        return accumulatedTxs.concat(newTransfers);
-      } else {
-        // 1000개 모두 24시간 이내인 경우 (추가 요청 필요)
-
-        // 1000개 트랜잭션 전체를 누적
-        accumulatedTxs = accumulatedTxs.concat(operations);
-
-        // 마지막 트랜잭션의 timestamp를 다음 요청의 오프셋으로 설정
-        const nextOffsetTimestamp = operations[operations.length - 1].timestamp;
-
-        // Rate Limit 방지를 위해 잠시 대기
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        // 다음 페이지 재귀 호출
-        return this._fetch24HourTxListRecursive(
-          startTimestamp,
-          nextOffsetTimestamp,
-          accumulatedTxs
-        );
-      }
     } catch (error) {
-      console.error(
-        "Ethplorer API Error (24h Tx List Recursive):",
-        error.message
-      );
-
-      return accumulatedTxs;
+      console.error("API Error:", error.message);
+      return collectedTxs;
     }
   }
 
   async getLastOneDay() {
-    const startTimestamp = dayjs().subtract(24, "hour").unix();
-    // 목록을 가져오는 함수 호출
-    const tx24hList = await this._fetch24HourTxListRecursive(startTimestamp, 0);
+    const endTimestamp = dayjs().utc().startOf("day").unix();
+    const startTimestamp = dayjs()
+      .utc()
+      .startOf("day")
+      .subtract(1, "day")
+      .unix();
+    const tx24hList = await this._fetchTxListRecursive(
+      startTimestamp,
+      endTimestamp
+    );
 
     return tx24hList.length;
   }
