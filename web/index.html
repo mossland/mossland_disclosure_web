@@ -1,996 +1,1024 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>MOSSCOIN DISCLOSURE</title>
-    <meta http-equiv="Expires" content="-1"/>
-    <meta http-equiv="Pragma" content="No-Cache"/>
-    <meta http-equiv="Cache-Control" content="No-Cache"/>
+    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="Pragma" content="No-Cache" />
+    <meta http-equiv="Cache-Control" content="No-Cache" />
 
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"/>
-    <meta http-equiv="Content-type" content="text/html; charset=UTF-8"/>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
 
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter&display=swap"
+      rel="stylesheet"
+    />
 
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard-std.css" />
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard-std-dynamic-subset.css" />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard-std.css"
+    />
+    <link
+      rel="stylesheet"
+      as="style"
+      crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard-std-dynamic-subset.css"
+    />
 
     <meta name="title" content="MOSSCOIN DISCLOSURE" />
-    <meta name="description" content="Circulating supply plan and summary of Mossland" />
-    <meta name="keywords" content="MOSSCOIN DISCLOSURE, mosscoin, mossland, 모스랜드, 모스코인, 공시, 유통" />
+    <meta
+      name="description"
+      content="Circulating supply plan and summary of Mossland"
+    />
+    <meta
+      name="keywords"
+      content="MOSSCOIN DISCLOSURE, mosscoin, mossland, 모스랜드, 모스코인, 공시, 유통"
+    />
     <meta name="language" content="Korean" />
     <meta name="author" content="Mossland" />
 
     <meta property="og:url" content="https://disclosure.moss.land/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Mossland Disclosure" />
-    <meta property="og:image" content="http://s3.ap-northeast-2.amazonaws.com/static.moss.land/ogimage.jpeg" />
-    <meta property="og:image:secure_url" content="https://disclosure.moss.land/ogimage.jpeg" />
-    <meta property="og:description" content="Circulating supply plan and summary of Mossland" />
+    <meta
+      property="og:image"
+      content="http://s3.ap-northeast-2.amazonaws.com/static.moss.land/ogimage.jpeg"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://disclosure.moss.land/ogimage.jpeg"
+    />
+    <meta
+      property="og:description"
+      content="Circulating supply plan and summary of Mossland"
+    />
 
-	<link rel="icon" href="/favicon.png" />
+    <link rel="icon" href="/favicon.png" />
     <script src="//unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="//cdn.jsdelivr.net/npm/big.js@6.2.1/big.min.js"></script>
-</head>
-<body>
-<header class="header">
 
-    <div class="container">
-        <div class="header_top" style="position: relative;">
+    <!-- 기존 CSS -->
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div class="container">
+        <div class="header_top" style="position: relative">
+          <a href="/"><img class="logo" src="./img/Vector.png" /></a>
 
-            <a href="/"><img class="logo" src="./img/Vector.png"/></a>
-
-            <div class="header_language" style="position: absolute; right: 0; top: 0; bottom: 0; margin: auto;">
-                <div class="language_container">
-                    <img src="./img/language.png" style="margin-right: 6px;"/>
-                    <span class="language_text">한국어</span>
-                    <img class="language_arrow" src="./img/language_arrow.png" style="margin-left: 4px;"/>
-                </div>
-
-                <div class="popup_language off">
-                    <ul class="language_list">
-                        <li class="language_type" value="en">English</li>
-                        <li class="language_type" value="ko">한국어</li>
-                    </ul>
-                </div>
+          <div
+            class="header_language"
+            style="
+              position: absolute;
+              right: 0;
+              top: 0;
+              bottom: 0;
+              margin: auto;
+            "
+          >
+            <div class="language_container">
+              <img src="./img/language.png" style="margin-right: 6px" />
+              <span class="language_text">한국어</span>
+              <img
+                class="language_arrow"
+                src="./img/language_arrow.png"
+                style="margin-left: 4px"
+              />
             </div>
+
+            <div class="popup_language off">
+              <ul class="language_list">
+                <li class="language_type" value="en">English</li>
+                <li class="language_type" value="ko">한국어</li>
+              </ul>
+            </div>
+          </div>
         </div>
+      </div>
+    </header>
+
+    <div class="page_loading">
+      <div class="page_loading_bar" style="width: 0"></div>
     </div>
-</header>
-<div class="page_loading">
-    <div class="page_loading_bar" style="width: 0;"></div>
-</div>
-<div id="wrapper">
 
-
-    <section class="top_section">
-
+    <div id="wrapper">
+      <section class="top_section">
         <div class="container">
-            <div class="top_container">
-                <a href="https://moss.land" target="_blank" class="top_btn" data-langNum="0">홈페이지</a>
-                <a href="https://github.com/mossland" target="_blank" class="top_btn" data-langNum="1">깃허브</a>
-                <a href="https://twitter.com/themossland" target="_blank" class="top_btn" data-langNum="2">트위터</a>
-                <a href="https://medium.com/mossland-blog" target="_blank" class="top_btn" data-langNum="83">블로그</a>
+          <div class="top_container">
+            <a
+              href="https://moss.land"
+              target="_blank"
+              class="top_btn"
+              data-langNum="0"
+              >홈페이지</a
+            >
+            <a
+              href="https://github.com/mossland"
+              target="_blank"
+              class="top_btn"
+              data-langNum="1"
+              >깃허브</a
+            >
+            <a
+              href="https://twitter.com/themossland"
+              target="_blank"
+              class="top_btn"
+              data-langNum="2"
+              >트위터</a
+            >
+            <a
+              href="https://medium.com/mossland-blog"
+              target="_blank"
+              class="top_btn"
+              data-langNum="83"
+              >블로그</a
+            >
+          </div>
+
+          <div class="middle_container">
+            <div class="order2">
+              <div class="txt--01">
+                <span data-langNum="3">시가총액</span>
+                <span data-langNum="4">(실시간)</span>
+              </div>
+              <div class="txt--02">
+                <span data-langNum="5">모스랜드 제공</span>
+              </div>
+              <div class="txt--03">
+                <span class="mossland_marketcap">- 억원</span>
+              </div>
+              <div class="coinmarketcap">
+                <span class="txt--04" data-langNum="6">코인마켓캡 제공</span>
+                <div class="txt--05">
+                  <span class="coinmarketcap_marketcap">- 억원</span>
+                </div>
+              </div>
+              <div class="coingeco">
+                <span class="txt--04" data-langNum="7">코인게코 제공</span>
+                <div class="txt--05">
+                  <span class="coingecko_marketcap">- 억원</span>
+                </div>
+              </div>
             </div>
 
-            <div class="middle_container">
-                <div class="order2">
-                    <div class="txt--01"><span data-langNum="3">시가총액</span><span data-langNum="4">(실시간)</span></div>
-                    <div class="txt--02"><span data-langNum="5">모스랜드 제공</span></div>
-                    <div class="txt--03"><span class="mossland_marketcap">- 억원</span></div>
-                    <div class="coinmarketcap">
-						<span class="txt--04" data-langNum="6">코인마켓캡 제공</span><div class="txt--05"><span class="coinmarketcap_marketcap">- 억원</span></div>
-					</div>
-                    <div class="coingeco">
-                        <span class="txt--04" data-langNum="7">코인게코 제공</span><div class="txt--05"><span class="coingecko_marketcap">- 억원</span></div>
-                    </div>
-                </div>
-                <div class="top_center order1">
-                    <img src="./img/Ellipse1copy.svg"/>
-                    <img class="top_center_image" src="./img/Ellipse8copy31.svg"/>
-                </div>
-                <div class="order3">
-                    <div class="txt--01"><span data-langNum="8">현재 유통량</span><span data-langNum="4">(실시간)</span></div>
-                    <div class="txt--02"><span data-langNum="5">모스랜드 제공</span></div>
-                    <div class="txt--03"><span class="mossland_circulating_supply">- moc</span></div>
-                    <div class="coinmarketcapR">
-						<span class="txt--04" data-langNum="6">코인마켓캡 제공</span><div class="txt--05"><span class="coinmarketcap_circulating_supply">- moc</span></div>
-					</div>
-                    <div class="coingeco">
-                        <span class="txt--04" data-langNum="7">코인게코 제공</span><div class="txt--05"><span class="coingecko_circulating_supply">- moc</span></div>
-                    </div>
-                </div>
+            <div class="top_center order1">
+              <img src="./img/Ellipse1copy.svg" />
+              <img class="top_center_image" src="./img/Ellipse8copy31.svg" />
             </div>
 
-            <div class="bottom_container">
-
-                <div class="bottom_box">
-                    <div class="box_title" data-langNum="9">최초 발행</div>
-                    <div class="box_content date">2018 / 05</div>
+            <div class="order3">
+              <div class="txt--01">
+                <span data-langNum="8">현재 유통량</span>
+                <span data-langNum="4">(실시간)</span>
+              </div>
+              <div class="txt--02">
+                <span data-langNum="5">모스랜드 제공</span>
+              </div>
+              <div class="txt--03">
+                <span class="mossland_circulating_supply">- moc</span>
+              </div>
+              <div class="coinmarketcapR">
+                <span class="txt--04" data-langNum="6">코인마켓캡 제공</span>
+                <div class="txt--05">
+                  <span class="coinmarketcap_circulating_supply">- moc</span>
                 </div>
-                <div class="bottom_box">
-                    <div class="box_title" data-langNum="10">총 발행 한도 (추가 발행 불가능)</div>
-                    <div class="box_content supply"><span class="mossland_max_supply">- moc</span></div>
+              </div>
+              <div class="coingeco">
+                <span class="txt--04" data-langNum="7">코인게코 제공</span>
+                <div class="txt--05">
+                  <span class="coingecko_circulating_supply">- moc</span>
                 </div>
-                <div class="bottom_box">
-                    <div class="box_title" data-langNum="11">연락처</div>
-                    <div class="box_content contract">contact@moss.land</div>
-                </div>
+              </div>
             </div>
+          </div>
+
+          <div class="bottom_container">
+            <div class="bottom_box">
+              <div class="box_title" data-langNum="9">최초 발행</div>
+              <div class="box_content date">2018 / 05</div>
+            </div>
+            <div class="bottom_box">
+              <div class="box_title" data-langNum="10">
+                총 발행 한도 (추가 발행 불가능)
+              </div>
+              <div class="box_content supply">
+                <span class="mossland_max_supply">- moc</span>
+              </div>
+            </div>
+            <div class="bottom_box">
+              <div class="box_title" data-langNum="11">연락처</div>
+              <div class="box_content contract">contact@moss.land</div>
+            </div>
+          </div>
         </div>
         <div class="mobile_top_section"></div>
-    </section>
+      </section>
 
-    <section class="middle_section">
-
+      <section class="middle_section">
         <div class="container">
-            <div class="date_file_container">
-                <div class="current_date"></div>
-                <div class="btn_file" data-langNum="12" onclick="window.open('https://static.moss.land/disclosure/2025-01-09+MOC+(Token+Supply+Schedule).pdf')">다운로드</div>
+          <div class="date_file_container">
+            <div class="current_date"></div>
+            <div
+              class="btn_file"
+              data-langNum="12"
+              onclick="window.open('https://static.moss.land/disclosure/2025-01-09+MOC+(Token+Supply+Schedule).pdf')"
+            >
+              다운로드
             </div>
-            <div class="middle_title" >
-                <div>
-                    <img src="./img/Vector-17.svg"/>
-                    <span data-langNum="13">유통량 계획</span>
+          </div>
+          <div class="middle_title">
+            <div>
+              <img src="./img/Vector-17.svg" />
+              <span data-langNum="13">유통량 계획</span>
+            </div>
+          </div>
+          <div class="wallet_container">
+            <div class="wallet_title">
+              <span data-langNum="14"
+                ><img src="./img/Vector-21.svg" />&nbsp;&nbsp;재단 보유 지갑
+                리스트</span
+              >
+              <br class="mobile_show" />
+              <span data-langNum="15"
+                >(유통되지 않는 모스코인을 보관하는 지갑)</span
+              >
+            </div>
+
+            <ul class="wallet_list">
+              <li>
+                <div class="category" data-langNum="16">재단 관리 지갑 #1</div>
+                <div class="info">
+                  <div class="body">
+                    <p id="wallet_1">
+                      0xcda8f4d40dbeaecf7ee7221f9e9b35d565ca2ad2
+                    </p>
+                    <img
+                      onclick="copyToClipboard('#wallet_1')"
+                      style="cursor: pointer"
+                      src="./img/Vector-15.svg"
+                    />
+                  </div>
+                  <div class="link">
+                    <button
+                      class="btn_link"
+                      onclick="window.open('https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab?a=0xcda8f4d40dbeaecf7ee7221f9e9b35d565ca2ad2')"
+                    >
+                      Link
+                    </button>
+                  </div>
                 </div>
-            </div>
-            <div class="wallet_container">
-                <div class="wallet_title" >
-                    <span data-langNum="14"><img src="./img/Vector-21.svg"/>&nbsp;&nbsp;재단 보유 지갑 리스트</span> <br class="mobile_show"/>
-                    <span data-langNum="15">(유통되지 않는 모스코인을 보관하는 지갑)</span>
-                </div>
+              </li>
+            </ul>
+          </div>
 
-                <ul class="wallet_list">
-                    <li>
-                        <div class="category" data-langNum="16">재단 관리 지갑 #1</div>
-                        <div class="info">
-                            <div class="body">
-                                <p id="wallet_1">0xcda8f4d40dbeaecf7ee7221f9e9b35d565ca2ad2</p>
-                                <img onclick="copyToClipboard('#wallet_1')" style="cursor: pointer;" src="./img/Vector-15.svg"/>
-                            </div>
-                            <div class="link"><button class="btn_link" onclick="window.open('https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab?a=0xcda8f4d40dbeaecf7ee7221f9e9b35d565ca2ad2')" >Link</button> </div>
-                        </div>
-                    </li>
-                </ul>
-
-            </div>
-
-            <div class="left_right_container">
-                <div class="left_container">
-                    <div class="title">
-                        <img src="./img/Vector-18.svg"/>
-                        <span data-langNum="18">최근 유통량 변동 상세</span>
-                        <span data-langNum="19">(최근 3개월)</span>
-                    </div>
-                    <table class="recent_release">
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Team 배정 물량 유통 예정</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Marketing 배정 물량 유통</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Team 배정 물량 유통 예정</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Marketing 배정 물량 유통</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-
-                    </table>
-                </div>
-                <div class="right_container">
-
-                    <div class="title">
-                        <img src="./img/Vector-20.svg"/>
-                        <span data-langNum="20">예정 유통량 변동 상세</span>
-                        <span data-langNum="21">(향후 3개월)</span>
-                    </div>
-                    <table class="expected_release">
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Team 배정 물량 유통 예정</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Marketing 배정 물량 유통</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Team 배정 물량 유통 예정</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-                        <tr>
-                            <td>2022.12</td>
-                            <td>Marketing 배정 물량 유통</td>
-                            <td>+2,000,000 moc</td>
-                        </tr>
-                    </table>
-                </div>
+          <div class="left_right_container">
+            <div class="left_container">
+              <div class="title">
+                <img src="./img/Vector-18.svg" />
+                <span data-langNum="18">최근 유통량 변동 상세</span>
+                <span data-langNum="19">(최근 3개월)</span>
+              </div>
+              <table class="recent_release">
+                <tr>
+                  <td>2022.12</td>
+                  <td>Team 배정 물량 유통 예정</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+                <tr>
+                  <td>2022.12</td>
+                  <td>Marketing 배정 물량 유통</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+                <tr>
+                  <td>2022.12</td>
+                  <td>Team 배정 물량 유통 예정</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+                <tr>
+                  <td>2022.12</td>
+                  <td>Marketing 배정 물량 유통</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+              </table>
             </div>
 
-
-            <div class="button_container">
-                <button class="btn_item" onclick="window.open('https://www.moss.land/privacy-policy')">
-                    <img src="./img/Shape1copy.svg"/>
-                    <p>Privacy Policy</p>
-                </button>
-                <button class="btn_item" onclick="window.open('https://www.moss.land/terms-condition')">
-                    <img src="./img/Shape1copy2.svg"/>
-                    <p>Terms & Conditions</p>
-                </button>
-                <button class="btn_item" onclick="window.open('https://www.moss.land/cookiespolicy')"R>
-                    <img src="./img/Shape1copy4.svg"/>
-                    <p>Cookie Policy</p>
-                </button>
+            <div class="right_container">
+              <div class="title">
+                <img src="./img/Vector-20.svg" />
+                <span data-langNum="20">예정 유통량 변동 상세</span>
+                <span data-langNum="21">(향후 3개월)</span>
+              </div>
+              <table class="expected_release">
+                <tr>
+                  <td>2022.12</td>
+                  <td>Team 배정 물량 유통 예정</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+                <tr>
+                  <td>2022.12</td>
+                  <td>Marketing 배정 물량 유통</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+                <tr>
+                  <td>2022.12</td>
+                  <td>Team 배정 물량 유통 예정</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+                <tr>
+                  <td>2022.12</td>
+                  <td>Marketing 배정 물량 유통</td>
+                  <td>+2,000,000 moc</td>
+                </tr>
+              </table>
             </div>
+          </div>
+
+          <div class="button_container">
+            <button
+              class="btn_item"
+              onclick="window.open('https://www.moss.land/privacy-policy')"
+            >
+              <img src="./img/Shape1copy.svg" />
+              <p>Privacy Policy</p>
+            </button>
+            <button
+              class="btn_item"
+              onclick="window.open('https://www.moss.land/terms-condition')"
+            >
+              <img src="./img/Shape1copy2.svg" />
+              <p>Terms & Conditions</p>
+            </button>
+            <button
+              class="btn_item"
+              onclick="window.open('https://www.moss.land/cookiespolicy')"
+            >
+              <img src="./img/Shape1copy4.svg" />
+              <p>Cookie Policy</p>
+            </button>
+          </div>
         </div>
+      </section>
 
-    </section>
-
-
-
-    <section class="middle_section">
-
+      <!-- 온체인 MOC 활성화 섹션 (그대로 유지) -->
+      <section class="middle_section">
         <div class="container">
-            <div class="date_file_container">
-                <div class="current_date transfer_list_date"></div>
+          <div class="date_file_container">
+            <div class="current_date transfer_list_date"></div>
+          </div>
+          <div class="middle_title">
+            <div>
+              <img src="./img/Vector-26.svg" />
+              <span data-langNum="24">모스코인 트랜잭션 활성화</span>
             </div>
-            <div class="middle_title" >
-                <div>
-                    <img src="./img/Vector-26.svg"/>
-                    <span data-langNum="24">모스코인 트랜잭션 활성화</span>
-                </div>
+          </div>
+
+          <div class="left_right_container moc_trans">
+            <div class="left_container">
+              <div class="title">
+                <span data-langNum="25">모스코인 (MOC)</span>
+                <span>
+                  <button
+                    class="btn_link"
+                    onclick="window.open('https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab');"
+                  >
+                    Link
+                  </button>
+                </span>
+              </div>
+              <table class="moc_table table_2col">
+                <tr>
+                  <td data-langNum="40">홀더</td>
+                  <td class="holder_count">-</td>
+                </tr>
+                <tr>
+                  <td data-langNum="41">컨트랙트 주소</td>
+                  <td>
+                    <a
+                      href="https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab"
+                      target="_blank"
+                      >0x8bb...dab</a
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td data-langNum="42">컨트랙트 소스 코드</td>
+                  <td>
+                    <a
+                      href="https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab#code"
+                      target="_blank"
+                      >Link</a
+                    >
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="right_container">
+              <div class="title">
+                <span data-langNum="26">트랜잭션</span>
+                <span>
+                  <button
+                    class="btn_link"
+                    onclick="window.open('https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab')"
+                  >
+                    Link
+                  </button>
+                </span>
+              </div>
+              <table class="transactions_table">
+                <tr>
+                  <td data-langNum="105">일일 트랜잭션 수 (어제)</td>
+                  <td class="transactions_1d">-</td>
+                </tr>
+                <tr>
+                  <td data-langNum="104">전체 트랜잭션</td>
+                  <td class="transactions_1y">-</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="list_container">
+            <div class="title">
+              <img src="./img/Vector-22.svg" />
+              <span data-langNum="50">토큰 전송 기록</span>
+              <span></span>
+            </div>
+
+            <table class="transfer_list_table">
+              <tr>
+                <th data-langNum="51">트랜잭션 해시</th>
+                <th data-langNum="52">시간</th>
+                <th data-langNum="53" class="pc_show">보낸사람</th>
+                <th data-langNum="54" class="pc_show">받는사람</th>
+                <th data-langNum="55">값(MOC)</th>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ▼▼▼ 여기부터: Upbit / Bithumb / Coinone / Gopax 공통 템플릿 기반 렌더링 ▼▼▼ -->
+
+      <!-- 렌더링 결과가 들어갈 루트 -->
+      <div id="market-sections-root"></div>
+
+      <!-- 공통 템플릿 -->
+      <template id="market-section-template">
+        <section class="middle_section">
+          <div class="container">
+            <div class="date_file_container">
+              <div class="current_date transaction_list_date"></div>
+            </div>
+            <div class="middle_title">
+              <div>
+                <img src="./img/Vector-27.svg" />
+                <span data-langNum="__TITLE_LANGNUM__">__TITLE_TEXT__</span>
+              </div>
             </div>
 
             <div class="left_right_container moc_trans">
-
-                <div class="left_container">
-                    <div class="title">
-<!--                        <img src="./img/Vector-18.svg"/>-->
-                        <span data-langNum="25">모스코인 (MOC)</span>
-                        <span><button class="btn_link" onclick="window.open('https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab');" >Link</button></span>
-                    </div>
-                    <table class="moc_table table_2col">
-                        <tr>
-                            <td data-langNum="40">홀더</td>
-                            <td class="holder_count">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="41">컨트랙트 주소</td>
-                            <td><a href="https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab" target="_blank">0x8bb...dab</a></td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="42">컨트랙트 소스 코드</td>
-                            <td><a href="https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab#code" target="_blank">Link</a></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="right_container">
-
-                    <div class="title">
-<!--                        <img src="./img/Vector-20.svg"/>-->
-                        <span data-langNum="26">트랜잭션</span>
-                        <span><button class="btn_link" onclick="window.open('https://etherscan.io/token/0x8bbfe65e31b348cd823c62e02ad8c19a84dd0dab')" >Link</button></span>
-                    </div>
-                    <table class="transactions_table">
-                        <tr>
-                            <td data-langNum="105">일일 트랜잭션 수 (어제)</td>
-                            <td class="transactions_1d">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="104">전체 트랜잭션</td>
-                            <td class="transactions_1y">-</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="list_container">
-
+              <div class="left_container">
                 <div class="title">
-                    <img src="./img/Vector-22.svg"/>
-                    <span data-langNum="50">토큰 전송 기록</span>
-                    <span></span>
+                  <span data-langNum="38">기본 정보</span>
+                  <span></span>
                 </div>
 
-                <table class="transfer_list_table">
-                    <tr>
-                        <th data-langNum="51">트랜잭션 해시</th>
-                        <th data-langNum="52">시간</th>
-                        <th data-langNum="53" class="pc_show">보낸사람</th>
-                        <th data-langNum="54" class="pc_show">받는사람</th>
-                        <th data-langNum="55">값(MOC)</th>
-                    </tr>
+                <table class="market_activity_table">
+                  <tr>
+                    <td data-langNum="28">거래량 (24h)</td>
+                    <td class="__PREFIX__acc_trade_volume_24h">- MOC</td>
+                  </tr>
+                  <tr>
+                    <td data-langNum="29">거래대금 (24h)</td>
+                    <td class="__PREFIX__acc_trade_price_24h">- KRW</td>
+                  </tr>
+                  <tr>
+                    <td data-langNum="30">52주 최고/52주 최저</td>
+                    <td>
+                      <span class="__PREFIX__w52_high">-</span>
+                      (<span class="__PREFIX__w52_high_date">-</span>) /
+                      <br />
+                      <span class="__PREFIX__w52_low">-</span>
+                      (<span class="__PREFIX__w52_low_date">-</span>)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td data-langNum="31">거래량/총발행량 (24h)</td>
+                    <td class="__PREFIX__acc_trade_volume_24h_per">-</td>
+                  </tr>
+                  <tr>
+                    <td data-langNum="32">유통량/총발행량 (24h)</td>
+                    <td class="__PREFIX__acc_trade_price_24h_per">-</td>
+                  </tr>
                 </table>
-            </div>
+              </div>
 
-        </div>
-    </section>
-    <section class="middle_section">
-
-        <div class="container">
-            <div class="date_file_container">
-                <div class="current_date transaction_list_date"></div>
-            </div>
-            <div class="middle_title" >
-                <div>
-                    <img src="./img/Vector-27.svg"/>
-                    <span data-langNum="27">모스코인 마켓 활성화 (Upbit)</span>
+              <div class="right_container">
+                <div class="title">
+                  <span data-langNum="39">가격 지표</span>
+                  <span></span>
                 </div>
-            </div>
 
-            <div class="left_right_container moc_trans">
-                <div class="left_container">
-
-                    <div class="title">
-<!--                        <img src="./img/Vector-18.svg"/>-->
-                        <span data-langNum="38">기본 정보</span>
-                        <span></span>
-                    </div>
-
-                    <table class="market_activity_table">
-                        <tr>
-                            <td data-langNum="28">거래량 (24h)</td>
-                            <td class="acc_trade_volume_24h">- MOC</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="29">거래대금 (24h)</td>
-                            <td class="acc_trade_price_24h">- KRW</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="30">52주 최고/52주 최저</td>
-                            <td><span class="w52_high">-</span> (<span class="w52_high_date">-</span>) / <br/><span class="w52_low">-</span> (<span class="w52_low_date">-</span>)</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="31">거래량/총발행량 (24h)</td>
-                            <td class="acc_trade_volume_24h_per">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="32">유통량/총발행량 (24h)</td>
-                            <td class="acc_trade_price_24h_per">-</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="right_container">
-
-                    <div class="title">
-<!--                        <img src="./img/Vector-20.svg"/>-->
-                        <span data-langNum="39">가격 지표</span>
-                        <span></span>
-                    </div>
-
-                    <table class="market_price_performance_table table_3col">
-                        <tr>
-                            <th data-langNum="43">기간</th>
-                            <th data-langNum="48">최고가(KRW)</th>
-                            <th data-langNum="49">최저가(KRW)</th>
-                        </tr>
-                        <tr>
-                            <td data-langNum="45">최근 24시간</td>
-                            <td class="krw_1d_high">-</td>
-                            <td class="krw_1d_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="46">최근 30일</td>
-                            <td class="krw_1m_high">-</td>
-                            <td class="krw_1m_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="47">최근 365일</td>
-                            <td class="krw_1y_high">-</td>
-                            <td class="krw_1y_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="44">전체 기간</td>
-                            <td class="krw_total_high">-</td>
-                            <td class="krw_total_low">-</td>
-                        </tr>
-                    </table>
-                </div>
+                <table class="market_price_performance_table table_3col">
+                  <tr>
+                    <th data-langNum="43">기간</th>
+                    <th data-langNum="48">최고가(KRW)</th>
+                    <th data-langNum="49">최저가(KRW)</th>
+                  </tr>
+                  <tr>
+                    <td data-langNum="45">최근 24시간</td>
+                    <td class="__PREFIX__krw_1d_high">-</td>
+                    <td class="__PREFIX__krw_1d_low">-</td>
+                  </tr>
+                  <tr>
+                    <td data-langNum="46">최근 30일</td>
+                    <td class="__PREFIX__krw_1m_high">-</td>
+                    <td class="__PREFIX__krw_1m_low">-</td>
+                  </tr>
+                  <tr>
+                    <td data-langNum="47">최근 365일</td>
+                    <td class="__PREFIX__krw_1y_high">-</td>
+                    <td class="__PREFIX__krw_1y_low">-</td>
+                  </tr>
+                  <tr>
+                    <td data-langNum="44">전체 기간</td>
+                    <td class="__PREFIX__krw_total_high">-</td>
+                    <td class="__PREFIX__krw_total_low">-</td>
+                  </tr>
+                </table>
+              </div>
             </div>
 
             <div class="list_container">
-
-                <div class="title">
-                    <img src="./img/Vector-23.svg"/>
-                    <span data-langNum="56">실시간 호가</span>
-                    <span></span>
-                </div>
-
+              <div class="title">
+                <img src="./img/Vector-23.svg" />
+                <span data-langNum="56">실시간 호가</span>
+                <span></span>
+              </div>
             </div>
 
             <div class="left_right_container order_book_container">
-
-                <div class="left_container">
-
-                    <table class="order_book_bid_table order_book_table">
-                        <tr>
-                            <th data-langNum="57">수량(MOC)</th>
-                            <th data-langNum="58">누적량(MOC)</th>
-                            <th data-langNum="59">평균매수호가(KRW)</th>
-                        </tr>
-
-                    </table>
-
-                </div>
-                <div class="right_container">
-
-                    <table class="order_book_ask_table order_book_table">
-                        <tr>
-                            <th data-langNum="60">평균매도호가(KRW)</th>
-                            <th data-langNum="58">누적량(MOC)</th>
-                            <th data-langNum="59">수량(MOC)</th>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-
-
-            <div class="list_container">
-
-                <div class="title">
-                    <img src="./img/Vector-22.svg"/>
-                    <span data-langNum="61">체결 이력</span>
-                    <span></span>
-                </div>
-
-                <table class="upbit_transaction_list_table transaction_list_table">
-                    <tr>
-                        <th data-langNum="33">체결시간</th>
-                        <th data-langNum="34">체결가격(KRW)</th>
-                        <th data-langNum="35">체결량(MOC)</th>
-                        <th data-langNum="36">체결금액(KRW)</th>
-                    </tr>
+              <div class="left_container">
+                <table
+                  class="__ORDERBOOK_PREFIX__order_book_bid_table order_book_table"
+                >
+                  <tr>
+                    <th data-langNum="57">수량(MOC)</th>
+                    <th data-langNum="58">누적량(MOC)</th>
+                    <th data-langNum="59">평균매수호가(KRW)</th>
+                  </tr>
                 </table>
-            </div>
-        </div>
-    </section>
-
-    <section class="middle_section">
-        <div class="container">
-            <div class="date_file_container">
-                <div class="current_date transaction_list_date"></div>
-            </div>
-            <div class="middle_title" >
-                <div>
-                    <img src="./img/Vector-27.svg"/>
-                    <span data-langNum="102">모스코인 마켓 활성화 (Bithumb)</span>
-                </div>
-            </div>
-
-            <div class="left_right_container moc_trans">
-                <div class="left_container">
-
-                    <div class="title">
-<!--                        <img src="./img/Vector-18.svg"/>-->
-                        <span data-langNum="38">기본 정보</span>
-                        <span></span>
-                    </div>
-
-                    <table class="market_activity_table">
-                        <tr>
-                            <td data-langNum="28">거래량 (24h)</td>
-                            <td class="bithumb_acc_trade_volume_24h">- MOC</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="29">거래대금 (24h)</td>
-                            <td class="bithumb_acc_trade_price_24h">- KRW</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="30">52주 최고/52주 최저</td>
-                            <td><span class="bithumb_w52_high">-</span> (<span class="bithumb_w52_high_date">-</span>) / <br/><span class="bithumb_w52_low">-</span> (<span class="bithumb_w52_low_date">-</span>)</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="31">거래량/총발행량 (24h)</td>
-                            <td class="bithumb_acc_trade_volume_24h_per">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="32">유통량/총발행량 (24h)</td>
-                            <td class="bithumb_acc_trade_price_24h_per">-</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="right_container">
-
-                    <div class="title">
-<!--                        <img src="./img/Vector-20.svg"/>-->
-                        <span data-langNum="39">가격 지표</span>
-                        <span></span>
-                    </div>
-
-                    <table class="market_price_performance_table table_3col">
-                        <tr>
-                            <th data-langNum="43">기간</th>
-                            <th data-langNum="48">최고가(KRW)</th>
-                            <th data-langNum="49">최저가(KRW)</th>
-                        </tr>
-                        <tr>
-                            <td data-langNum="45">최근 24시간</td>
-                            <td class="bithumb_krw_1d_high">-</td>
-                            <td class="bithumb_krw_1d_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="46">최근 30일</td>
-                            <td class="bithumb_krw_1m_high">-</td>
-                            <td class="bithumb_krw_1m_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="47">최근 365일</td>
-                            <td class="bithumb_krw_1y_high">-</td>
-                            <td class="bithumb_krw_1y_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="44">전체 기간</td>
-                            <td class="bithumb_krw_total_high">-</td>
-                            <td class="bithumb_krw_total_low">-</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="list_container">
-                <div class="title">
-                    <img src="./img/Vector-23.svg"/>
-                    <span data-langNum="56">실시간 호가</span>
-                    <span></span>
-                </div>
-            </div>
-            <div class="left_right_container order_book_container">
-                <div class="left_container">
-                    <table class="bithumb_order_book_bid_table order_book_table">
-                        <tr>
-                            <th data-langNum="57">수량(MOC)</th>
-                            <th data-langNum="58">누적량(MOC)</th>
-                            <th data-langNum="59">평균매수호가(KRW)</th>
-                        </tr>
-                    </table>
-                </div>
-                <div class="right_container">
-                    <table class="bithumb_order_book_ask_table order_book_table">
-                        <tr>
-                            <th data-langNum="60">평균매도호가(KRW)</th>
-                            <th data-langNum="58">누적량(MOC)</th>
-                            <th data-langNum="59">수량(MOC)</th>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="list_container">
-                <div class="title">
-                    <img src="./img/Vector-22.svg"/>
-                    <span data-langNum="61">체결 이력</span>
-                    <span></span>
-                </div>
-                <table class="bithumb_transaction_list_table transaction_list_table">
-                    <tr>
-                        <th data-langNum="33">체결시간</th>
-                        <th data-langNum="34">체결가격(KRW)</th>
-                        <th data-langNum="35">체결량(MOC)</th>
-                        <th data-langNum="36">체결금액(KRW)</th>
-                    </tr>
+              </div>
+              <div class="right_container">
+                <table
+                  class="__ORDERBOOK_PREFIX__order_book_ask_table order_book_table"
+                >
+                  <tr>
+                    <th data-langNum="60">평균매도호가(KRW)</th>
+                    <th data-langNum="58">누적량(MOC)</th>
+                    <th data-langNum="59">수량(MOC)</th>
+                  </tr>
                 </table>
-            </div>
-        </div>
-    </section>
-
-
-    <section class="middle_section">
-        <div class="container">
-            <div class="date_file_container">
-                <div class="current_date transaction_list_date"></div>
-            </div>
-            <div class="middle_title" >
-                <div>
-                    <img src="./img/Vector-27.svg"/>
-                    <span data-langNum="103">모스코인 마켓 활성화 (Coinone)</span>
-                </div>
+              </div>
             </div>
 
-            <div class="left_right_container moc_trans">
-                <div class="left_container">
-
-                    <div class="title">
-<!--                        <img src="./img/Vector-18.svg"/>-->
-                        <span data-langNum="38">기본 정보</span>
-                        <span></span>
-                    </div>
-
-                    <table class="market_activity_table">
-                        <tr>
-                            <td data-langNum="28">거래량 (24h)</td>
-                            <td class="coinone_acc_trade_volume_24h">- MOC</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="29">거래대금 (24h)</td>
-                            <td class="coinone_acc_trade_price_24h">- KRW</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="30">52주 최고/52주 최저</td>
-                            <td><span class="coinone_w52_high">-</span> (<span class="coinone_w52_high_date">-</span>) / <br/><span class="coinone_w52_low">-</span> (<span class="coinone_w52_low_date">-</span>)</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="31">거래량/총발행량 (24h)</td>
-                            <td class="coinone_acc_trade_volume_24h_per">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="32">유통량/총발행량 (24h)</td>
-                            <td class="coinone_acc_trade_price_24h_per">-</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="right_container">
-
-                    <div class="title">
-<!--                        <img src="./img/Vector-20.svg"/>-->
-                        <span data-langNum="39">가격 지표</span>
-                        <span></span>
-                    </div>
-
-                    <table class="market_price_performance_table table_3col">
-                        <tr>
-                            <th data-langNum="43">기간</th>
-                            <th data-langNum="48">최고가(KRW)</th>
-                            <th data-langNum="49">최저가(KRW)</th>
-                        </tr>
-                        <tr>
-                            <td data-langNum="45">최근 24시간</td>
-                            <td class="coinone_krw_1d_high">-</td>
-                            <td class="coinone_krw_1d_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="46">최근 30일</td>
-                            <td class="coinone_krw_1m_high">-</td>
-                            <td class="coinone_krw_1m_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="47">최근 365일</td>
-                            <td class="coinone_krw_1y_high">-</td>
-                            <td class="coinone_krw_1y_low">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="44">전체 기간</td>
-                            <td class="coinone_krw_total_high">-</td>
-                            <td class="coinone_krw_total_low">-</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
             <div class="list_container">
-                <div class="title">
-                    <img src="./img/Vector-23.svg"/>
-                    <span data-langNum="56">실시간 호가</span>
-                    <span></span>
-                </div>
-            </div>
-            <div class="left_right_container order_book_container">
-                <div class="left_container">
-                    <table class="coinone_order_book_bid_table order_book_table">
-                        <tr>
-                            <th data-langNum="57">수량(MOC)</th>
-                            <th data-langNum="58">누적량(MOC)</th>
-                            <th data-langNum="59">평균매수호가(KRW)</th>
-                        </tr>
-                    </table>
-                </div>
-                <div class="right_container">
-                    <table class="coinone_order_book_ask_table order_book_table">
-                        <tr>
-                            <th data-langNum="60">평균매도호가(KRW)</th>
-                            <th data-langNum="58">누적량(MOC)</th>
-                            <th data-langNum="59">수량(MOC)</th>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="list_container">
-                <div class="title">
-                    <img src="./img/Vector-22.svg"/>
-                    <span data-langNum="61">체결 이력</span>
-                    <span></span>
-                </div>
-                <table class="coinone_transaction_list_table transaction_list_table">
-                    <tr>
-                        <th data-langNum="33">체결시간</th>
-                        <th data-langNum="34">체결가격(KRW)</th>
-                        <th data-langNum="35">체결량(MOC)</th>
-                        <th data-langNum="36">체결금액(KRW)</th>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </section>
+              <div class="title">
+                <img src="./img/Vector-22.svg" />
+                <span data-langNum="61">체결 이력</span>
+                <span></span>
+              </div>
 
-    <section class="middle_section">
+              <table class="__TX_TABLE_CLASS__ transaction_list_table">
+                <tr>
+                  <th data-langNum="33">체결시간</th>
+                  <th data-langNum="34">체결가격(KRW)</th>
+                  <th data-langNum="35">체결량(MOC)</th>
+                  <th data-langNum="36">체결금액(KRW)</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+      </template>
 
+      <!-- ▲▲▲ 공통 템플릿 끝 / 여기까지가 4개 거래소 섹션 리팩터링 ▲▲▲ -->
+
+      <section class="middle_section">
         <div class="container">
-            <div class="date_file_container">
-                <div class="current_date"></div>
-                <div class="btn_url_link" onclick="window.open('https://github.com/mossland')">Github</div>
+          <div class="date_file_container">
+            <div class="current_date"></div>
+            <div
+              class="btn_url_link"
+              onclick="window.open('https://github.com/mossland')"
+            >
+              Github
             </div>
-            <div class="middle_title" >
-                <div>
-                    <img src="./img/Vector-28.svg"/>
-                    <span data-langNum="37">모스랜드 오픈소스 활성화</span>
-                </div>
+          </div>
+          <div class="middle_title">
+            <div>
+              <img src="./img/Vector-28.svg" />
+              <span data-langNum="37">모스랜드 오픈소스 활성화</span>
+            </div>
+          </div>
+
+          <div class="left_right_container">
+            <div class="left_container">
+              <div class="title">
+                <img src="./img/Vector-25.svg" />
+                <span data-langNum="62">Github Code Frequency</span>
+                <span data-langNum="82">(including private repository)</span>
+              </div>
+
+              <table class="github_frq_table table_3col">
+                <tr>
+                  <th data-langNum="43">기간</th>
+                  <th data-langNum="64">추가 항목</th>
+                  <th data-langNum="65">삭제 항목</th>
+                </tr>
+                <tr>
+                  <td data-langNum="67">지난 4주간</td>
+                  <td class="github_frq_tw_add">-</td>
+                  <td class="github_frq_tw_del">-</td>
+                </tr>
+                <tr>
+                  <td data-langNum="68">지난 8주간</td>
+                  <td class="github_frq_pw_add">-</td>
+                  <td class="github_frq_pw_del">-</td>
+                </tr>
+                <tr>
+                  <td data-langNum="70">지난 1년간</td>
+                  <td class="github_frq_1y_add">-</td>
+                  <td class="github_frq_1y_del">-</td>
+                </tr>
+              </table>
             </div>
 
-            <div class="left_right_container">
+            <div class="right_container">
+              <div class="title">
+                <img src="./img/Vector-25.svg" />
+                <span data-langNum="63">Github Code Commits</span>
+                <span data-langNum="82">(including private repository)</span>
+              </div>
 
-                <div class="left_container">
-
-                    <div class="title">
-                        <img src="./img/Vector-25.svg"/>
-                        <span data-langNum="62">Github Code Frequency</span>
-                        <span data-langNum="82">(including private repository)</span>
-                    </div>
-
-                    <table class="github_frq_table table_3col">
-                        <tr>
-                            <th data-langNum="43">기간</th>
-                            <th data-langNum="64">추가 항목</th>
-                            <th data-langNum="65">삭제 항목</th>
-                        </tr>
-                        <tr>
-                            <td data-langNum="67">지난 4주간</td>
-                            <td class="github_frq_tw_add">-</td>
-                            <td class="github_frq_tw_del">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="68">지난 8주간</td>
-                            <td class="github_frq_pw_add">-</td>
-                            <td class="github_frq_pw_del">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="70">지난 1년간</td>
-                            <td class="github_frq_1y_add">-</td>
-                            <td class="github_frq_1y_del">-</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="right_container">
-
-                    <div class="title">
-                        <img src="./img/Vector-25.svg"/>
-                        <span data-langNum="63">Github Code Commits</span>
-                        <span data-langNum="82">(including private repository)</span>
-                    </div>
-
-                    <table class="github_commits_table table_2col">
-                        <tr>
-                            <th data-langNum="43">기간</th>
-                            <th data-langNum="66">횟수</th>
-                        </tr>
-                        <tr>
-                            <td data-langNum="67">지난 4주간</td>
-                            <td class="github_commit_tw">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="68">지난 8주간</td>
-                            <td class="github_commit_pw">-</td>
-                        </tr>
-                        <tr>
-                            <td data-langNum="70">지난 1년간</td>
-                            <td class="github_commit_1y">-</td>
-                        </tr>
-                    </table>
-                </div>
-
+              <table class="github_commits_table table_2col">
+                <tr>
+                  <th data-langNum="43">기간</th>
+                  <th data-langNum="66">횟수</th>
+                </tr>
+                <tr>
+                  <td data-langNum="67">지난 4주간</td>
+                  <td class="github_commit_tw">-</td>
+                </tr>
+                <tr>
+                  <td data-langNum="68">지난 8주간</td>
+                  <td class="github_commit_pw">-</td>
+                </tr>
+                <tr>
+                  <td data-langNum="70">지난 1년간</td>
+                  <td class="github_commit_1y">-</td>
+                </tr>
+              </table>
             </div>
+          </div>
         </div>
-    </section>
+      </section>
 
-
-    <section class="public_section">
+      <section class="public_section">
         <div id="app">
-            <section class="middle_section">
-                <div class="container">
-                    <div class="middle_title" >
-                        <div>
-                            <img src="./img/Vector-29.svg"/>
-                            <span data-langNum="71">&nbsp;모스랜드 DAO 활동</span>
-                        </div>
-                    </div>
-                    <div class="dao_stat">
-                        <dl>
-                            <div class="dao_stat__block">
-                                <dt data-langNum="72">전체 안건 수</dt>
-                                <dd>{{ surveyData.totalSurveyCount }} <span data-langNum="73">안건</span></dd>
-                            </div>
-
-                            <div class="dao_stat__block">
-                                <dt data-langNum="74">누적 투표 수</dt>
-                                <dd>{{ accVoteCount }} <span data-langNum="75">회</span></dd>
-                            </div>
-                            <div class="dao_stat__block">
-                                <dt data-langNum="76">누적 투표 MOC</dt>
-                                <dd>{{ accVoteMmoc }} MOC</dd>
-                            </div>
-                        </dl>
-                    </div>
-
-                    <div class="dao_vote" v-if="dupVoteList && dupVoteList.length > 0">
-                        <div class="title">
-                            <img src="./img/Vector-30.svg"/>
-                            <span data-langNum="77">최근 DAO 안건</span>
-                        </div>
-                        <section class="vote-list-table">
-                            <transition-group name="votelist" tag="div" mode="out-in" @after-enter="onAfterEnter">
-                                <div v-for="v, vidx in dupVoteList" :key="`${v.id}`" :data-id="v.id">
-                                    <div class="info">
-                                        <div class="title td">
-                                            <mark data-langNum="78" class="surveying" v-if="v.votingStatus === 'Ended'">
-                                                {{ locale === 'ko' ? '마감' : 'Closed' }}
-                                            </mark>
-                                            <mark data-langNum="79" class="end" v-else>
-                                                {{ locale === 'ko' ? '진행중' : 'Active' }}
-                                            </mark>
-                                            <a :href="`https://meta.moss.land/mocSurvey`" taget="_blank">
-                                                {{ v.title }}
-                                            </a>
-                                        </div>
-                                        <div class="duration td">
-                                            {{ toDateFormat(v.openAt) }} ~ {{ toDateFormat(v.closeAt) }}
-                                        </div>
-                                    </div>
-                                    <div class="figure">
-                                        <div class="selection td" colspan="2">
-                                            <div class="selection__wrapper">
-                                                <div
-                                                    class="selection__ele"
-                                                    v-for="sel, sidx in v.selections"
-                                                    :key="`${v.id}_${sidx}${sel}`"
-                                                    :data-idx="sidx"
-                                                >
-                                                    <div class="text">{{ selectionData[v.id][sidx].text }}</div>
-                                                    <div class="count">{{ selectionData[v.id][sidx].count }}<span data-langNum="80">{{ locale === 'ko' ? 'MOC' : 'MOC'}}</span></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </transition-group>
-                        </section>
-                    </div>
-
-                    <div class="dao_resp" v-if="dupRespList && dupRespList.length > 0">
-                        <div class="title">
-                            <img src="./img/Vector-31.svg"/>
-                            <span data-langNum="81">최근 투표</span>
-                        </div>
-                        <section class="resp-list-table">
-                            <transition-group name="resplist" tag="div" mode="out-in">
-                                <div class="resp-tr" v-for="r, ridx in dupRespList" :key="`${r.id}`" :data-id="r.id">
-                                    <div class="vote_title">
-                                        <div class="vote_user">
-                                            <img src="./img/user.svg"/> {{ r.id }}
-                                        </div>
-                                        <div>{{ r.title }}</div>
-                                    </div>
-                                    <div class="vote_meta">
-                                        <div class="vote_select" :class="`select-${parseInt(r.selection) % 4}`">
-                                            <span class="opText">{{ r.selections[r.selection] }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </transition-group>
-                        </section>
-                    </div>
+          <section class="middle_section">
+            <div class="container">
+              <div class="middle_title">
+                <div>
+                  <img src="./img/Vector-29.svg" />
+                  <span data-langNum="71">&nbsp;모스랜드 DAO 활동</span>
                 </div>
-            </section>
+              </div>
+              <div class="dao_stat">
+                <dl>
+                  <div class="dao_stat__block">
+                    <dt data-langNum="72">전체 안건 수</dt>
+                    <dd>
+                      {{ surveyData.totalSurveyCount }}
+                      <span data-langNum="73">안건</span>
+                    </dd>
+                  </div>
 
+                  <div class="dao_stat__block">
+                    <dt data-langNum="74">누적 투표 수</dt>
+                    <dd>
+                      {{ accVoteCount }} <span data-langNum="75">회</span>
+                    </dd>
+                  </div>
 
-    <section class="board_section">
-        <div class="container">
-            <div class="title--01" data-langNum="22">모스랜드 공시</div>
-            <table class="main_board disclosure">
-                <tr>
-                    <td class="date">2022.10</td>
-                    <td class="body">모스랜드, 오픈소스 메타버스 플랫폼 베타 출시</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.08</td>
-                    <td class="body">모스랜드, CyberTHUG DAO 투표 솔루션 출시</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.06</td>
-                    <td class="body">모스랜드, CyberTHUG 광고 영상 "원슈타인 - CyberTHUG (feat. 신구)" 공개</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.03</td>
-                    <td class="body">모스랜드, NFT 게임 "CyberTHUG Gecko Club" 베타 출시</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.02</td>
-                    <td class="body">모스랜드, CyberTHUG x MXXR 파트너십 체결</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.01</td>
-                    <td class="body">모스랜드, CyberTHUG x THIS.GG 파트너십 체결</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.01</td>
-                    <td class="body">모스랜드, CyberTHUG 사운드트랙 Apple Music 등록</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.01</td>
-                    <td class="body">모스랜드, CyberTHUG x MXXR 파트너십 체결</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.01</td>
-                    <td class="body">모스랜드, CyberTHUG x MXXR 파트너십 체결</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-            </table>
+                  <div class="dao_stat__block">
+                    <dt data-langNum="76">누적 투표 MOC</dt>
+                    <dd>{{ accVoteMmoc }} MOC</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div
+                class="dao_vote"
+                v-if="dupVoteList && dupVoteList.length > 0"
+              >
+                <div class="title">
+                  <img src="./img/Vector-30.svg" />
+                  <span data-langNum="77">최근 DAO 안건</span>
+                </div>
+                <section class="vote-list-table">
+                  <transition-group
+                    name="votelist"
+                    tag="div"
+                    mode="out-in"
+                    @after-enter="onAfterEnter"
+                  >
+                    <div
+                      v-for="v, vidx in dupVoteList"
+                      :key="`${v.id}`"
+                      :data-id="v.id"
+                    >
+                      <div class="info">
+                        <div class="title td">
+                          <mark
+                            data-langNum="78"
+                            class="surveying"
+                            v-if="v.votingStatus === 'Ended'"
+                          >
+                            {{ locale === 'ko' ? '마감' : 'Closed' }}
+                          </mark>
+                          <mark data-langNum="79" class="end" v-else>
+                            {{ locale === 'ko' ? '진행중' : 'Active' }}
+                          </mark>
+                          <a
+                            :href="`https://meta.moss.land/mocSurvey`"
+                            taget="_blank"
+                          >
+                            {{ v.title }}
+                          </a>
+                        </div>
+                        <div class="duration td">
+                          {{ toDateFormat(v.openAt) }} ~ {{
+                          toDateFormat(v.closeAt) }}
+                        </div>
+                      </div>
+                      <div class="figure">
+                        <div class="selection td" colspan="2">
+                          <div class="selection__wrapper">
+                            <div
+                              class="selection__ele"
+                              v-for="sel, sidx in v.selections"
+                              :key="`${v.id}_${sidx}${sel}`"
+                              :data-idx="sidx"
+                            >
+                              <div class="text">
+                                {{ selectionData[v.id][sidx].text }}
+                              </div>
+                              <div class="count">
+                                {{ selectionData[v.id][sidx].count }}
+                                <span data-langNum="80"
+                                  >{{ locale === 'ko' ? 'MOC' : 'MOC'}}</span
+                                >
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </transition-group>
+                </section>
+              </div>
+
+              <div
+                class="dao_resp"
+                v-if="dupRespList && dupRespList.length > 0"
+              >
+                <div class="title">
+                  <img src="./img/Vector-31.svg" />
+                  <span data-langNum="81">최근 투표</span>
+                </div>
+                <section class="resp-list-table">
+                  <transition-group name="resplist" tag="div" mode="out-in">
+                    <div
+                      class="resp-tr"
+                      v-for="r, ridx in dupRespList"
+                      :key="`${r.id}`"
+                      :data-id="r.id"
+                    >
+                      <div class="vote_title">
+                        <div class="vote_user">
+                          <img src="./img/user.svg" /> {{ r.id }}
+                        </div>
+                        <div>{{ r.title }}</div>
+                      </div>
+                      <div class="vote_meta">
+                        <div
+                          class="vote_select"
+                          :class="`select-${parseInt(r.selection) % 4}`"
+                        >
+                          <span class="opText"
+                            >{{ r.selections[r.selection] }}</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </transition-group>
+                </section>
+              </div>
+            </div>
+          </section>
         </div>
-    </section>
-    <section class="public_section">
-        <div class="container">
-            <div class="title--01" data-langNum="23">모스랜드 공개 문서</div>
-            <table class="main_board materials">
-                <tr>
-                    <td class="date">2022.10</td>
-                    <td class="body">모스랜드: 탈중앙화조직(DAO) 거버넌스 모델에 대한 연구와 계획</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.08</td>
-                    <td class="body">모스랜드: 모스코인으로 통합된 메타버스</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.06</td>
-                    <td class="body">모스랜드, 스포츠 엔터테인먼트 메타버스와 NFT 활용</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.03</td>
-                    <td class="body">UDC 2020, 모스랜드 소개 영상 출시</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
-                <tr>
-                    <td class="date">2022.02</td>
-                    <td class="body">모스코인, 모스랜드의 게임 생태계에서 활용되는 암호 화폐</td>
-                    <td><button class="btn_view">View</button></td>
-                </tr>
+      </section>
 
-            </table>
-        </div>
-    </section>
-
-    <section class="bottom_section">
+      <section class="board_section">
         <div class="container">
-            <div class="copyright">Copyright @ Mossland. All Right Reserved.</div>
+          <div class="title--01" data-langNum="22">모스랜드 공시</div>
+          <table class="main_board disclosure">
+            <tr>
+              <td class="date">2022.10</td>
+              <td class="body">모스랜드, 오픈소스 메타버스 플랫폼 베타 출시</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.08</td>
+              <td class="body">모스랜드, CyberTHUG DAO 투표 솔루션 출시</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.06</td>
+              <td class="body">
+                모스랜드, CyberTHUG 광고 영상 "원슈타인 - CyberTHUG (feat.
+                신구)" 공개
+              </td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.03</td>
+              <td class="body">
+                모스랜드, NFT 게임 "CyberTHUG Gecko Club" 베타 출시
+              </td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.02</td>
+              <td class="body">모스랜드, CyberTHUG x MXXR 파트너십 체결</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.01</td>
+              <td class="body">모스랜드, CyberTHUG x THIS.GG 파트너십 체결</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.01</td>
+              <td class="body">
+                모스랜드, CyberTHUG 사운드트랙 Apple Music 등록
+              </td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.01</td>
+              <td class="body">모스랜드, CyberTHUG x MXXR 파트너십 체결</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.01</td>
+              <td class="body">모스랜드, CyberTHUG x MXXR 파트너십 체결</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+          </table>
         </div>
-    </section>
-</div>
-</body>
+      </section>
+
+      <section class="public_section">
+        <div class="container">
+          <div class="title--01" data-langNum="23">모스랜드 공개 문서</div>
+          <table class="main_board materials">
+            <tr>
+              <td class="date">2022.10</td>
+              <td class="body">
+                모스랜드: 탈중앙화조직(DAO) 거버넌스 모델에 대한 연구와 계획
+              </td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.08</td>
+              <td class="body">모스랜드: 모스코인으로 통합된 메타버스</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.06</td>
+              <td class="body">
+                모스랜드, 스포츠 엔터테인먼트 메타버스와 NFT 활용
+              </td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.03</td>
+              <td class="body">UDC 2020, 모스랜드 소개 영상 출시</td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+            <tr>
+              <td class="date">2022.02</td>
+              <td class="body">
+                모스코인, 모스랜드의 게임 생태계에서 활용되는 암호 화폐
+              </td>
+              <td><button class="btn_view">View</button></td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="bottom_section">
+        <div class="container">
+          <div class="copyright">Copyright @ Mossland. All Right Reserved.</div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 기존 스크립트들 + 마켓 섹션 렌더링 스크립트 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="./script.js"></script>
+
+    <script>
+      // Upbit / Bithumb / Coinone / Gopax 섹션을 템플릿으로 생성하는 스크립트
+      (function () {
+        const markets = [
+          {
+            id: "upbit",
+            titleLangNum: 27,
+            titleText: "모스코인 마켓 활성화 (Upbit)",
+            prefix: "", // acc_trade_volume_24h ...
+            orderbookPrefix: "", // order_book_bid_table ...
+            txTableClass: "upbit_transaction_list_table",
+          },
+          {
+            id: "bithumb",
+            titleLangNum: 102,
+            titleText: "모스코인 마켓 활성화 (Bithumb)",
+            prefix: "bithumb_",
+            orderbookPrefix: "bithumb_",
+            txTableClass: "bithumb_transaction_list_table",
+          },
+          {
+            id: "coinone",
+            titleLangNum: 103,
+            titleText: "모스코인 마켓 활성화 (Coinone)",
+            prefix: "coinone_",
+            orderbookPrefix: "coinone_",
+            txTableClass: "coinone_transaction_list_table",
+          },
+          {
+            id: "gopax",
+            titleLangNum: 106,
+            titleText: "모스코인 마켓 활성화 (Gopax)",
+            prefix: "gopax_",
+            orderbookPrefix: "gopax_",
+            txTableClass: "gopax_transaction_list_table",
+          },
+        ];
+
+        const root = document.getElementById("market-sections-root");
+        const tplEl = document.getElementById("market-section-template");
+        if (!root || !tplEl) return;
+
+        const tpl = tplEl.innerHTML;
+
+        markets.forEach((m) => {
+          let html = tpl
+            .replace(/__TITLE_LANGNUM__/g, String(m.titleLangNum))
+            .replace(/__TITLE_TEXT__/g, m.titleText)
+            .replace(/__PREFIX__/g, m.prefix)
+            .replace(/__ORDERBOOK_PREFIX__/g, m.orderbookPrefix)
+            .replace(/__TX_TABLE_CLASS__/g, m.txTableClass);
+
+          const wrapper = document.createElement("div");
+          wrapper.innerHTML = html.trim();
+          const section = wrapper.firstElementChild;
+          section.setAttribute("data-market", m.id);
+          root.appendChild(section);
+        });
+      })();
+    </script>
+  </body>
 </html>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
-<link rel="stylesheet" type="text/css" href="./style.css">
-<script src="./script.js"></script>

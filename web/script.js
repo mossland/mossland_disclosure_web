@@ -5,6 +5,69 @@ var ORDER_BOOK_TIMER = null;
 var MOSSLAND_MAX_SUPPLY = 500000000;
 var MOSSLAND_CIRCULATING_SUPPLY = 0;
 
+// 공통 거래소 정의
+const EXCHANGES = [
+  { key: "upbit", exchange: null }, // 기본(Upbit)
+  { key: "bithumb", exchange: "bithumb" },
+  { key: "coinone", exchange: "coinone" },
+  { key: "gopax", exchange: "gopax" },
+];
+
+// KRW 구간(1d/1m/1y/total)용
+const KRW_RANGE_MARKETS = EXCHANGES.map(({ key, exchange }) => ({
+  exchange,
+  prefix: key === "upbit" ? "" : key + "_", // 예: '', 'bithumb_', 'coinone_'
+}));
+
+// 체결 이력 테이블용
+const TX_MARKETS = EXCHANGES.map(({ key, exchange }) => ({
+  exchange,
+  prefix: key, // upbit, bithumb, coinone, gopax
+}));
+
+// 호가창 테이블용
+const ORDERBOOK_MARKETS = EXCHANGES.map(({ key, exchange }) => {
+  const isUpbit = key === "upbit";
+  return {
+    exchange,
+    rowClass: isUpbit
+      ? "order_book_table_item"
+      : key + "_order_book_table_item",
+    bidTable: isUpbit
+      ? ".order_book_bid_table"
+      : "." + key + "_order_book_bid_table",
+    askTable: isUpbit
+      ? ".order_book_ask_table"
+      : "." + key + "_order_book_ask_table",
+  };
+});
+
+// Ticker(52주, 24h, 퍼센트 등)용
+const TICKER_MARKETS = EXCHANGES.map(({ key, exchange }) => {
+  const isUpbit = key === "upbit";
+  const prefix = isUpbit ? "" : key + "_";
+  return {
+    exchange,
+    w52HighClass: "." + prefix + "w52_high",
+    w52HighDateClass: "." + prefix + "w52_high_date",
+    w52LowClass: "." + prefix + "w52_low",
+    w52LowDateClass: "." + prefix + "w52_low_date",
+    volumeClass: "." + prefix + "acc_trade_volume_24h",
+    priceClass: "." + prefix + "acc_trade_price_24h",
+    volumePerClass: "." + prefix + "acc_trade_volume_24h_per",
+    pricePerClass: "." + prefix + "acc_trade_price_24h_per",
+  };
+});
+
+// 공통 $.getJSON 래퍼 (exchange 파라미터 옵션)
+function getJSONWithOptionalExchange(path, exchange, cb) {
+  if (exchange) {
+    $.getJSON(BASE_URL + path, { exchange: exchange }, cb);
+  } else {
+    $.getJSON(BASE_URL + path, cb);
+  }
+}
+
 $.lang = {};
 
 $.lang.ko = {
@@ -122,6 +185,7 @@ $.lang.ko = {
   103: "모스코인 마켓 활성화 (Bithumb)",
   104: "전체 트랜잭션",
   105: "일일 트랜잭션 수 (어제)",
+  106: "모스코인 마켓 활성화 (Gopax)",
 };
 
 $.lang.en = {
@@ -239,6 +303,7 @@ $.lang.en = {
   103: "MossCoin Market Activity (Coinone)",
   104: "Total Transactions",
   105: "Daily Transfers (Previous Day)",
+  106: "MossCoin Market Activity (Gopax)",
 };
 
 const { createApp } = Vue;
@@ -273,6 +338,7 @@ createApp({
     },
     dupVoteList() {
       const data = [...this.surveyData.lastVote, ...this.surveyData.lastVote];
+      if (!this.surveyData.lastVote.length) return [];
       return data.slice(
         this.startIdx % this.surveyData.lastVote.length,
         (this.startIdx % this.surveyData.lastVote.length) + this.voteShowSize
@@ -283,6 +349,7 @@ createApp({
         ...this.surveyData.lastResponse,
         ...this.surveyData.lastResponse,
       ];
+      if (!this.surveyData.lastResponse.length) return [];
       return data.slice(
         this.respStartIdx % this.surveyData.lastResponse.length,
         (this.respStartIdx % this.surveyData.lastResponse.length) +
@@ -302,9 +369,6 @@ createApp({
           });
         }
 
-        // const totalResponse = v.voteCount.totalMoc;
-        // let ratioSum = Big(0);
-        // let percentSum = Big(0);
         // For = 0
         acc[v.id][0].count = v.voteCount.forMoc;
         acc[v.id][0].ratio = Big(v.voteCount.forMocPercentage)
@@ -337,24 +401,6 @@ createApp({
           : Big(100)
               .sub(Big(acc[v.id][0].percent).plus(Big(acc[v.id][1].percent)))
               .toFixed(2, 0);
-
-        // v.responses.forEach((r, ridx) => {
-        //     acc[v.id][r.selection].count += 1;
-        //     const rat = Big(acc[v.id][r.selection].count).div(totalResponse).toFixed(2, 0);
-        //     acc[v.id][r.selection].ratio = rat;
-        //     ratioSum = ratioSum.plus(rat);
-        //     const perc = Big(acc[v.id][r.selection].ratio).times(100).toFixed(2, 0);
-        //     acc[v.id][r.selection].percent = perc;
-        //     percentSum = percentSum.plus(perc);
-
-        //     if (ridx === r.length - 1) {
-        //         const diff = Big(100).sub(percentSum);
-        //         acc[v.id][r.selection].percent = Big(acc[v.id][r.selection].percent).plus(diff).toString();
-
-        //         const ratDiff = Big(1).sub(ratioSum);
-        //         acc[v.id][r.selection].ratio = Big(acc[v.id][r.selection].ratio).plus(ratDiff).toString();
-        //     }
-        // });
 
         return acc;
       }, {});
@@ -493,16 +539,14 @@ function loadTransferList(lang) {
 
   $.getJSON(BASE_URL + "/api/getHolderCount", function (data) {
     $(".holder_count").html(numberWithCommas(data["count"]));
-    // setTimeout(() => counter($('.holder_count'), data["count"], ''), 1);
   });
 
   $.getJSON(BASE_URL + "/api/getTotalTx", function (data) {
     $(".transactions_1y").html(numberWithCommas(data["count"]));
-    // setTimeout(() => counter($('.transactions_1y'), data["count"], ''), 1);
   });
+
   $.getJSON(BASE_URL + "/api/getLastDayTx", function (data) {
     $(".transactions_1d").html(numberWithCommas(data["count"]));
-    // setTimeout(() => counter($('.transactions_1d'), data["count"], ''), 1);
   });
 
   $.getJSON(BASE_URL + "/api/getLastTx", function (data) {
@@ -546,9 +590,9 @@ function loadTransferList(lang) {
           }
         } else {
           if (hr > 0) {
-            age = hr + "시간 " + min + "분" + " 전";
+            age = hr + "시간 " + min + "분 전";
           } else if (min > 0) {
-            age = min + "분 " + sec + "초" + " 전";
+            age = min + "분 " + sec + "초 전";
           } else {
             age = sec + "초 전";
           }
@@ -597,111 +641,51 @@ function pad0(x) {
   }
 }
 
-function loadTransactionList(lang) {
-  if (TRANSACTION_TIMER != null) {
-    clearInterval(TRANSACTION_TIMER);
-  }
-
-  $.getJSON(BASE_URL + "/api/getYearKrw", function (data) {
-    $(".krw_1y_high").html(numberWithCommas(data["high_price"]));
-    $(".krw_1y_low").html(numberWithCommas(data["low_price"]));
+// 특정 거래소의 1d/1m/1y/total high/low 로딩
+function loadKrwRangeForExchange(prefix, exchange) {
+  // 1년
+  getJSONWithOptionalExchange("/api/getYearKrw", exchange, function (data) {
+    $("." + prefix + "krw_1y_high").html(numberWithCommas(data["high_price"]));
+    $("." + prefix + "krw_1y_low").html(numberWithCommas(data["low_price"]));
   });
 
-  $.getJSON(BASE_URL + "/api/getMonthKrw", function (data) {
-    $(".krw_1m_high").html(numberWithCommas(data["high_price"]));
-    $(".krw_1m_low").html(numberWithCommas(data["low_price"]));
+  // 1개월
+  getJSONWithOptionalExchange("/api/getMonthKrw", exchange, function (data) {
+    $("." + prefix + "krw_1m_high").html(numberWithCommas(data["high_price"]));
+    $("." + prefix + "krw_1m_low").html(numberWithCommas(data["low_price"]));
   });
 
-  $.getJSON(BASE_URL + "/api/getDayKrw", function (data) {
-    $(".krw_1d_high").html(numberWithCommas(data["high_price"]));
-    $(".krw_1d_low").html(numberWithCommas(data["low_price"]));
+  // 1일
+  getJSONWithOptionalExchange("/api/getDayKrw", exchange, function (data) {
+    $("." + prefix + "krw_1d_high").html(numberWithCommas(data["high_price"]));
+    $("." + prefix + "krw_1d_low").html(numberWithCommas(data["low_price"]));
   });
 
-  $.getJSON(BASE_URL + "/api/getAccTradeVolumeKrw", function (data) {
-    $(".krw_total_high").html(numberWithCommas(data["high_price"]));
-    $(".krw_total_low").html(numberWithCommas(data["low_price"]));
-  });
-  /****/
-  $.getJSON(
-    BASE_URL + "/api/getYearKrw",
-    { exchange: "bithumb" },
+  // 전체 기간
+  getJSONWithOptionalExchange(
+    "/api/getAccTradeVolumeKrw",
+    exchange,
     function (data) {
-      $(".bithumb_krw_1y_high").html(numberWithCommas(data["high_price"]));
-      $(".bithumb_krw_1y_low").html(numberWithCommas(data["low_price"]));
+      $("." + prefix + "krw_total_high").html(
+        numberWithCommas(data["high_price"])
+      );
+      $("." + prefix + "krw_total_low").html(
+        numberWithCommas(data["low_price"])
+      );
     }
   );
+}
 
-  $.getJSON(
-    BASE_URL + "/api/getMonthKrw",
-    { exchange: "bithumb" },
-    function (data) {
-      $(".bithumb_krw_1m_high").html(numberWithCommas(data["high_price"]));
-      $(".bithumb_krw_1m_low").html(numberWithCommas(data["low_price"]));
-    }
-  );
+// 특정 거래소 체결 이력 로딩
+function loadTxListForExchange(lang, exchange, prefix) {
+  getJSONWithOptionalExchange("/api/getLastKrwTx", exchange, function (data) {
+    var rowSelector = "." + prefix + "_transaction_list_table_item";
+    var tableSelector = "." + prefix + "_transaction_list_table";
 
-  $.getJSON(
-    BASE_URL + "/api/getDayKrw",
-    { exchange: "bithumb" },
-    function (data) {
-      $(".bithumb_krw_1d_high").html(numberWithCommas(data["high_price"]));
-      $(".bithumb_krw_1d_low").html(numberWithCommas(data["low_price"]));
-    }
-  );
+    $(rowSelector).remove();
 
-  $.getJSON(
-    BASE_URL + "/api/getAccTradeVolumeKrw",
-    { exchange: "bithumb" },
-    function (data) {
-      $(".bithumb_krw_total_high").html(numberWithCommas(data["high_price"]));
-      $(".bithumb_krw_total_low").html(numberWithCommas(data["low_price"]));
-    }
-  );
-  /****/
-
-  $.getJSON(
-    BASE_URL + "/api/getYearKrw",
-    { exchange: "coinone" },
-    function (data) {
-      $(".coinone_krw_1y_high").html(numberWithCommas(data["high_price"]));
-      $(".coinone_krw_1y_low").html(numberWithCommas(data["low_price"]));
-    }
-  );
-
-  $.getJSON(
-    BASE_URL + "/api/getMonthKrw",
-    { exchange: "coinone" },
-    function (data) {
-      $(".coinone_krw_1m_high").html(numberWithCommas(data["high_price"]));
-      $(".coinone_krw_1m_low").html(numberWithCommas(data["low_price"]));
-    }
-  );
-
-  $.getJSON(
-    BASE_URL + "/api/getDayKrw",
-    { exchange: "coinone" },
-    function (data) {
-      $(".coinone_krw_1d_high").html(numberWithCommas(data["high_price"]));
-      $(".coinone_krw_1d_low").html(numberWithCommas(data["low_price"]));
-    }
-  );
-
-  $.getJSON(
-    BASE_URL + "/api/getAccTradeVolumeKrw",
-    { exchange: "coinone" },
-    function (data) {
-      $(".coinone_krw_total_high").html(numberWithCommas(data["high_price"]));
-      $(".coinone_krw_total_low").html(numberWithCommas(data["low_price"]));
-    }
-  );
-
-  $.getJSON(BASE_URL + "/api/getLastKrwTx", function (data) {
-    $(".upbit_transaction_list_table_item").remove();
     if (data != null) {
       $.each(data, function (i, item) {
-        // "trade_price": 105,
-        //     "trade_volume": 172.5,
-
         var tradePrice = item["trade_price"];
         var tradeVolume = item["trade_volume"];
         var tradeAmount = numberWithCommas(
@@ -721,7 +705,9 @@ function loadTransactionList(lang) {
           pad0(d.getMinutes());
 
         var $item = $(
-          '<tr class="upbit_transaction_list_table_item">\n' +
+          '<tr class="' +
+            prefix +
+            '_transaction_list_table_item">\n' +
             "                    <td>" +
             tradeDate +
             "</td>\n" +
@@ -737,117 +723,94 @@ function loadTransactionList(lang) {
             "                    </tr>"
         );
 
-        $(".upbit_transaction_list_table").append($item);
+        $(tableSelector).append($item);
       });
     }
 
-    $(".transaction_list_date").html(getCurrentDateString(lang));
+    // Upbit(기본)에 대해서만 날짜 표시
+    if (!exchange) {
+      $(".transaction_list_date").html(getCurrentDateString(lang));
+    }
+  });
+}
 
-    /*
-        TRANSACTION_TIMER = setTimeout(function () {
-            loadTransactionList(lang);
-        }, 5000);
-        */
+function loadTransactionList(lang) {
+  if (TRANSACTION_TIMER != null) {
+    clearInterval(TRANSACTION_TIMER);
+  }
+
+  // 1d/1m/1y/total high/low
+  KRW_RANGE_MARKETS.forEach(function (m) {
+    loadKrwRangeForExchange(m.prefix, m.exchange);
   });
 
-  $.getJSON(
-    BASE_URL + "/api/getLastKrwTx",
-    { exchange: "bithumb" },
+  // 거래소별 체결 이력
+  TX_MARKETS.forEach(function (m) {
+    loadTxListForExchange(lang, m.exchange, m.prefix);
+  });
+
+  // 기존에도 자동 재호출은 주석 (원하면 여기서 타이머 추가 가능)
+}
+
+// 특정 거래소 오더북 로딩
+function loadOrderBookForExchange(cfg) {
+  getJSONWithOptionalExchange(
+    "/api/getOrderbookKrw",
+    cfg.exchange,
     function (data) {
-      $(".bithumb_transaction_list_table_item").remove();
+      $("." + cfg.rowClass).remove();
+
       if (data != null) {
-        $.each(data, function (i, item) {
-          // "trade_price": 105,
-          //     "trade_volume": 172.5,
+        var orderbook_units = data[0]["orderbook_units"];
 
-          var tradePrice = item["trade_price"];
-          var tradeVolume = item["trade_volume"];
-          var tradeAmount = numberWithCommas(
-            Math.round(tradePrice * tradeVolume)
-          );
+        var bidTotal = 0;
+        var askTotal = 0;
 
-          var d = new Date(item["timestamp"]);
-          var tradeDate =
-            d.getFullYear() +
-            "-" +
-            pad0(d.getMonth() + 1) +
-            "-" +
-            pad0(d.getDate()) +
-            " " +
-            pad0(d.getHours()) +
-            ":" +
-            pad0(d.getMinutes());
+        for (var i = 0, l = 10; i < l; i++) {
+          var item = orderbook_units[i];
+          if (item == undefined) {
+            break;
+          }
 
-          var $item = $(
-            '<tr class="bithumb_transaction_list_table_item">\n' +
+          bidTotal += item["bid_size"];
+          askTotal += item["ask_size"];
+
+          var $itemBid = $(
+            '<tr class="' +
+              cfg.rowClass +
+              '">\n' +
               "                    <td>" +
-              tradeDate +
+              numberWithCommas(Math.floor(item["bid_size"])) +
               "</td>\n" +
               "                    <td>" +
-              tradePrice +
+              numberWithCommas(Math.floor(bidTotal)) +
               "</td>\n" +
               "                    <td>" +
-              tradeVolume +
-              "</td>\n" +
-              "                    <td>" +
-              tradeAmount +
+              numberWithCommas(item["bid_price"]) +
               "</td>\n" +
               "                    </tr>"
           );
 
-          $(".bithumb_transaction_list_table").append($item);
-        });
-      }
-    }
-  );
+          $(cfg.bidTable).append($itemBid);
 
-  $.getJSON(
-    BASE_URL + "/api/getLastKrwTx",
-    { exchange: "coinone" },
-    function (data) {
-      $(".coinone_transaction_list_table_item").remove();
-      if (data != null) {
-        $.each(data, function (i, item) {
-          // "trade_price": 105,
-          //     "trade_volume": 172.5,
-
-          var tradePrice = item["trade_price"];
-          var tradeVolume = item["trade_volume"];
-          var tradeAmount = numberWithCommas(
-            Math.round(tradePrice * tradeVolume)
-          );
-
-          var d = new Date(item["timestamp"]);
-          var tradeDate =
-            d.getFullYear() +
-            "-" +
-            pad0(d.getMonth() + 1) +
-            "-" +
-            pad0(d.getDate()) +
-            " " +
-            pad0(d.getHours()) +
-            ":" +
-            pad0(d.getMinutes());
-
-          var $item = $(
-            '<tr class="coinone_transaction_list_table_item">\n' +
+          var $itemAsk = $(
+            '<tr class="' +
+              cfg.rowClass +
+              '">\n' +
               "                    <td>" +
-              tradeDate +
+              numberWithCommas(item["ask_price"]) +
               "</td>\n" +
               "                    <td>" +
-              tradePrice +
+              numberWithCommas(Math.floor(askTotal)) +
               "</td>\n" +
               "                    <td>" +
-              tradeVolume +
-              "</td>\n" +
-              "                    <td>" +
-              tradeAmount +
+              numberWithCommas(Math.floor(item["ask_size"])) +
               "</td>\n" +
               "                    </tr>"
           );
 
-          $(".coinone_transaction_list_table").append($item);
-        });
+          $(cfg.askTable).append($itemAsk);
+        }
       }
     }
   );
@@ -858,189 +821,37 @@ function loadOrderBookList(lang) {
     clearInterval(ORDER_BOOK_TIMER);
   }
 
-  $.getJSON(
-    BASE_URL + "/api/getOrderbookKrw",
-    { exchange: "bithumb" },
-    function (data) {
-      $(".bithumb_order_book_table_item").remove();
-
-      if (data != null) {
-        var orderbook_units = data[0]["orderbook_units"];
-
-        var bidTotal = 0;
-        var askTotal = 0;
-
-        for (var i = 0, l = 10; i < l; i++) {
-          var item = orderbook_units[i];
-          if (item == undefined) {
-            break;
-          }
-
-          bidTotal += item["bid_size"];
-          askTotal += item["ask_size"];
-
-          var $itemBid = $(
-            '<tr class="bithumb_order_book_table_item">\n' +
-              "                    <td>" +
-              numberWithCommas(Math.floor(item["bid_size"])) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(Math.floor(bidTotal)) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(item["bid_price"]) +
-              "</td>\n" +
-              "                    </tr>"
-          );
-
-          $(".bithumb_order_book_bid_table").append($itemBid);
-
-          var $itemAsk = $(
-            '<tr class="bithumb_order_book_table_item">\n' +
-              "                    <td>" +
-              numberWithCommas(item["ask_price"]) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(Math.floor(askTotal)) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(Math.floor(item["ask_size"])) +
-              "</td>\n" +
-              "                    </tr>"
-          );
-
-          $(".bithumb_order_book_ask_table").append($itemAsk);
-        }
-      }
-    }
-  );
-
-  $.getJSON(
-    BASE_URL + "/api/getOrderbookKrw",
-    { exchange: "coinone" },
-    function (data) {
-      $(".coinone_order_book_table_item").remove();
-
-      if (data != null) {
-        var orderbook_units = data[0]["orderbook_units"];
-
-        var bidTotal = 0;
-        var askTotal = 0;
-
-        for (var i = 0, l = 10; i < l; i++) {
-          var item = orderbook_units[i];
-          if (item == undefined) {
-            break;
-          }
-
-          bidTotal += item["bid_size"];
-          askTotal += item["ask_size"];
-
-          var $itemBid = $(
-            '<tr class="coinone_order_book_table_item">\n' +
-              "                    <td>" +
-              numberWithCommas(Math.floor(item["bid_size"])) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(Math.floor(bidTotal)) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(item["bid_price"]) +
-              "</td>\n" +
-              "                    </tr>"
-          );
-
-          $(".coinone_order_book_bid_table").append($itemBid);
-
-          var $itemAsk = $(
-            '<tr class="coinone_order_book_table_item">\n' +
-              "                    <td>" +
-              numberWithCommas(item["ask_price"]) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(Math.floor(askTotal)) +
-              "</td>\n" +
-              "                    <td>" +
-              numberWithCommas(Math.floor(item["ask_size"])) +
-              "</td>\n" +
-              "                    </tr>"
-          );
-
-          $(".coinone_order_book_ask_table").append($itemAsk);
-        }
-      }
-    }
-  );
-
-  $.getJSON(BASE_URL + "/api/getOrderbookKrw", function (data) {
-    $(".order_book_table_item").remove();
-
-    if (data != null) {
-      var orderbook_units = data[0]["orderbook_units"];
-
-      var bidTotal = 0;
-      var askTotal = 0;
-
-      for (var i = 0, l = 10; i < l; i++) {
-        var item = orderbook_units[i];
-        if (item == undefined) {
-          break;
-        }
-
-        bidTotal += item["bid_size"];
-        askTotal += item["ask_size"];
-
-        var $itemBid = $(
-          '<tr class="order_book_table_item">\n' +
-            "                    <td>" +
-            numberWithCommas(Math.floor(item["bid_size"])) +
-            "</td>\n" +
-            "                    <td>" +
-            numberWithCommas(Math.floor(bidTotal)) +
-            "</td>\n" +
-            "                    <td>" +
-            numberWithCommas(item["bid_price"]) +
-            "</td>\n" +
-            "                    </tr>"
-        );
-
-        $(".order_book_bid_table").append($itemBid);
-
-        var $itemAsk = $(
-          '<tr class="order_book_table_item">\n' +
-            "                    <td>" +
-            numberWithCommas(item["ask_price"]) +
-            "</td>\n" +
-            "                    <td>" +
-            numberWithCommas(Math.floor(askTotal)) +
-            "</td>\n" +
-            "                    <td>" +
-            numberWithCommas(Math.floor(item["ask_size"])) +
-            "</td>\n" +
-            "                    </tr>"
-        );
-
-        $(".order_book_ask_table").append($itemAsk);
-      }
-    }
-
-    ORDER_BOOK_TIMER = setTimeout(function () {
-      loadOrderBookList(lang);
-    }, 5000);
+  ORDERBOOK_MARKETS.forEach(function (cfg) {
+    loadOrderBookForExchange(cfg);
   });
+
+  ORDER_BOOK_TIMER = setTimeout(function () {
+    loadOrderBookList(lang);
+  }, 5000);
 }
 
+// 숫자 콤마: 정수부에만 콤마, 소수부는 원래대로(뒤 0 제거)
 const numberWithCommas = (x) => {
-  if (typeof x == "string") {
-    const ret = x.replace(/(\.[0-9]*[1-9])0+$|\.0*$/, "$1");
-    return ret;
-  }
-
-  if (x == undefined || isNaN(x)) {
+  if (x === null || x === undefined || x === "") {
     return;
   }
 
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const num = Number(x);
+  if (Number.isNaN(num)) {
+    return x;
+  }
+
+  const str = num.toString();
+  const [intPart, decPart] = str.split(".");
+
+  const intWithCommas = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+  if (decPart === undefined) {
+    return intWithCommas;
+  }
+
+  const trimmedDec = decPart.replace(/0+$/, "");
+  return trimmedDec ? `${intWithCommas}.${trimmedDec}` : intWithCommas;
 };
 
 const counter = ($counter, max, unit) => {
@@ -1049,33 +860,70 @@ const counter = ($counter, max, unit) => {
   const handle = setInterval(() => {
     $counter.html(numberWithCommas(Math.ceil(max - now)) + unit);
 
-    // 목표수치에 도달하면 정지
     if (now < 1) {
       clearInterval(handle);
     }
 
-    // 증가되는 값이 계속하여 작아짐
     const step = now / 10;
-
-    // 값을 적용시키면서 다음 차례에 영향을 끼침
     now -= step;
   }, 1);
 };
 
+// 모든 거래소 Ticker(52주/24h/퍼센트) 로딩
+function loadAllTickerData(lang) {
+  TICKER_MARKETS.forEach(function (cfg) {
+    getJSONWithOptionalExchange(
+      "/api/getTickerKrw",
+      cfg.exchange,
+      function (data) {
+        if (!data || !data[0]) return;
+        var item = data[0];
+
+        // 52주 고저
+        $(cfg.w52HighClass).html(
+          numberWithCommas(item["highest_52_week_price"]) + " KRW"
+        );
+        $(cfg.w52HighDateClass).html(item["highest_52_week_date"]);
+        $(cfg.w52LowClass).html(
+          numberWithCommas(item["lowest_52_week_price"]) + " KRW"
+        );
+        $(cfg.w52LowDateClass).html(item["lowest_52_week_date"]);
+
+        // 24h 거래량
+        $(cfg.volumeClass).html(
+          numberWithCommas(Math.floor(item["acc_trade_volume_24h"])) + " MOC"
+        );
+
+        // 24h 거래대금
+        var priceText =
+          numberWithCommas(Math.floor(item["acc_trade_price_24h"])) + " KRW";
+        if (lang == "en") {
+          priceText += " (24h)";
+        }
+        $(cfg.priceClass).html(priceText);
+
+        // 퍼센트
+        $(cfg.volumePerClass).html(
+          numberWithCommas(
+            (
+              (item["acc_trade_volume_24h"] * 100) /
+              MOSSLAND_MAX_SUPPLY
+            ).toFixed(2)
+          ) + "%"
+        );
+        $(cfg.pricePerClass).html(
+          numberWithCommas(
+            ((MOSSLAND_CIRCULATING_SUPPLY * 100) / MOSSLAND_MAX_SUPPLY).toFixed(
+              2
+            )
+          ) + "%"
+        );
+      }
+    );
+  });
+}
+
 function loadData(lang) {
-  //setTimeout(() => counter($('.mossland_circulating_supply'), 382489688, 'moc'), 1);
-  //setTimeout(() => counter($('.mossland_marketcap'), 999999, '억원'), 1);
-
-  // Object.keys($.lang.en).length
-  // data-langNum="0"
-
-  /*
-    var num = Object.keys($.lang.en).length;
-    $('.mossland_marketcap').attr("data-langNum", num);
-    $.lang.en.add({ num : '' });
-    $.lang.ko.add({ num : '' });
-    */
-
   // Market Data
   $.getJSON(BASE_URL + "/api/market/", function (data) {
     $.each(data, function (index, value) {
@@ -1154,145 +1002,8 @@ function loadData(lang) {
       }
     });
 
-    $.getJSON(BASE_URL + "/api/getTickerKrw", function (data) {
-      var item = data[0];
-      // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
-      $(".w52_high").html(
-        numberWithCommas(item["highest_52_week_price"]) + " KRW"
-      );
-      $(".w52_high_date").html(item["highest_52_week_date"]);
-      // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
-      $(".w52_low").html(
-        numberWithCommas(item["lowest_52_week_price"]) + " KRW"
-      );
-      $(".w52_low_date").html(item["lowest_52_week_date"]);
-
-      $(".acc_trade_volume_24h").html(
-        numberWithCommas(Math.floor(item["acc_trade_volume_24h"])) + " MOC"
-      );
-
-      if (lang == "en") {
-        $(".acc_trade_price_24h").html(
-          numberWithCommas(Math.floor(item["acc_trade_price_24h"])) +
-            " KRW (24h)"
-        );
-      } else {
-        $(".acc_trade_price_24h").html(
-          numberWithCommas(Math.floor(item["acc_trade_price_24h"])) + " KRW"
-        );
-      }
-
-      $(".acc_trade_volume_24h_per").html(
-        numberWithCommas(
-          ((item["acc_trade_volume_24h"] * 100) / MOSSLAND_MAX_SUPPLY).toFixed(
-            2
-          )
-        ) + "%"
-      );
-      $(".acc_trade_price_24h_per").html(
-        numberWithCommas(
-          ((MOSSLAND_CIRCULATING_SUPPLY * 100) / MOSSLAND_MAX_SUPPLY).toFixed(2)
-        ) + "%"
-      );
-    });
-
-    $.getJSON(
-      BASE_URL + "/api/getTickerKrw",
-      { exchange: "bithumb" },
-      function (data) {
-        var item = data[0];
-        // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
-        $(".bithumb_w52_high").html(
-          numberWithCommas(item["highest_52_week_price"]) + " KRW"
-        );
-        $(".bithumb_w52_high_date").html(item["highest_52_week_date"]);
-        // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
-        $(".bithumb_w52_low").html(
-          numberWithCommas(item["lowest_52_week_price"]) + " KRW"
-        );
-        $(".bithumb_w52_low_date").html(item["lowest_52_week_date"]);
-
-        $(".bithumb_acc_trade_volume_24h").html(
-          numberWithCommas(Math.floor(item["acc_trade_volume_24h"])) + " MOC"
-        );
-
-        if (lang == "en") {
-          $(".bithumb_acc_trade_price_24h").html(
-            numberWithCommas(Math.floor(item["acc_trade_price_24h"])) +
-              " KRW (24h)"
-          );
-        } else {
-          $(".bithumb_acc_trade_price_24h").html(
-            numberWithCommas(Math.floor(item["acc_trade_price_24h"])) + " KRW"
-          );
-        }
-
-        $(".bithumb_acc_trade_volume_24h_per").html(
-          numberWithCommas(
-            (
-              (item["acc_trade_volume_24h"] * 100) /
-              MOSSLAND_MAX_SUPPLY
-            ).toFixed(2)
-          ) + "%"
-        );
-        $(".bithumb_acc_trade_price_24h_per").html(
-          numberWithCommas(
-            ((MOSSLAND_CIRCULATING_SUPPLY * 100) / MOSSLAND_MAX_SUPPLY).toFixed(
-              2
-            )
-          ) + "%"
-        );
-      }
-    );
-
-    $.getJSON(
-      BASE_URL + "/api/getTickerKrw",
-      { exchange: "coinone" },
-      function (data) {
-        var item = data[0];
-        // setTimeout(() => counter($('.w52_high'), item["highest_52_week_price"], ''), 1);
-        $(".coinone_w52_high").html(
-          numberWithCommas(item["highest_52_week_price"]) + " KRW"
-        );
-        $(".coinone_w52_high_date").html(item["highest_52_week_date"]);
-        // setTimeout(() => counter($('.w52_low'), item["lowest_52_week_price"], ''), 1);
-        $(".coinone_w52_low").html(
-          numberWithCommas(item["lowest_52_week_price"]) + " KRW"
-        );
-        $(".coinone_w52_low_date").html(item["lowest_52_week_date"]);
-
-        $(".coinone_acc_trade_volume_24h").html(
-          numberWithCommas(Math.floor(item["acc_trade_volume_24h"])) + " MOC"
-        );
-
-        if (lang == "en") {
-          $(".coinone_acc_trade_price_24h").html(
-            numberWithCommas(Math.floor(item["acc_trade_price_24h"])) +
-              " KRW (24h)"
-          );
-        } else {
-          $(".coinone_acc_trade_price_24h").html(
-            numberWithCommas(Math.floor(item["acc_trade_price_24h"])) + " KRW"
-          );
-        }
-
-        $(".coinone_acc_trade_volume_24h_per").html(
-          numberWithCommas(
-            (
-              (item["acc_trade_volume_24h"] * 100) /
-              MOSSLAND_MAX_SUPPLY
-            ).toFixed(2)
-          ) + "%"
-        );
-        $(".coinone_acc_trade_price_24h_per").html(
-          numberWithCommas(
-            ((MOSSLAND_CIRCULATING_SUPPLY * 100) / MOSSLAND_MAX_SUPPLY).toFixed(
-              2
-            )
-          ) + "%"
-        );
-      }
-    );
+    // 모든 거래소 Ticker 공통 처리
+    loadAllTickerData(lang);
   });
 
   // Release Data
@@ -1408,12 +1119,12 @@ function loadData(lang) {
         initValue
       );
 
-    var initValue = 0;
+    var initValue2 = 0;
     var last8weeks = list
       .slice(list.length - 8, list.length)
       .reduce(
         (accumulator, currentValue) => accumulator + currentValue,
-        initValue
+        initValue2
       );
 
     $(".github_commit_tw").html(numberWithCommas(last4weeks));
@@ -1488,63 +1199,40 @@ $(window).ready(function () {
   if (month < 10) {
     month = "0" + month;
   }
-  //$('.box_content.date').html(year + ' / ' + month );
   $(".current_date").html(
     "(" + today.toISOString().replace("T", " ").substring(0, 10) + " 기준)"
   );
 });
 
+// 아래부터는 기존 commaNumber 유틸 (Vue에서 사용 중)
+
 function commaNumber(inputNumber, optionalSeparator, optionalDecimalChar) {
-  // default `decimalChar` is a period
   const decimalChar = optionalDecimalChar || ".";
-
-  let stringNumber; // we assign this in the switch block and need it later.
-
+  let stringNumber;
   {
-    let number; // we assign this in the switch block and need it right after.
-
+    let number;
     switch (typeof inputNumber) {
       case "string":
-        // if there aren't enough digits to need separators then return it
-        // NOTE: some numbers which are too small will get passed this
-        //       when they have decimal values which make them too long here.
-        //       but, the number value check after this switch will catch it.
         if (inputNumber.length < (inputNumber[0] === "-" ? 5 : 4)) {
           return inputNumber;
         }
-
-        // remember it as a string in `stringNumber` and convert to a Number
         stringNumber = inputNumber;
-
-        // if they're not using the Node standard decimal char then replace it
-        // before converting.
         number = Number(
           decimalChar !== "."
             ? stringNumber.replace(decimalChar, ".")
             : stringNumber
         );
         break;
-
-      // convert to a string.
-      // NOTE: don't check if the number is too small before converting
-      //       because we'll need to return `stringNumber` anyway.
       case "number":
         stringNumber = String(inputNumber);
         number = inputNumber;
-        // create the string version with the decimalChar they specified.
-        // this matches what the above case 'string' produces,
-        // and, fixes the bug *not* doing this caused.
         if ("." !== decimalChar && !Number.isInteger(inputNumber)) {
           stringNumber = stringNumber.replace(".", decimalChar);
         }
         break;
-
-      // return invalid type as-is
       default:
         return inputNumber;
     }
-
-    // when it doesn't need a separator or isn't a number then return it
     if (
       (-1000 < number && number < 1000) ||
       isNaN(number) ||
@@ -1553,49 +1241,30 @@ function commaNumber(inputNumber, optionalSeparator, optionalDecimalChar) {
       return stringNumber;
     }
   }
-
   {
-    // strip off decimal value to add back in later
     const decimalIndex = stringNumber.lastIndexOf(decimalChar);
     let decimal;
     if (decimalIndex > -1) {
       decimal = stringNumber.slice(decimalIndex);
       stringNumber = stringNumber.slice(0, decimalIndex);
     }
-
-    // finally, parse the string. Note, default 'separator' is a comma.
     const parts = parse(stringNumber, optionalSeparator || ",");
-
-    // if there's a decimal value then add it to the parts.
     if (decimal) {
-      // NOTE: we sliced() it off including the decimalChar
       parts.push(decimal);
     }
-
-    // combine all parts for the final string (note, has separators).
     return parts.join("");
   }
 }
 
 function parse(string, separator) {
-  // find first index to split the string at (where 1st separator goes).
   let i = ((string.length - 1) % 3) + 1;
-
-  // above calculation is wrong when num is negative and a certain size.
   if (i === 1 && string[0] === "-") {
-    i = 4; // example: -123,456,789  start at 4, not 1.
+    i = 4;
   }
-
-  const strings = [
-    // holds the string parts
-    string.slice(0, i), // grab part before the first separator
-  ];
-
-  // split remaining string in groups of 3 where a separator belongs
+  const strings = [string.slice(0, i)];
   for (; i < string.length; i += 3) {
     strings.push(separator, string.substr(i, 3));
   }
-
   return strings;
 }
 
