@@ -2,9 +2,9 @@ const mysql = require("mysql2/promise");
 require("dotenv").config();
 
 function mask(v) {
-  if (!v) return v;           // undefined/null/''은 그대로 표시
-  if (v.length <= 4) return '*'.repeat(v.length);
-  return v.slice(0, 2) + '***' + v.slice(-2);
+  if (!v) return v; // undefined/null/''은 그대로 표시
+  if (v.length <= 4) return "*".repeat(v.length);
+  return v.slice(0, 2) + "***" + v.slice(-2);
 }
 
 const env = {
@@ -15,13 +15,12 @@ const env = {
   DB_SCHEMA: process.env.DB_SCHEMA,
 };
 
-console.log('[ENV CHECK]');
-console.log('  DB_HOST    =', env.DB_HOST);
-console.log('  DB_PORT    =', env.DB_PORT);
-console.log('  DB_USERNAME=', env.DB_USERNAME);
-console.log('  DB_PASSWORD=', env.DB_PASSWORD);
-console.log('  DB_SCHEMA  =', env.DB_SCHEMA);
-
+console.log("[ENV CHECK]");
+console.log("  DB_HOST    =", env.DB_HOST);
+console.log("  DB_PORT    =", env.DB_PORT);
+console.log("  DB_USERNAME=", env.DB_USERNAME);
+console.log("  DB_PASSWORD=", env.DB_PASSWORD);
+console.log("  DB_SCHEMA  =", env.DB_SCHEMA);
 
 const db_config = {
   host: process.env.DB_HOST,
@@ -204,6 +203,12 @@ class Database {
   }
   async setCoinoneData(key, value) {
     return await this.setData("coinone", key, value);
+  }
+  async getGopaxData(key) {
+    return await this.getData("gopax", key);
+  }
+  async setGopaxData(key, value) {
+    return await this.setData("gopax", key, value);
   }
   async getMaterials() {
     return await this.getData2("materials");

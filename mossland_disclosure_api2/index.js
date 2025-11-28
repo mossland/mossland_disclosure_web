@@ -16,6 +16,7 @@ const GitHub = require("./github.js");
 const Database = require("./database.js");
 const SwapInfo = require("./swapInfo.js");
 const Coinone = require("./coinone.js"); // 선택
+const Gopax = require("./gopax.js"); // 선택
 
 const app = express();
 
@@ -344,6 +345,28 @@ async function setCoinoneInfo() {
   }
 }
 
+async function setGopaxInfo() {
+  const bt = new Gopax();
+  const plan = [
+    "getTickerKrw",
+    "getYearKrw",
+    "getMonthKrw",
+    "getWeekKrw",
+    "getDayKrw",
+    "getOrderbookKrw",
+    "getLastKrwTx",
+    "getAccTradeVolumeKrw",
+  ];
+  for (const key of plan) {
+    try {
+      const ret = await bt[key]();
+      await db.setGopaxData(key, JSON.stringify(ret));
+    } catch (err) {
+      console.error(`[Gopax] ${key} failed:`, err?.message || err);
+    }
+  }
+}
+
 async function setGitHubInfo() {
   const gb = new GitHub();
   try {
@@ -439,6 +462,7 @@ const exchangeGetter = {
   upbit: (key) => db.getUpbitData(key),
   bithumb: (key) => db.getBithumbData(key),
   coinone: (key) => db.getCoinoneData(key),
+  gopax: (key) => db.getGopaxData(key),
 };
 function registerExchangeRoute(path, key) {
   app.get(
@@ -506,6 +530,7 @@ app.get(
 );
 
 //setLuniverseInfo();
+setGopaxInfo();
 /* ---------------------------
  * 스케줄링 (이제 정의 위반 없음)
  * ------------------------- */
@@ -552,6 +577,14 @@ scheduleJob("BithumbLoop", setBithumbInfo, 10 * 1000, {
   dbThrottleMinIntervalMs: 7 * 1000,
 });
 scheduleJob("CoinoneLoop", setCoinoneInfo, 10 * 1000, {
+  runAtStart: true,
+  startupHoldoffMs: 30_000,
+  startupJitterMs: 15_000,
+  jitterPct: 0.2,
+  dbThrottleMinIntervalMs: 7 * 1000,
+});
+
+scheduleJob("GopaxLoop", setGopaxInfo, 10 * 1000, {
   runAtStart: true,
   startupHoldoffMs: 30_000,
   startupJitterMs: 15_000,
