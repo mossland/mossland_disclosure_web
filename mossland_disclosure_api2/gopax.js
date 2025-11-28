@@ -225,6 +225,7 @@ class Gopax {
     const low = Number(stats.low ?? 0);
     const close = Number(stats.close ?? ticker.price ?? 0);
     const volume24h = Number(stats.volume ?? ticker.volume ?? 0);
+    const quoteVolume = Number(stats.quoteVolume ?? ticker.quoteVolume ?? 0);
 
     const prevClosingPrice = open || close;
     let changeType = "EVEN";
@@ -262,7 +263,7 @@ class Gopax {
       acc_trade_volume: null,
       acc_trade_price: null,
       acc_trade_volume_24h: volume24h,
-      acc_trade_price_24h: null,
+      acc_trade_price_24h: Number(quoteVolume.toFixed(0)),
 
       highest_52_week_price: hl52w.highest_52_week_price,
       highest_52_week_date: hl52w.highest_52_week_date,
